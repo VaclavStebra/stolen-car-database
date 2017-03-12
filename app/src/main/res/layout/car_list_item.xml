@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/car_image"
                 android:layout_width="0dp"
                 android:layout_height="241dp"
                 android:layout_marginLeft="0dp"
