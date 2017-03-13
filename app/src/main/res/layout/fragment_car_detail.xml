@@ -1,0 +1,90 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="215dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pas0"
+                android:contentDescription="@string/car_thumbnail"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:stretchColumns="*">
+                <TableRow>
+                    <TextView
+                        android:text="Volkswagen PASSAT VARIANT"
+                        android:textSize="20sp"
+                        android:padding="3dp"
+                        android:layout_span="2"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/regno"
+                        android:padding="3dp"/>
+                    <TextView
+                        android:text="1AY1234"
+                        android:padding="3dp"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/stolen_date"
+                        android:padding="3dp"/>
+                    <TextView
+                        android:text="13.03.2015"
+                        android:padding="3dp"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/color"
+                        android:padding="3dp"/>
+                    <TextView
+                        android:text="modra tmava"
+                        android:padding="3dp"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/vin"
+                        android:padding="3dp"/>
+                    <TextView
+                        android:text="WVWZZZ12345624"
+                        android:padding="3dp"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/production_year"
+                        android:padding="3dp"/>
+                    <TextView
+                        android:text="2002"
+                        android:padding="3dp"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/engine"
+                        android:padding="3dp"/>
+                    <TextView
+                        android:text="2.0 TDI"
+                        android:padding="3dp"/>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

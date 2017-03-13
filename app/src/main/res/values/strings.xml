@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Stolen Car Database</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="car_thumbnail">Car thumbnail</string>
+    <string name="color">Color</string>
+    <string name="regno">SPZ</string>
+    <string name="vin">VIN</string>
+    <string name="stolen_date">Stolen Date</string>
+    <string name="production_year">Production Year</string>
+    <string name="engine">Engine</string>
 </resources>
