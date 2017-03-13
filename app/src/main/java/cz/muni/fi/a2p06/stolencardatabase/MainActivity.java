@@ -1,7 +1,7 @@
 package cz.muni.fi.a2p06.stolencardatabase;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         car.setColor("modra tmava");
         car.setEngine("2.0 TDI");
         car.setManufacturer("Volkswagen");
-        car.setPhoto("gs://stolen-car-database.appspot.com/PAS0.jpg");
+        car.setPhotoUrl("gs://stolen-car-database.appspot.com/PAS0.jpg");
         car.setProductionYear(2002);
         car.setRegno("1XY1234");
         Calendar cal = Calendar.getInstance();
