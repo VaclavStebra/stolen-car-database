@@ -57,12 +57,12 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    @PropertyName("photoUrl")
+    @PropertyName("photo_url")
     public String getPhotoUrl() {
         return photoUrl;
     }
 
-    @PropertyName("photoUrl")
+    @PropertyName("photo_url")
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
