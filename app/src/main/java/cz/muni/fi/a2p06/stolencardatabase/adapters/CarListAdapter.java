@@ -1,4 +1,4 @@
-package cz.muni.fi.a2p06.stolencardatabase;
+package cz.muni.fi.a2p06.stolencardatabase.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,6 +8,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 /**
@@ -27,10 +29,11 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
 
     static class CarItemHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.car_image)
-        ImageView mCarImage;
+        private ImageView mCarImage;
 
         public CarItemHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }
