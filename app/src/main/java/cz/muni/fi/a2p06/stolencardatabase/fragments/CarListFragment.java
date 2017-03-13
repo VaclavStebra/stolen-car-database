@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -71,7 +70,7 @@ public class CarListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new CarListAdapter(Car.class, R.layout.car_list_item,
-                CarListAdapter.CarItemHolder.class, mRef, Glide.with(this)));
+                CarListAdapter.CarItemHolder.class, mRef, getContext()));
 
         return view;
     }
