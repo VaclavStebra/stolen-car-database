@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.Query;
@@ -23,8 +23,11 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.CarItemHolder> {
 
-    public CarListAdapter(Class<Car> modelClass, int modelLayout, Class<CarItemHolder> viewHolderClass, Query ref) {
+    private final RequestManager glide;
+
+    public CarListAdapter(Class<Car> modelClass, int modelLayout, Class<CarItemHolder> viewHolderClass, Query ref, RequestManager glide) {
         super(modelClass, modelLayout, viewHolderClass, ref);
+        this.glide = glide;
     }
 
     @Override
@@ -37,15 +40,14 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(model.getPhotoUrl());
 
-        Glide.with() //TODO set fragment instance
-                .using(new FirebaseImageLoader())
+        glide.using(new FirebaseImageLoader())
                 .load(storageReference)
                 .placeholder(R.drawable.car_placeholder)
                 .fitCenter()
                 .into(viewHolder.mCarImage);
     }
 
-    static class CarItemHolder extends RecyclerView.ViewHolder {
+    public static class CarItemHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.car_image)
         private ImageView mCarImage;
         @BindView(R.id.manuf_and_model)
