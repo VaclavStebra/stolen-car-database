@@ -2,16 +2,19 @@ package cz.muni.fi.a2p06.stolencardatabase;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
+import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,5 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
         // save to database
         cars.setValue(car);
+    }
+
+    @Override
+    public void onItemClick(View v, int position) {
+        // TODO: Implement
+        Toast.makeText(this, "Item at position " + position, Toast.LENGTH_SHORT).show();
     }
 }

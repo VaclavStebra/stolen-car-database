@@ -3,6 +3,7 @@ package cz.muni.fi.a2p06.stolencardatabase.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,16 +21,19 @@ import java.util.GregorianCalendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.muni.fi.a2p06.stolencardatabase.MainActivity;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.CarItemHolder> {
 
     private final Context mContext;
+    private CarItemHolder.OnCarItemClickListener listener;
 
     public CarListAdapter(Class<Car> modelClass, int modelLayout, Class<CarItemHolder> viewHolderClass, Query ref, Context context) {
         super(modelClass, modelLayout, viewHolderClass, ref);
         this.mContext = context;
+        listener = (MainActivity) mContext;
     }
 
     @Override
@@ -56,7 +60,22 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
                 .into(viewHolder.mCarImage);
     }
 
+    @Override
+    public CarItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        CarItemHolder holder = super.onCreateViewHolder(parent, viewType);
+        holder.setOnItemClickListener(listener);
+
+        return holder;
+    }
+
     public static class CarItemHolder extends RecyclerView.ViewHolder {
+
+        public interface OnCarItemClickListener {
+            void onItemClick(View v, int position);
+        }
+
+        private OnCarItemClickListener mListener;
+
         @BindView(R.id.car_image)
         ImageView mCarImage;
         @BindView(R.id.manuf_and_model)
@@ -73,6 +92,16 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
         public CarItemHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClick(v, getAdapterPosition());
+                }
+            });
+        }
+
+        public void setOnItemClickListener(OnCarItemClickListener listener) {
+            this.mListener = listener;
         }
     }
 }
