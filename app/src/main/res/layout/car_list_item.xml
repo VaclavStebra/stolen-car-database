@@ -5,12 +5,12 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:weightSum="1">
+    >
     <!-- TODO pozret layout -->
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp"
         card_view:cardCornerRadius="2dp"
@@ -18,7 +18,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
             <ImageView
                 android:id="@+id/car_image"
@@ -31,20 +32,23 @@
                 card_view:layout_constraintLeft_toLeftOf="parent"
                 card_view:layout_constraintRight_toRightOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/car_placeholder"/>
+                card_view:srcCompat="@drawable/car_placeholder"
+                />
 
             <TextView
                 android:id="@+id/manuf_and_model"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="#73000000"
+                android:gravity="center_vertical|center_horizontal"
                 android:paddingBottom="12dp"
                 android:paddingEnd="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="12dp"
-                android:textAppearance="@android:style/TextAppearance.Large.Inverse"
+                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textSize="22sp"
                 card_view:layout_constraintBottom_toBottomOf="@+id/car_image"
                 card_view:layout_constraintHorizontal_bias="1.0"
                 card_view:layout_constraintLeft_toLeftOf="parent"
@@ -55,10 +59,10 @@
                 android:id="@+id/regno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 card_view:layout_constraintBaseline_toBaselineOf="@+id/spz_text"
                 card_view:layout_constraintLeft_toRightOf="@+id/spz_text"
                 tools:text="SPZ"/>
@@ -79,10 +83,10 @@
                 android:id="@+id/vin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 card_view:layout_constraintBaseline_toBaselineOf="@+id/vin_text"
                 card_view:layout_constraintLeft_toRightOf="@+id/spz_text"
                 tools:text="VIN"/>
@@ -91,39 +95,42 @@
                 android:id="@+id/district"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="8dp"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintLeft_toLeftOf="@+id/vin_text"
-                card_view:layout_constraintTop_toBottomOf="@+id/vin_text"
-                card_view:layout_constraintVertical_bias="0.0"
-                tools:text="District"/>
-
-            <TextView
-                android:id="@+id/spz_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/manuf_and_model"
+                tools:text="District"
+                />
+
+            <TextView
+                android:id="@+id/spz_text"
+                android:layout_width="33dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/spz"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
-                card_view:layout_constraintLeft_toLeftOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/car_image"/>
+                android:textSize="14sp"
+                card_view:layout_constraintLeft_toLeftOf="@+id/district"
+                card_view:layout_constraintTop_toBottomOf="@+id/stolen_date"/>
 
             <TextView
                 android:id="@+id/vin_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/vin"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintLeft_toLeftOf="@+id/spz_text"
-                card_view:layout_constraintTop_toBottomOf="@+id/spz_text"/>
+                card_view:layout_constraintTop_toBottomOf="@+id/spz_text"
+                card_view:layout_constraintVertical_bias="0.0"/>
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
