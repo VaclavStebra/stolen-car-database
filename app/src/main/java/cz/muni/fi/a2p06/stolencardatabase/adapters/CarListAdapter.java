@@ -28,12 +28,10 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.CarItemHolder> {
 
     private final Context mContext;
-    private CarItemHolder.OnCarItemClickListener listener;
 
     public CarListAdapter(Class<Car> modelClass, int modelLayout, Class<CarItemHolder> viewHolderClass, Query ref, Context context) {
         super(modelClass, modelLayout, viewHolderClass, ref);
         this.mContext = context;
-        listener = (MainActivity) mContext;
     }
 
     @Override
@@ -63,8 +61,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
     @Override
     public CarItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CarItemHolder holder = super.onCreateViewHolder(parent, viewType);
-        holder.setOnItemClickListener(listener);
-
+        holder.setOnItemClickListener((MainActivity) mContext);
         return holder;
     }
 
