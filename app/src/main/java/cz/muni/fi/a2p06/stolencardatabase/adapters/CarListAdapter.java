@@ -35,8 +35,8 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
     @Override
     protected void populateViewHolder(CarItemHolder viewHolder, Car model, int position) {
         viewHolder.mManufacturerAndModel.setText(model.getManufacturer() + " " + model.getModel());
-        viewHolder.mRegno.setText(mContext.getResources().getString(R.string.spz, model.getRegno()));
-        viewHolder.mVin.setText(mContext.getString(R.string.vin, model.getVin()));
+        viewHolder.mRegno.setText(model.getRegno());
+        viewHolder.mVin.setText(model.getVin());
 
         viewHolder.mDistrict.setText(model.getDistrict());
 
