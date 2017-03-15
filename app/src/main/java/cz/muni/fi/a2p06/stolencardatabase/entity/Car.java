@@ -136,4 +136,17 @@ public class Car {
     public void setDistrict(String district) {
         this.district = district;
     }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "manufacturer='" + manufacturer + '\'' +
+                ", productionYear=" + productionYear +
+                ", regno='" + regno + '\'' +
+                ", stolenDate=" + stolenDate +
+                ", model='" + model + '\'' +
+                ", vin='" + vin + '\'' +
+                ", district='" + district + '\'' +
+                '}';
+    }
 }

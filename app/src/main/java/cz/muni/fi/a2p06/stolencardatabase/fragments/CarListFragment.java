@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -16,7 +18,11 @@ import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 
-public class CarListFragment extends Fragment {
+public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
+
+    private static final String TAG = "CarListFragment";
+
+    private CarListAdapter mCarListAdapter;
 //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -69,10 +75,20 @@ public class CarListFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.car_list_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new CarListAdapter(Car.class, R.layout.car_list_item,
-                CarListAdapter.CarItemHolder.class, mRef, getContext()));
+
+        mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
+                CarListAdapter.CarItemHolder.class, mRef, this);
+        recyclerView.setAdapter(mCarListAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(View v, int position) {
+        // TODO: Implement
+        Car car = mCarListAdapter.getItem(position);
+        Log.d(TAG, "onItemClick: " + car);
+        Toast.makeText(getActivity(), "Item at position " + position + " is " + car.getManufacturer(), Toast.LENGTH_SHORT).show();
     }
 //
 //    // TODO: Rename method, update argument and hook method into UI event

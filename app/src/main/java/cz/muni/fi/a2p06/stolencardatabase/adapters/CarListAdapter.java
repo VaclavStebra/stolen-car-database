@@ -1,6 +1,6 @@
 package cz.muni.fi.a2p06.stolencardatabase.adapters;
 
-import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +21,17 @@ import java.util.GregorianCalendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cz.muni.fi.a2p06.stolencardatabase.MainActivity;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
 
 public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.CarItemHolder> {
 
-    private final Context mContext;
+    private final Fragment mFragment;
 
-    public CarListAdapter(Class<Car> modelClass, int modelLayout, Class<CarItemHolder> viewHolderClass, Query ref, Context context) {
+    public CarListAdapter(Class<Car> modelClass, int modelLayout, Class<CarItemHolder> viewHolderClass, Query ref, Fragment fragment) {
         super(modelClass, modelLayout, viewHolderClass, ref);
-        this.mContext = context;
+        this.mFragment = fragment;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(model.getPhotoUrl());
 
-        Glide.with(mContext)
+        Glide.with(mFragment)
                 .using(new FirebaseImageLoader())
                 .load(storageReference)
                 .placeholder(R.drawable.car_placeholder)
@@ -61,7 +61,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
     @Override
     public CarItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CarItemHolder holder = super.onCreateViewHolder(parent, viewType);
-        holder.setOnItemClickListener((MainActivity) mContext);
+        holder.setOnItemClickListener((CarListFragment) mFragment);
         return holder;
     }
 
