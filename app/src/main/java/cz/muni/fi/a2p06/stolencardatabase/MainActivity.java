@@ -82,4 +82,9 @@ public class MainActivity extends AppCompatActivity implements CarListFragment.O
     public void onItemClick(Car car) {
         // TODO: launch DetailFragment
     }
+
+    @Override
+    public void onAddCarClick() {
+        // TODO: launch AddCar Fragment
+    }
 }

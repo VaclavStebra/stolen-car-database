@@ -2,6 +2,7 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -81,6 +82,15 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                 CarListAdapter.CarItemHolder.class, mRef, this);
         recyclerView.setAdapter(mCarListAdapter);
 
+        // TODO: Implement FAB
+        FloatingActionButton addButton = (FloatingActionButton) view.findViewById(R.id.fab);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onAddCarClick();
+            }
+        });
+
         return view;
     }
 
@@ -129,6 +139,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
      */
     public interface OnCarListFragmentInteractionListener {
         void onItemClick(Car car);
-        // TODO: fab - new car
+
+        void onAddCarClick();
     }
 }
