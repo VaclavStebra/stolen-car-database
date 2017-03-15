@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements CarListFragment.O
     }
 
     @Override
-    public void onItemClick() {
+    public void onItemClick(Car car) {
         // TODO: launch DetailFragment
     }
 }

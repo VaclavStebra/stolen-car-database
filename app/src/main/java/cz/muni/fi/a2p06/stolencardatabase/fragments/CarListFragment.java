@@ -90,6 +90,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         Car car = mCarListAdapter.getItem(position);
         Log.d(TAG, "onCarListItemClick: " + car);
         Toast.makeText(getActivity(), "Item at position " + position + " is " + car.getManufacturer(), Toast.LENGTH_SHORT).show();
+//        mListener.onItemClick(car);
     }
 //
 //    // TODO: Rename method, update argument and hook method into UI event
@@ -127,7 +128,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCarListFragmentInteractionListener {
-        void onItemClick();
+        void onItemClick(Car car);
         // TODO: fab - new car
     }
 }
