@@ -97,7 +97,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
             });
         }
 
-        public void setOnItemClickListener(OnCarItemClickListener listener) {
+        void setOnItemClickListener(OnCarItemClickListener listener) {
             this.mListener = listener;
         }
     }

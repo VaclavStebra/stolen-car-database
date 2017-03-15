@@ -82,7 +82,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                 CarListAdapter.CarItemHolder.class, mRef, this);
         recyclerView.setAdapter(mCarListAdapter);
 
-        // TODO: Implement FAB
         FloatingActionButton addButton = (FloatingActionButton) view.findViewById(R.id.fab);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,19 +95,11 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @Override
     public void onCarListItemClick(View v, int position) {
-        // TODO: Implement
         Car car = mCarListAdapter.getItem(position);
         Log.d(TAG, "onCarListItemClick: " + car);
         Toast.makeText(getActivity(), "Item at position " + position + " is " + car.getManufacturer(), Toast.LENGTH_SHORT).show();
 //        mListener.onItemClick(car);
     }
-//
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
 
     @Override
     public void onAttach(Context context) {
