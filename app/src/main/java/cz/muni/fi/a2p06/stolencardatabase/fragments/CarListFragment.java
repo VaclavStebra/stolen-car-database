@@ -1,5 +1,6 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,9 +32,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 //    // TODO: Rename and change types of parameters
 //    private String mParam1;
 //    private String mParam2;
-//
-//    private OnFragmentInteractionListener mListener;
-//
+
+    private OnCarListFragmentInteractionListener mListener;
+
 //    public CarListFragment() {
 //        // Required empty public constructor
 //    }
@@ -84,10 +85,10 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     }
 
     @Override
-    public void onItemClick(View v, int position) {
+    public void onCarListItemClick(View v, int position) {
         // TODO: Implement
         Car car = mCarListAdapter.getItem(position);
-        Log.d(TAG, "onItemClick: " + car);
+        Log.d(TAG, "onCarListItemClick: " + car);
         Toast.makeText(getActivity(), "Item at position " + position + " is " + car.getManufacturer(), Toast.LENGTH_SHORT).show();
     }
 //
@@ -97,36 +98,36 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 //            mListener.onFragmentInteraction(uri);
 //        }
 //    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCarListFragmentInteractionListener) {
+            mListener = (OnCarListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnCarListFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnCarListFragmentInteractionListener {
+        void onItemClick();
+        // TODO: fab - new car
+    }
 }

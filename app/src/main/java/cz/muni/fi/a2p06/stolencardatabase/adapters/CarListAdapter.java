@@ -68,7 +68,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
     public static class CarItemHolder extends RecyclerView.ViewHolder {
 
         public interface OnCarItemClickListener {
-            void onItemClick(View v, int position);
+            void onCarListItemClick(View v, int position);
         }
 
         private OnCarItemClickListener mListener;
@@ -92,7 +92,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onItemClick(v, getAdapterPosition());
+                    mListener.onCarListItemClick(v, getAdapterPosition());
                 }
             });
         }

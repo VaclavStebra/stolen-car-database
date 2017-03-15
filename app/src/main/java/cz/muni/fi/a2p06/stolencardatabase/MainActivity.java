@@ -10,8 +10,9 @@ import java.util.Calendar;
 
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
+import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CarListFragment.OnCarListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,5 +76,10 @@ public class MainActivity extends AppCompatActivity {
 
         // save to database
         cars.setValue(car);
+    }
+
+    @Override
+    public void onItemClick() {
+        // TODO: launch DetailFragment
     }
 }
