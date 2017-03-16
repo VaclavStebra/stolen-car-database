@@ -86,7 +86,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onAddCarClick();
+                if (mListener != null) {
+                    mListener.onAddCarClick();
+                }
             }
         });
 
@@ -98,7 +100,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         Car car = mCarListAdapter.getItem(position);
         Log.d(TAG, "onCarListItemClick: " + car);
         Toast.makeText(getActivity(), "Item at position " + position + " is " + car.getManufacturer(), Toast.LENGTH_SHORT).show();
-//        mListener.onItemClick(car);
+        if (mListener != null) {
+            mListener.onItemClick(car);
+        }
     }
 
     @Override
