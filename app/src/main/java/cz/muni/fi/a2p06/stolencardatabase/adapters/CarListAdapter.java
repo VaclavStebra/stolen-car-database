@@ -92,7 +92,9 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onCarListItemClick(v, getAdapterPosition());
+                    if (mListener != null) {
+                        mListener.onCarListItemClick(v, getAdapterPosition());
+                    }
                 }
             });
         }
