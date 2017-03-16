@@ -11,13 +11,14 @@ public class Car {
     private String color;
     private String engine;
     private String manufacturer;
-    private String photo;
+    private String photoUrl;
     private int productionYear;
     private String regno;
     private long stolenDate;
     private String model;
     private String vin;
     private Coordinates location;
+    private String district;
 
     public Car() {
     }
@@ -56,14 +57,14 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    @PropertyName("photo")
-    public String getPhoto() {
-        return photo;
+    @PropertyName("photo_url")
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    @PropertyName("photo")
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    @PropertyName("photo_url")
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     @PropertyName("production_year")
@@ -124,5 +125,28 @@ public class Car {
     @PropertyName("location")
     public void setLocation(Coordinates location) {
         this.location = location;
+    }
+
+    @PropertyName("district")
+    public String getDistrict() {
+        return district;
+    }
+
+    @PropertyName("district")
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "manufacturer='" + manufacturer + '\'' +
+                ", productionYear=" + productionYear +
+                ", regno='" + regno + '\'' +
+                ", stolenDate=" + stolenDate +
+                ", model='" + model + '\'' +
+                ", vin='" + vin + '\'' +
+                ", district='" + district + '\'' +
+                '}';
     }
 }
