@@ -6,9 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.stepstone.stepper.StepperLayout;
+
+import butterknife.BindView;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 
 public class AddCarFragment extends Fragment {
+
+    @BindView(R.id.stepperLayout)
+    private StepperLayout mStepperLayout;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_car, container, false);
+
+        return view;
+    }
+
 //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -51,12 +66,6 @@ public class AddCarFragment extends Fragment {
 //        }
 //    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_car, container, false);
-    }
 
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
