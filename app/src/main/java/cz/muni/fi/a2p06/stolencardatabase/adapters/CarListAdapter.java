@@ -42,7 +42,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
 
         viewHolder.mDistrict.setText(model.getDistrict());
 
-        // TODO: Calendar
+        // TODO: Calendar - check if the month is right
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(model.getStolenDate());
         DateFormat format = SimpleDateFormat.getDateInstance();
