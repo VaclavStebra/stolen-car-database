@@ -1,118 +1,165 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="16dp"
-              tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.BasicCarInfoFragment">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.BasicCarInfoStepFragment">
 
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_input_manufacturer"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <EditText
-            android:id="@+id/input_manufacturer"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_manufacturer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_manufacturer"
-            android:inputType="textPersonName"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginBottom="8dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_input_model"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+            <EditText
+                android:id="@+id/input_manufacturer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/hint_manufacturer"
+                android:inputType="textPersonName"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/input_model"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_model"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_model"
-            android:inputType="textPersonName"/>
+            android:layout_marginBottom="8dp">
 
-    </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/input_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/hint_model"
+                android:inputType="textPersonName"/>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_input_regno"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/input_regno"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_regno"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_regno"
-            android:inputType="textCapCharacters"/>
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/input_regno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_regno"
+                android:inputType="textCapCharacters"/>
 
 
-    </android.support.design.widget.TextInputLayout>
+        </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_input_vin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
-
-        <EditText
-            android:id="@+id/input_vin"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_vin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_vin"
-            android:inputType="textCapCharacters"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginBottom="8dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_input_color"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+            <EditText
+                android:id="@+id/input_vin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_vin"
+                android:inputType="textCapCharacters"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/input_color"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_color"
-            android:inputType="text"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginBottom="8dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_input_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+            <EditText
+                android:id="@+id/input_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_color"
+                android:inputType="text"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/input_date"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_date"
-            android:inputType="date"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="4dp"
-        android:paddingStart="4dp"
-        android:text="@string/hint_district"
-        android:textColor="?android:attr/textColorHint"
-        android:textSize="12sp"/>
+            <EditText
+                android:id="@+id/input_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_date"
+                android:inputType="date"/>
+        </android.support.design.widget.TextInputLayout>
 
-    <Spinner
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:paddingLeft="-4dp"
-        android:paddingStart="-4dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/hint_districts"
-        android:spinnerMode="dialog"/>/>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
+            android:text="@string/hint_district"
+            android:textColor="?android:attr/textColorHint"
+            android:textSize="12sp"/>
 
-</LinearLayout>
+        <Spinner
+            android:id="@+id/district_spinner"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:entries="@array/hint_districts"
+            android:paddingLeft="-4dp"
+            android:paddingStart="-4dp"
+            android:spinnerMode="dialog"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1f000000"/>
+
+        <TextView
+            android:id="@+id/option_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Optional"
+            android:textColor="?android:attr/textColorHint"
+            android:textSize="12sp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_production_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_production_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_production_year"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_input_engine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_engine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_engine"
+                android:inputType="text"/>
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+</ScrollView>
