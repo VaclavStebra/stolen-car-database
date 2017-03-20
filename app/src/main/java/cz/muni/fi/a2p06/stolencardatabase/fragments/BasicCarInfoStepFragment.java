@@ -3,6 +3,7 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -11,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+
+import com.stepstone.stepper.Step;
+import com.stepstone.stepper.VerificationError;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,12 +27,15 @@ import cz.muni.fi.a2p06.stolencardatabase.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BasicCarInfoFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class BasicCarInfoStepFragment extends Fragment
+        implements DatePickerDialog.OnDateSetListener, Step, NumberPickerFragment.OnNumberSetListener {
 
     private Calendar mCalendar;
 
     @BindView(R.id.input_date)
     EditText mDate;
+    @BindView(R.id.input_production_year)
+    EditText mYear;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +56,17 @@ public class BasicCarInfoFragment extends Fragment implements DatePickerDialog.O
             }
         });
 
+        mYear.setInputType(InputType.TYPE_NULL);
+        mYear.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_UP == event.getAction()) {
+                    showNumberPicker();
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -64,5 +82,31 @@ public class BasicCarInfoFragment extends Fragment implements DatePickerDialog.O
         datePickerFragment.setListener(this);
         datePickerFragment.setCalendar(mCalendar);
         datePickerFragment.show(getActivity().getFragmentManager(), "DatePicker");
+    }
+
+    @Override
+    public void onNumberSet(int number) {
+        mYear.setText(Integer.toString(number));
+    }
+
+    private void showNumberPicker() {
+        NumberPickerFragment numberPickerFragment = new NumberPickerFragment();
+        numberPickerFragment.setOnNumberSetListener(this);
+        numberPickerFragment.show(getActivity().getFragmentManager(), "NumberPicker");
+    }
+
+    @Override
+    public VerificationError verifyStep() {
+        return null;
+    }
+
+    @Override
+    public void onSelected() {
+
+    }
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+
     }
 }
