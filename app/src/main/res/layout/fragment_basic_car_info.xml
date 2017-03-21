@@ -100,16 +100,20 @@
                 android:inputType="date"/>
         </android.support.design.widget.TextInputLayout>
 
+        <!--TODO change text color on focus-->
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/district_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingEnd="0dp"
             android:paddingLeft="4dp"
+            android:paddingRight="0dp"
             android:paddingStart="4dp"
             android:text="@string/hint_district"
             android:textColor="?android:attr/textColorHint"
             android:textSize="12sp"/>
 
+        <!--TODO add hint first item instead of selecting first item-->
         <Spinner
             android:id="@+id/district_spinner"
             style="@style/Widget.AppCompat.Spinner.Underlined"
@@ -117,7 +121,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:entries="@array/hint_districts"
+            android:paddingEnd="0dp"
             android:paddingLeft="-4dp"
+            android:paddingRight="0dp"
             android:paddingStart="-4dp"
             android:spinnerMode="dialog"/>
 
@@ -128,13 +134,14 @@
             android:background="#1f000000"/>
 
         <TextView
-            android:id="@+id/option_text"
+            android:id="@+id/optional_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Optional"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/optional"
             android:textColor="?android:attr/textColorHint"
-            android:textSize="12sp"/>
+            android:textSize="14sp"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/layout_input_production_year"

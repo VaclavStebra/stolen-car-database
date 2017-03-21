@@ -28,14 +28,14 @@ import cz.muni.fi.a2p06.stolencardatabase.R;
  * A simple {@link Fragment} subclass.
  */
 public class BasicCarInfoStepFragment extends Fragment
-        implements DatePickerDialog.OnDateSetListener, Step, NumberPickerFragment.OnNumberSetListener {
+        implements DatePickerDialog.OnDateSetListener, Step, YearPickerFragment.OnYearSetListener {
 
     private Calendar mCalendar;
 
     @BindView(R.id.input_date)
-    EditText mDate;
+    EditText mStolenDate;
     @BindView(R.id.input_production_year)
-    EditText mYear;
+    EditText mProductionYear;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +45,8 @@ public class BasicCarInfoStepFragment extends Fragment
 
         mCalendar = Calendar.getInstance();
 
-        mDate.setInputType(InputType.TYPE_NULL);
-        mDate.setOnTouchListener(new View.OnTouchListener() {
+        mStolenDate.setInputType(InputType.TYPE_NULL);
+        mStolenDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_UP == event.getAction()) {
@@ -56,12 +56,12 @@ public class BasicCarInfoStepFragment extends Fragment
             }
         });
 
-        mYear.setInputType(InputType.TYPE_NULL);
-        mYear.setOnTouchListener(new View.OnTouchListener() {
+        mProductionYear.setInputType(InputType.TYPE_NULL);
+        mProductionYear.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_UP == event.getAction()) {
-                    showNumberPicker();
+                    showYearPicker();
                 }
                 return false;
             }
@@ -74,7 +74,7 @@ public class BasicCarInfoStepFragment extends Fragment
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         mCalendar.set(year, month, dayOfMonth);
         DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-        mDate.setText(dateFormat.format(mCalendar.getTime()));
+        mStolenDate.setText(dateFormat.format(mCalendar.getTime()));
     }
 
     private void showDatePicker() {
@@ -85,14 +85,14 @@ public class BasicCarInfoStepFragment extends Fragment
     }
 
     @Override
-    public void onNumberSet(int number) {
-        mYear.setText(Integer.toString(number));
+    public void onYearSet(int number) {
+        mProductionYear.setText(String.valueOf(number));
     }
 
-    private void showNumberPicker() {
-        NumberPickerFragment numberPickerFragment = new NumberPickerFragment();
-        numberPickerFragment.setOnNumberSetListener(this);
-        numberPickerFragment.show(getActivity().getFragmentManager(), "NumberPicker");
+    private void showYearPicker() {
+        YearPickerFragment yearPickerFragment = new YearPickerFragment();
+        yearPickerFragment.setOnYearSetListener(this);
+        yearPickerFragment.show(getActivity().getFragmentManager(), "YearPicker");
     }
 
     @Override
