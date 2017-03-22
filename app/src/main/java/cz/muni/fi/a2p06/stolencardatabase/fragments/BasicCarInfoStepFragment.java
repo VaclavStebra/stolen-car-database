@@ -4,6 +4,7 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -13,12 +14,14 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import com.stepstone.stepper.Step;
+import com.stepstone.stepper.BlockingStep;
+import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,12 +31,40 @@ import cz.muni.fi.a2p06.stolencardatabase.R;
  * A simple {@link Fragment} subclass.
  */
 public class BasicCarInfoStepFragment extends Fragment
-        implements DatePickerDialog.OnDateSetListener, Step, YearPickerFragment.OnYearSetListener {
+        implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
 
     private Calendar mCalendar;
 
+    @BindView(R.id.input_manufacturer)
+    EditText mManufacturer;
+    @BindView(R.id.layout_input_manufacturer)
+    TextInputLayout mLayoutManufacturer;
+
+    @BindView(R.id.input_model)
+    EditText mModel;
+    @BindView(R.id.layout_input_model)
+    TextInputLayout mLayoutModel;
+
+    @BindView(R.id.input_regno)
+    EditText mRegno;
+    @BindView(R.id.layout_input_regno)
+    TextInputLayout mLayoutRegno;
+
+    @BindView(R.id.input_vin)
+    EditText mVin;
+    @BindView(R.id.layout_input_vin)
+    TextInputLayout mLayoutVin;
+
+    @BindView(R.id.input_color)
+    EditText mColor;
+    @BindView(R.id.layout_input_color)
+    TextInputLayout mLayoutColor;
+
     @BindView(R.id.input_date)
     EditText mStolenDate;
+    @BindView(R.id.layout_input_date)
+    TextInputLayout mLayoutStolenDate;
+
     @BindView(R.id.input_production_year)
     EditText mProductionYear;
 
@@ -95,9 +126,57 @@ public class BasicCarInfoStepFragment extends Fragment
         yearPickerFragment.show(getActivity().getFragmentManager(), "YearPicker");
     }
 
+    private boolean isValidInput() {
+        if (mManufacturer.getText().length() == 0) {
+            mLayoutManufacturer.setError("This field is required"); //TODO string resource
+            return false;
+        }
+
+        if (mModel.getText().length() == 0) {
+            mLayoutModel.setError("This field is required");
+            return false;
+        }
+
+        String temp = mRegno.getText().toString().replace(" ", "");
+
+        if (temp.isEmpty()) {
+            mLayoutRegno.setError("This field is required");
+            return false;
+        }
+
+        if (temp.length() > 8 || temp.length() < 7) {
+            mLayoutRegno.setError("Invalid input");
+            return false;
+        }
+
+        temp = mVin.getText().toString().trim();
+
+        if (temp.isEmpty()) {
+            mLayoutVin.setError("This field is required");
+            return false;
+        }
+
+        if (!Pattern.matches("[a-zA-Z0-9]{17}", temp)) {
+            mLayoutVin.setError("Invalid input");
+            return false;
+        }
+
+        if (mColor.getText().length() == 0) {
+            mLayoutColor.setError("This field is required");
+            return false;
+        }
+
+        if (mStolenDate.getText().length() == 0) {
+            mLayoutStolenDate.setError("This field is required");
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public VerificationError verifyStep() {
-        return null;
+        return isValidInput() ? null : new VerificationError("Invalid input");
     }
 
     @Override
@@ -107,6 +186,21 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public void onError(@NonNull VerificationError error) {
+
+    }
+
+    @Override
+    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        callback.goToNextStep();
+    }
+
+    @Override
+    public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
+        callback.complete();
+    }
+
+    @Override
+    public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
 
     }
 }
