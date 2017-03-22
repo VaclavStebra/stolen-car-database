@@ -13,6 +13,7 @@
     <string name="hint_production_year">Production Year</string>
     <string name="hint_engine">Engine</string>
     <string name="optional">Optional</string>
+    <string name="select_image_button">Select Image</string>
     <string-array name="hint_districts">
         <item>Benešov (Středočeský kraj)</item>
         <item>Beroun (Středočeský kraj)</item>

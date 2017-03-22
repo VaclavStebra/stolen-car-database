@@ -28,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/car_list_item_image"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/car_placeholder"/>
 
@@ -36,8 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Select Image"/>
-
+                android:text="@string/select_image_button"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

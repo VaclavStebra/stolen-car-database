@@ -68,7 +68,7 @@ public class CarPhotoStepFragment extends Fragment implements Step {
 
             if (selectedImage != null) {
                 try {
-                    // TODO: version for API 19-
+                    // TODO: API 19- -> http://codetheory.in/android-pick-select-image-from-gallery-with-intents/
                     Bitmap image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
                     mCarPhoto.setImageBitmap(image);
                 } catch (IOException e) {
