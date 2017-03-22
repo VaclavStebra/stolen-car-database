@@ -128,46 +128,46 @@ public class BasicCarInfoStepFragment extends Fragment
 
     private boolean isValidInput() {
         if (mManufacturer.getText().length() == 0) {
-            mLayoutManufacturer.setError("This field is required"); //TODO string resource
+            mLayoutManufacturer.setError(getString(R.string.required_field));
             return false;
         }
 
         if (mModel.getText().length() == 0) {
-            mLayoutModel.setError("This field is required");
+            mLayoutModel.setError(getString(R.string.required_field));
             return false;
         }
 
         String temp = mRegno.getText().toString().replace(" ", "");
 
         if (temp.isEmpty()) {
-            mLayoutRegno.setError("This field is required");
+            mLayoutRegno.setError(getString(R.string.required_field));
             return false;
         }
 
         if (temp.length() > 8 || temp.length() < 7) {
-            mLayoutRegno.setError("Invalid input");
+            mLayoutRegno.setError(getString(R.string.invalid_input));
             return false;
         }
 
         temp = mVin.getText().toString().trim();
 
         if (temp.isEmpty()) {
-            mLayoutVin.setError("This field is required");
+            mLayoutVin.setError(getString(R.string.required_field));
             return false;
         }
 
         if (!Pattern.matches("[a-zA-Z0-9]{17}", temp)) {
-            mLayoutVin.setError("Invalid input");
+            mLayoutVin.setError(getString(R.string.invalid_input));
             return false;
         }
 
         if (mColor.getText().length() == 0) {
-            mLayoutColor.setError("This field is required");
+            mLayoutColor.setError(getString(R.string.required_field));
             return false;
         }
 
         if (mStolenDate.getText().length() == 0) {
-            mLayoutStolenDate.setError("This field is required");
+            mLayoutStolenDate.setError(getString(R.string.required_field));
             return false;
         }
 
