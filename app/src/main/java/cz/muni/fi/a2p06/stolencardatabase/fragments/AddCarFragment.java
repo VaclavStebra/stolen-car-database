@@ -9,18 +9,23 @@ import android.view.ViewGroup;
 import com.stepstone.stepper.StepperLayout;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
+import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
 
 public class AddCarFragment extends Fragment {
 
     @BindView(R.id.stepperLayout)
-    private StepperLayout mStepperLayout;
+    StepperLayout mStepperLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_car, container, false);
+        ButterKnife.bind(this, view);
 
+        StepperAdapter adapter = new StepperAdapter(getFragmentManager(), getContext());
+        mStepperLayout.setAdapter(adapter);
         return view;
     }
 
