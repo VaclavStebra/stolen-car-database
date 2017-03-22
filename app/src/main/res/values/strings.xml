@@ -93,4 +93,9 @@
         <item>Znojmo (Jihomoravský kraj)</item>
         <item>Žďár nad Sázavou (Kraj Vysočina)</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="required_field">This field is required</string>
+    <string name="invalid_input">Invalid input</string>
 </resources>
