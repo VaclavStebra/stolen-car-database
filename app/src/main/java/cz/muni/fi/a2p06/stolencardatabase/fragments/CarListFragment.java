@@ -6,11 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,8 +19,6 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
-
-    private static final String TAG = "CarListFragment";
 
     private CarListAdapter mCarListAdapter;
 //    // TODO: Rename parameter arguments, choose names that match
@@ -98,8 +94,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     @Override
     public void onCarListItemClick(View v, int position) {
         Car car = mCarListAdapter.getItem(position);
-        Log.d(TAG, "onCarListItemClick: " + car);
-        Toast.makeText(getActivity(), "Item at position " + position + " is " + car.getManufacturer(), Toast.LENGTH_SHORT).show();
         if (mListener != null) {
             mListener.onItemClick(car);
         }
@@ -120,6 +114,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mCarListAdapter.cleanup();
     }
 
     /**
