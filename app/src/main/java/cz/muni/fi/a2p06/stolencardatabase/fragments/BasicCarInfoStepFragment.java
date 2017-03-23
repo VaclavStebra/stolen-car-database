@@ -176,7 +176,9 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public VerificationError verifyStep() {
-        return isValidInput() ? null : new VerificationError("Invalid input");
+//TODO uncomment this
+//        return isValidInput() ? null : new VerificationError("Invalid input");
+        return null;
     }
 
     @Override
