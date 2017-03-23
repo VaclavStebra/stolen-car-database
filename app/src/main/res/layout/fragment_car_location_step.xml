@@ -1,38 +1,38 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarLocationStepFragment"
-                                             tools:layout_editor_absoluteY="81dp"
-                                             tools:layout_editor_absoluteX="0dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:map="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="16dp"
+              android:gravity="center"
+              tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarLocationStepFragment"
+    >
+
+    <TextView
+        android:id="@+id/place_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/hint_location_text"
+        android:textStyle="italic"/>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        map:cameraZoom="17"
+        map:mapType="normal"
+        map:liteMode="true"
+        map:uiMapToolbar="false"/>
 
     <Button
         android:id="@+id/location_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginBottom="8dp"/>
+        android:layout_gravity="center"
+        android:text="@string/set_location_button"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/location_btn"/>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

@@ -93,9 +93,9 @@
         <item>Znojmo (Jihomoravský kraj)</item>
         <item>Žďár nad Sázavou (Kraj Vysočina)</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="google_maps_key">AIzaSyARCOqR-LsqqnI82VjZ0jI5rMN-xKsaI6w</string>
     <string name="required_field">This field is required</string>
     <string name="invalid_input">Invalid input</string>
+    <string name="hint_location_text">Set the last known location of your car</string>
+    <string name="set_location_button">Set Location</string>
 </resources>
