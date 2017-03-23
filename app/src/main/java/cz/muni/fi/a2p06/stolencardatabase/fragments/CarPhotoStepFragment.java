@@ -2,13 +2,10 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +15,19 @@ import android.widget.ImageView;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
-import java.io.IOException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CarPhotoStepFragment extends Fragment implements Step {
+    // TODO: Check if any permissions are needed
 
-    private final int PICK_IMAGE_REQUEST = 1;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @BindView(R.id.add_photo_btn)
     Button mAddPhotoBtn;
@@ -67,13 +62,7 @@ public class CarPhotoStepFragment extends Fragment implements Step {
             Uri selectedImage = data.getData();
 
             if (selectedImage != null) {
-                try {
-                    // TODO: API 19- -> http://codetheory.in/android-pick-select-image-from-gallery-with-intents/
-                    Bitmap image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
-                    mCarPhoto.setImageBitmap(image);
-                } catch (IOException e) {
-                    Log.e(TAG, "onActivityResult: Image loading error ", e);
-                }
+                mCarPhoto.setImageURI(selectedImage);
             }
         }
     }
