@@ -15,6 +15,12 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
@@ -30,19 +36,17 @@ import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CarLocationStepFragment extends Fragment implements Step {
+public class CarLocationStepFragment extends Fragment implements Step, OnMapReadyCallback {
 
     @BindView(R.id.location_btn)
     Button mSetLocationBtn;
     @BindView(R.id.textView)
     TextView mLocation;
+    @BindView(R.id.mapView)
+    MapView mMapView;
 
+    private GoogleMap mMap;
     private final int PLACE_PICKER_REQUEST = 1;
-
-    public CarLocationStepFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +68,9 @@ public class CarLocationStepFragment extends Fragment implements Step {
             }
         });
 
+//        mMapView.setVisibility(View.GONE);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.getMapAsync(this);
         return view;
     }
 
@@ -74,7 +81,17 @@ public class CarLocationStepFragment extends Fragment implements Step {
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
             Place place = getPlace(getContext(), data);
             mLocation.setText(String.format("Place: %s", place.getName()));
+            LatLng carPosition = place.getLatLng();
+            mMap.addMarker(new MarkerOptions().position(carPosition).title("Car position"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(carPosition));
+            mMapView.onResume();
+            mMapView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
     }
 
     @Override
