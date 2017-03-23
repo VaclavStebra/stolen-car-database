@@ -52,6 +52,9 @@ dependencies {
 
     // Google Places
     compile 'com.google.android.gms:play-services-places:10.2.1'
+
+    // Google Maps
+    compile 'com.google.android.gms:play-services-maps:10.2.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
