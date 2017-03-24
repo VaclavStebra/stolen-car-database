@@ -52,7 +52,17 @@ public class CarLocationStepFragment extends Fragment implements Step, OnMapRead
     private GoogleMap mMap;
     private Marker mMarker;
 
+    private Car mCar;
+
     private final int PLACE_PICKER_REQUEST = 1;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mCar = getArguments().getParcelable(Car.class.getSimpleName());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,7 +95,7 @@ public class CarLocationStepFragment extends Fragment implements Step, OnMapRead
     public static CarLocationStepFragment newInstance(Car car) {
         CarLocationStepFragment fragment = new CarLocationStepFragment();
         Bundle args = new Bundle();
-        args.putParcelable(car.getClass().getSimpleName(), car);
+        args.putParcelable(Car.class.getSimpleName(), car);
         fragment.setArguments(args);
         return fragment;
     }

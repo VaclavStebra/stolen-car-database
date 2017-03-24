@@ -30,11 +30,20 @@ public class CarPhotoStepFragment extends Fragment implements Step {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
+    private Car mCar;
+
     @BindView(R.id.add_photo_btn)
     Button mAddPhotoBtn;
     @BindView(R.id.car_photo_view)
     ImageView mCarPhoto;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mCar = getArguments().getParcelable(Car.class.getSimpleName());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +66,7 @@ public class CarPhotoStepFragment extends Fragment implements Step {
     public static CarPhotoStepFragment newInstance(Car car) {
         CarPhotoStepFragment fragment = new CarPhotoStepFragment();
         Bundle args = new Bundle();
-        args.putParcelable(car.getClass().getSimpleName(), car);
+        args.putParcelable(Car.class.getSimpleName(), car);
         fragment.setArguments(args);
         return fragment;
     }

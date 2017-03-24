@@ -35,6 +35,7 @@ public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
 
     private Calendar mCalendar;
+    private Car mCar;
 
     // TODO textinputedittext
     @BindView(R.id.input_manufacturer)
@@ -69,6 +70,14 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @BindView(R.id.input_production_year)
     EditText mProductionYear;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mCar = getArguments().getParcelable(Car.class.getSimpleName());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -179,7 +188,7 @@ public class BasicCarInfoStepFragment extends Fragment
     public static BasicCarInfoStepFragment newInstance(Car car) {
         BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
         Bundle args = new Bundle();
-        args.putParcelable(car.getClass().getSimpleName(), car);
+        args.putParcelable(Car.class.getSimpleName(), car);
         fragment.setArguments(args);
         return fragment;
     }
