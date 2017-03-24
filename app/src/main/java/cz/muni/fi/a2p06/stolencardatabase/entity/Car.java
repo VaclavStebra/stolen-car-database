@@ -1,5 +1,8 @@
 package cz.muni.fi.a2p06.stolencardatabase.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.PropertyName;
 
@@ -7,7 +10,7 @@ import com.google.firebase.database.PropertyName;
  * Created by Vaclav Stebra
  */
 
-public class Car {
+public class Car implements Parcelable {
 
     private String color;
     private String engine;
@@ -150,4 +153,51 @@ public class Car {
                 ", district='" + district + '\'' +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.color);
+        dest.writeString(this.engine);
+        dest.writeString(this.manufacturer);
+        dest.writeString(this.photoUrl);
+        dest.writeInt(this.productionYear);
+        dest.writeString(this.regno);
+        dest.writeLong(this.stolenDate);
+        dest.writeString(this.model);
+        dest.writeString(this.vin);
+        dest.writeParcelable(this.location, flags);
+        dest.writeString(this.district);
+    }
+
+    protected Car(Parcel in) {
+        this.color = in.readString();
+        this.engine = in.readString();
+        this.manufacturer = in.readString();
+        this.photoUrl = in.readString();
+        this.productionYear = in.readInt();
+        this.regno = in.readString();
+        this.stolenDate = in.readLong();
+        this.model = in.readString();
+        this.vin = in.readString();
+        this.location = in.readParcelable(LatLng.class.getClassLoader());
+        this.district = in.readString();
+    }
+
+    public static final Parcelable.Creator<Car> CREATOR = new Parcelable.Creator<Car>() {
+        @Override
+        public Car createFromParcel(Parcel source) {
+            return new Car(source);
+        }
+
+        @Override
+        public Car[] newArray(int size) {
+            return new Car[size];
+        }
+    };
 }

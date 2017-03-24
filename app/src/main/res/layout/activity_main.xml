@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment"
+        android:name="cz.muni.fi.a2p06.stolencardatabase.fragments.AddCarFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="0dp"
@@ -31,7 +31,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_car_list"
+        tools:layout="@layout/fragment_add_car"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"

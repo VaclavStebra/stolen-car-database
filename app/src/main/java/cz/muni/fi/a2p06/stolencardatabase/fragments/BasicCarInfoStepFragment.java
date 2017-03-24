@@ -35,6 +35,7 @@ public class BasicCarInfoStepFragment extends Fragment
 
     private Calendar mCalendar;
 
+    // TODO textinputedittext
     @BindView(R.id.input_manufacturer)
     EditText mManufacturer;
     @BindView(R.id.layout_input_manufacturer)

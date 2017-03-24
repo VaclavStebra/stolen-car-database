@@ -6,8 +6,8 @@
               android:orientation="vertical"
               android:padding="16dp"
               android:gravity="center"
-              tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarLocationStepFragment"
-    >
+              tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarLocationStepFragment">
+    <!-- TODO Landscape layout_weights-->
 
     <TextView
         android:id="@+id/place_text"
@@ -20,9 +20,10 @@
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
+        android:layout_weight="2"
         map:cameraZoom="17"
         map:mapType="normal"
         map:liteMode="true"

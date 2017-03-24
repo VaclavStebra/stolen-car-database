@@ -3,13 +3,13 @@ package cz.muni.fi.a2p06.stolencardatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
-import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
 
 public class MainActivity extends AppCompatActivity implements CarListFragment.OnCarListFragmentInteractionListener {
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements CarListFragment.O
 //        TextView textView = (TextView) findViewById(R.id.text_view);
 //        //this.testWrite();
 //        this.testRead(textView);
-//        //this.addCar();
+        this.addCar();
     }
 
     //    private void testWrite() {
@@ -69,10 +69,8 @@ public class MainActivity extends AppCompatActivity implements CarListFragment.O
         car.setStolenDate(cal.getTimeInMillis());
         car.setModel("Octavia");
         car.setVin("WVWZZZ12345624");
-        Coordinates coords = new Coordinates();
-        coords.setLat(49.210019);
-        coords.setLon(16.598789);
-        car.setLocation(coords);
+
+        car.setLocation(new LatLng(45.031, 43.015));
 
         // save to database
         cars.setValue(car);
