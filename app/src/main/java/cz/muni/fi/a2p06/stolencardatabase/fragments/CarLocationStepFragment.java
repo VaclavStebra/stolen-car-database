@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.stepstone.stepper.Step;
+import com.stepstone.stepper.BlockingStep;
+import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import butterknife.BindView;
@@ -39,8 +41,10 @@ import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CarLocationStepFragment extends Fragment implements Step, OnMapReadyCallback {
+public class CarLocationStepFragment extends Fragment implements BlockingStep, OnMapReadyCallback {
     // TODO: Check if any permissions are needed
+
+    private static final String TAG = "CarLocationStepFragment";
 
     @BindView(R.id.location_btn)
     Button mSetLocationBtn;
@@ -182,5 +186,24 @@ public class CarLocationStepFragment extends Fragment implements Step, OnMapRead
     @Override
     public void onError(@NonNull VerificationError error) {
 
+    }
+
+    @Override
+    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        if (mCar != null && mMarker != null) {
+            mCar.setLocation(mMarker.getPosition());
+        }
+        callback.goToNextStep();
+    }
+
+    @Override
+    public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
+        Log.d(TAG, "onCompleteClicked: " + mCar);
+        callback.complete();
+    }
+
+    @Override
+    public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
+        callback.goToPrevStep();
     }
 }
