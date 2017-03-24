@@ -12,11 +12,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
+import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 public class AddCarFragment extends Fragment {
 
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
+
+    private Car mCar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,7 +27,9 @@ public class AddCarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_car, container, false);
         ButterKnife.bind(this, view);
 
-        StepperAdapter adapter = new StepperAdapter(getFragmentManager(), getContext());
+        mCar = new Car();
+
+        StepperAdapter adapter = new StepperAdapter(getFragmentManager(), getContext(), mCar);
         mStepperLayout.setAdapter(adapter);
         return view;
     }
