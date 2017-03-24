@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_manufacturer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_model"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_regno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_vin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_production_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_engine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
