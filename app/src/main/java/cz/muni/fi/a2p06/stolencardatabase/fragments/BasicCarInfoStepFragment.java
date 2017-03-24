@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -37,7 +38,6 @@ public class BasicCarInfoStepFragment extends Fragment
     private Calendar mCalendar;
     private Car mCar;
 
-    // TODO textinputedittext
     @BindView(R.id.input_manufacturer)
     EditText mManufacturer;
     @BindView(R.id.layout_input_manufacturer)
@@ -68,8 +68,15 @@ public class BasicCarInfoStepFragment extends Fragment
     @BindView(R.id.layout_input_date)
     TextInputLayout mLayoutStolenDate;
 
+    @BindView(R.id.district_spinner)
+    Spinner mDistrict;
+
     @BindView(R.id.input_production_year)
     EditText mProductionYear;
+    @BindView(R.id.input_engine)
+    EditText mEngine;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -212,6 +219,21 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        if (mCar != null) {
+            mCar.setManufacturer(mManufacturer.getText().toString());
+            mCar.setModel(mModel.getText().toString());
+            mCar.setRegno(mRegno.getText().toString().toUpperCase());
+            mCar.setVin(mVin.getText().toString().toUpperCase());
+            mCar.setColor(mColor.getText().toString());
+            mCar.setStolenDate(mCalendar.getTimeInMillis());
+            mCar.setDistrict(mDistrict.getSelectedItem().toString());
+            if (mProductionYear.getText().length() != 0) {
+                mCar.setProductionYear(Integer.valueOf(mProductionYear.getText().toString()));
+            }
+            if (mEngine.getText().length() != 0) {
+                mCar.setEngine(mEngine.getText().toString());
+            }
+        }
         callback.goToNextStep();
     }
 
@@ -222,6 +244,6 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
-
+        callback.goToPrevStep();
     }
 }
