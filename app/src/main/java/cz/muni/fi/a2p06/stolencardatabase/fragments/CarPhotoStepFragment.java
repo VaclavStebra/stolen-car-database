@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.stepstone.stepper.Step;
+import com.stepstone.stepper.BlockingStep;
+import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import butterknife.BindView;
@@ -25,7 +26,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CarPhotoStepFragment extends Fragment implements Step {
+public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     // TODO: Check if any permissions are needed
 
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -36,6 +37,8 @@ public class CarPhotoStepFragment extends Fragment implements Step {
     Button mAddPhotoBtn;
     @BindView(R.id.car_photo_view)
     ImageView mCarPhoto;
+
+    private Uri mPhotoUri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,10 +79,10 @@ public class CarPhotoStepFragment extends Fragment implements Step {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
+            mPhotoUri = data.getData();
 
-            if (selectedImage != null) {
-                mCarPhoto.setImageURI(selectedImage);
+            if (mPhotoUri != null) {
+                mCarPhoto.setImageURI(mPhotoUri);
             }
         }
     }
@@ -97,5 +100,24 @@ public class CarPhotoStepFragment extends Fragment implements Step {
     @Override
     public void onError(@NonNull VerificationError error) {
 
+    }
+
+    @Override
+    public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        if (mCar != null && mPhotoUri != null) {
+            // Temporarily save the photo uri into the photoUrl parameter of the Car object
+            mCar.setPhotoUrl(mPhotoUri.toString());
+        }
+        callback.goToNextStep();
+    }
+
+    @Override
+    public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
+        callback.complete();
+    }
+
+    @Override
+    public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
+        callback.goToPrevStep();
     }
 }
