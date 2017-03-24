@@ -18,6 +18,7 @@ import com.stepstone.stepper.VerificationError;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
+import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -53,6 +54,13 @@ public class CarPhotoStepFragment extends Fragment implements Step {
         return view;
     }
 
+    public static CarPhotoStepFragment newInstance(Car car) {
+        CarPhotoStepFragment fragment = new CarPhotoStepFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(car.getClass().getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

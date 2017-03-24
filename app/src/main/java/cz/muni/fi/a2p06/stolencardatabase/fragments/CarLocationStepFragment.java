@@ -29,6 +29,7 @@ import com.stepstone.stepper.VerificationError;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
+import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 import static android.app.Activity.RESULT_OK;
 import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
@@ -79,6 +80,14 @@ public class CarLocationStepFragment extends Fragment implements Step, OnMapRead
         mMapView.setClickable(false);
 
         return view;
+    }
+
+    public static CarLocationStepFragment newInstance(Car car) {
+        CarLocationStepFragment fragment = new CarLocationStepFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(car.getClass().getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

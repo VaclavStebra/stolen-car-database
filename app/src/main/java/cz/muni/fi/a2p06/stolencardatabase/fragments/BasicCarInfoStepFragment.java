@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
+import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -173,6 +174,14 @@ public class BasicCarInfoStepFragment extends Fragment
         }
 
         return true;
+    }
+
+    public static BasicCarInfoStepFragment newInstance(Car car) {
+        BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(car.getClass().getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
