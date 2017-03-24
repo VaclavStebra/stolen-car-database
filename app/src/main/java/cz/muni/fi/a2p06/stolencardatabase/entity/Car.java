@@ -1,5 +1,6 @@
 package cz.muni.fi.a2p06.stolencardatabase.entity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.PropertyName;
 
 /**
@@ -17,7 +18,7 @@ public class Car {
     private long stolenDate;
     private String model;
     private String vin;
-    private Coordinates location;
+    private LatLng location;
     private String district;
 
     public Car() {
@@ -118,12 +119,12 @@ public class Car {
     }
 
     @PropertyName("location")
-    public Coordinates getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
     @PropertyName("location")
-    public void setLocation(Coordinates location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
