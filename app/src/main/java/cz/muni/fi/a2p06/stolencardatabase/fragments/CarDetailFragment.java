@@ -27,8 +27,6 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
  * create an instance of this fragment.
  */
 public class CarDetailFragment extends Fragment {
-    private static final String CAR_KEY = "CAR_KEY";
-
     private Car mCar;
 
     @BindView(R.id.car_detail_photo)
@@ -63,7 +61,7 @@ public class CarDetailFragment extends Fragment {
     public static CarDetailFragment newInstance(Car car) {
         CarDetailFragment fragment = new CarDetailFragment();
         Bundle args = new Bundle();
-        args.putParcelable(CAR_KEY, car);
+        args.putParcelable(Car.class.getSimpleName(), car);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,7 +70,7 @@ public class CarDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCar = getArguments().getParcelable(CAR_KEY);
+            mCar = getArguments().getParcelable(Car.class.getSimpleName());
         }
     }
 
