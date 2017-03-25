@@ -3,4 +3,15 @@
     <string name="car_list_item_image">Car photo</string>
     <string name="spz">SPZ:</string>
     <string name="vin">VIN:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="car_thumbnail">Car thumbnail</string>
+    <string name="color">Color</string>
+    <string name="spz_text">SPZ</string>
+    <string name="vin_text">VIN</string>
+    <string name="stolen_date">Stolen Date</string>
+    <string name="production_year">Production Year</string>
+    <string name="engine">Engine</string>
 </resources>
