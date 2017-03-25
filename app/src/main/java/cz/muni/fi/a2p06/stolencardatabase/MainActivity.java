@@ -1,7 +1,8 @@
 package cz.muni.fi.a2p06.stolencardatabase;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
 
@@ -13,6 +14,7 @@ import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
 
 public class MainActivity extends FragmentActivity implements CarListFragment.OnCarListFragmentInteractionListener {
 
+    @Nullable
     @BindView(R.id.fragment_container)
     FrameLayout mFragmentContainer;
 
@@ -34,11 +36,27 @@ public class MainActivity extends FragmentActivity implements CarListFragment.On
 
     @Override
     public void onItemClick(Car car) {
+        if (mFragmentContainer != null) {
+            manageCarClickOnMobile(car);
+        } else {
+            manageCarClickOnTablet(car);
+        }
+    }
+
+    private void manageCarClickOnMobile(Car car) {
         CarDetailFragment carDetailFragment = CarDetailFragment.newInstance(car);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, carDetailFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void manageCarClickOnTablet(Car car) {
+        CarDetailFragment carFragment = (CarDetailFragment)
+                getSupportFragmentManager().findFragmentById(R.id.car_detail_frag);
+        if (carFragment != null) {
+            carFragment.updateCarView(car);
+        }
     }
 
     @Override

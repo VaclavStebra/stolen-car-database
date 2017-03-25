@@ -86,6 +86,11 @@ public class CarDetailFragment extends Fragment {
         return view;
     }
 
+    public void updateCarView(Car car) {
+        mCar = car;
+        populateCarDetails();
+    }
+
     private void populateCarDetails() {
         populateCarImage();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
