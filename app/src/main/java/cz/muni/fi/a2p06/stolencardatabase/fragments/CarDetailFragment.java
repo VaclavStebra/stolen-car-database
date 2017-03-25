@@ -1,6 +1,7 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,20 @@ public class CarDetailFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            Car car = savedInstanceState.getParcelable(Car.class.getSimpleName());
+            updateCarView(car);
+        }
+    }
+
+    public void updateCarView(Car car) {
+        mCar = car;
+        populateCarDetails();
+    }
+
     private void populateCarDetails() {
         populateCarImage();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
@@ -93,7 +108,7 @@ public class CarDetailFragment extends Fragment {
         mStolenDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date(mCar.getStolenDate())));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());
-        mProductionYear.setText(mCar.getProductionYear());
+        mProductionYear.setText(Integer.toString(mCar.getProductionYear()));
         mEngine.setText(mCar.getEngine());
     }
 
@@ -106,5 +121,15 @@ public class CarDetailFragment extends Fragment {
                 .placeholder(R.drawable.car_placeholder)
                 .centerCrop()
                 .into(mPhoto);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelable(Car.class.getSimpleName(), mCar);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public Car getCar() {
+        return mCar;
     }
 }
