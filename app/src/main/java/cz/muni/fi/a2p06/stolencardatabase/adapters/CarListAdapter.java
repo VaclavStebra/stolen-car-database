@@ -57,10 +57,14 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
                 .placeholder(R.drawable.car_placeholder)
                 .centerCrop()
                 .into(viewHolder.mCarImage);
+    }
 
-        if (position == 0 && ! isDataLoaded) {
+    @Override
+    protected void onDataChanged() {
+        super.onDataChanged();
+        if ( ! isDataLoaded) {
             isDataLoaded = true;
-            ((CarListFragment) mFragment).onDataLoaded(model);
+            ((CarListFragment) mFragment).onDataLoaded(getItem(0));
         }
     }
 
