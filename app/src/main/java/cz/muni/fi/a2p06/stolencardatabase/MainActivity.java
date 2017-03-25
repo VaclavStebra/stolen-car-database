@@ -18,8 +18,6 @@ public class MainActivity extends FragmentActivity implements CarListFragment.On
     @BindView(R.id.fragment_container)
     FrameLayout mFragmentContainer;
 
-    private Car mCar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +41,6 @@ public class MainActivity extends FragmentActivity implements CarListFragment.On
         } else {
             manageCarClickOnTablet(car);
         }
-        mCar = car;
     }
 
     private void manageCarClickOnMobile(Car car) {
@@ -65,22 +62,11 @@ public class MainActivity extends FragmentActivity implements CarListFragment.On
 
     @Override
     public void onDataLoaded(Car car) {
-        if (mCar == null) {
+        CarDetailFragment carFragment = (CarDetailFragment)
+                getSupportFragmentManager().findFragmentById(R.id.car_detail_frag);
+        if (carFragment != null && carFragment.getCar() == null) {
             updateCarDetailFragment(car);
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelable(Car.class.getSimpleName(), mCar);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mCar = savedInstanceState.getParcelable(Car.class.getSimpleName());
-        updateCarDetailFragment(mCar);
     }
 
     private void updateCarDetailFragment(Car car) {
