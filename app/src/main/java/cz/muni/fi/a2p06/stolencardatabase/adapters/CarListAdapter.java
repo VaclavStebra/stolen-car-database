@@ -28,6 +28,7 @@ import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
 public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.CarItemHolder> {
 
     private final Fragment mFragment;
+    private boolean isDataLoaded = false;
 
     public CarListAdapter(Class<Car> modelClass, int modelLayout, Class<CarItemHolder> viewHolderClass, Query ref, Fragment fragment) {
         super(modelClass, modelLayout, viewHolderClass, ref);
@@ -56,6 +57,11 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
                 .placeholder(R.drawable.car_placeholder)
                 .centerCrop()
                 .into(viewHolder.mCarImage);
+
+        if (position == 0 && ! isDataLoaded) {
+            isDataLoaded = true;
+            ((CarListFragment) mFragment).onDataLoaded(model);
+        }
     }
 
     @Override

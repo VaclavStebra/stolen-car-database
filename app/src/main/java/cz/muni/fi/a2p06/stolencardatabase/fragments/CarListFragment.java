@@ -86,6 +86,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         mListener = null;
     }
 
+    public void onDataLoaded(Car car) {
+        if (mListener != null) {
+            mListener.onDataLoaded(car);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -99,5 +105,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     public interface OnCarListFragmentInteractionListener {
         void onItemClick(Car car);
         void onAddCarClick();
+        void onDataLoaded(Car car);
     }
 }

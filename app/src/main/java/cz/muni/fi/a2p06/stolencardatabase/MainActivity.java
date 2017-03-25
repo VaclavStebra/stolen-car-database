@@ -63,4 +63,15 @@ public class MainActivity extends FragmentActivity implements CarListFragment.On
     public void onAddCarClick() {
         // TODO: launch AddCar Fragment
     }
+
+    @Override
+    public void onDataLoaded(Car car) {
+        if (mFragmentContainer == null) {
+            CarDetailFragment carFragment = (CarDetailFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.car_detail_frag);
+            if (carFragment != null) {
+                carFragment.updateCarView(car);
+            }
+        }
+    }
 }
