@@ -25,47 +25,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     private static final String TAG = "CarListFragment";
 
     private CarListAdapter mCarListAdapter;
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
 
     private OnCarListFragmentInteractionListener mListener;
 
-//    public CarListFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment CarListFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static CarListFragment newInstance(String param1, String param2) {
-//        CarListFragment fragment = new CarListFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
+    public CarListFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,7 +64,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     public void onCarListItemClick(View v, int position) {
         Car car = mCarListAdapter.getItem(position);
         Log.d(TAG, "onCarListItemClick: " + car);
-        Toast.makeText(getActivity(), "Item at position " + position + " is " + car.getManufacturer(), Toast.LENGTH_SHORT).show();
         if (mListener != null) {
             mListener.onItemClick(car);
         }
@@ -134,7 +98,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
      */
     public interface OnCarListFragmentInteractionListener {
         void onItemClick(Car car);
-
         void onAddCarClick();
     }
 }

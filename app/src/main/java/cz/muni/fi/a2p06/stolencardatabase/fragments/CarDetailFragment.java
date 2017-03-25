@@ -93,7 +93,7 @@ public class CarDetailFragment extends Fragment {
         mStolenDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date(mCar.getStolenDate())));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());
-        mProductionYear.setText(mCar.getProductionYear());
+        mProductionYear.setText(Integer.toString(mCar.getProductionYear()));
         mEngine.setText(mCar.getEngine());
     }
 
