@@ -13,7 +13,6 @@
     <string name="hint_production_year">Production Year</string>
     <string name="hint_engine">Engine</string>
     <string name="optional">Optional</string>
-    <string name="select_image_button">Select Image</string>
     <string-array name="hint_districts">
         <item>Benešov (Středočeský kraj)</item>
         <item>Beroun (Středočeský kraj)</item>
@@ -96,6 +95,8 @@
     <string name="google_maps_key">AIzaSyARCOqR-LsqqnI82VjZ0jI5rMN-xKsaI6w</string>
     <string name="required_field">This field is required</string>
     <string name="invalid_input">Invalid input</string>
-    <string name="hint_location_text">Set the last known location of your car</string>
+    <string name="hint_location_text">Set the last known location of your car (optional)</string>
     <string name="set_location_button">Set Location</string>
+    <string name="hint_car_photo_text">Select a photo of your car (optional)</string>
+    <string name="select_image_button">Select Photo</string>
 </resources>
