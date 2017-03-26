@@ -3,7 +3,6 @@ package cz.muni.fi.a2p06.stolencardatabase.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.PropertyName;
 
 /**
@@ -21,7 +20,7 @@ public class Car implements Parcelable {
     private long stolenDate;
     private String model;
     private String vin;
-    private LatLng location;
+    private Coordinates location;
     private String district;
 
     public Car() {
@@ -122,12 +121,12 @@ public class Car implements Parcelable {
     }
 
     @PropertyName("location")
-    public LatLng getLocation() {
+    public Coordinates getLocation() {
         return location;
     }
 
     @PropertyName("location")
-    public void setLocation(LatLng location) {
+    public void setLocation(Coordinates location) {
         this.location = location;
     }
 
@@ -185,7 +184,7 @@ public class Car implements Parcelable {
         this.stolenDate = in.readLong();
         this.model = in.readString();
         this.vin = in.readString();
-        this.location = in.readParcelable(LatLng.class.getClassLoader());
+        this.location = in.readParcelable(Coordinates.class.getClassLoader());
         this.district = in.readString();
     }
 
