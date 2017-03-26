@@ -16,10 +16,12 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 public class AddCarFragment extends Fragment {
 
+    private static final String CURRENT_STEP_POSITION_KEY = "position";
+
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
 
-    private Car mCar;
+    private Car mNewCar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,87 +29,23 @@ public class AddCarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_car, container, false);
         ButterKnife.bind(this, view);
 
-        mCar = new Car();
+        StepperAdapter stepperAdapter = new StepperAdapter(getFragmentManager(), getContext(), mNewCar);
 
-        StepperAdapter adapter = new StepperAdapter(getFragmentManager(), getContext(), mCar);
-        mStepperLayout.setAdapter(adapter);
+        if (savedInstanceState != null) {
+            mNewCar = savedInstanceState.getParcelable(Car.class.getSimpleName());
+            mStepperLayout.setAdapter(stepperAdapter, savedInstanceState.getInt(CURRENT_STEP_POSITION_KEY));
+        } else {
+            mNewCar = new Car();
+            mStepperLayout.setAdapter(stepperAdapter);
+        }
+
         return view;
     }
 
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    private String mParam1;
-//    private String mParam2;
-//
-//    private OnFragmentInteractionListener mListener;
-//
-//    public AddCarFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment AddCarFragment.
-//     */
-//    public static AddCarFragment newInstance(String param1, String param2) {
-//        AddCarFragment fragment = new AddCarFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
-
-
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        void onFragmentInteraction(Uri uri);
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(Car.class.getSimpleName(), mNewCar);
+        outState.putInt(CURRENT_STEP_POSITION_KEY, mStepperLayout.getCurrentStepPosition());
+        super.onSaveInstanceState(outState);
+    }
 }
