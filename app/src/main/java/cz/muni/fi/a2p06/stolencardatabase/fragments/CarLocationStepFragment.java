@@ -22,7 +22,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -50,16 +49,17 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     @BindView(R.id.location_btn)
     Button mSetLocationBtn;
     @BindView(R.id.place_text)
-    TextView mPlaceTxt;
+    TextView mPlaceText;
     @BindView(R.id.mapView)
     MapView mMapView;
 
     private GoogleMap mMap;
-    private Marker mMarker;
+    private LatLng mLocation;
 
     private Car mCar;
 
     private final int PLACE_PICKER_REQUEST = 1;
+    private static final String PLACE_TEXT = "place_text";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,8 +89,17 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
             }
         });
 
-        mMapView.setVisibility(View.GONE);
         mMapView.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mLocation = savedInstanceState.getParcelable(LatLng.class.getSimpleName());
+            mMapView.setVisibility(View.VISIBLE);
+            mPlaceText.setText(savedInstanceState.getString(PLACE_TEXT));
+            mPlaceText.setTypeface(Typeface.DEFAULT);
+        } else {
+            mMapView.setVisibility(View.GONE);
+        }
+
         mMapView.getMapAsync(this);
         mMapView.setClickable(false);
 
@@ -112,16 +121,11 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
             final Place place = getPlace(getContext(), data);
 
-            mPlaceTxt.setText(String.format("Location: %s", place.getName()));
-            mPlaceTxt.setTypeface(Typeface.DEFAULT);
+            mPlaceText.setText(String.format("Location: %s", place.getName()));
+            mPlaceText.setTypeface(Typeface.DEFAULT);
 
-            LatLng carPosition = place.getLatLng();
-            if (mMarker == null) {
-                mMarker = mMap.addMarker(new MarkerOptions().position(carPosition).title("Car position"));
-            } else {
-                mMarker.setPosition(carPosition);
-            }
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(carPosition));
+            mLocation = place.getLatLng();
+            showMarker(mLocation);
 
             mMapView.setVisibility(View.VISIBLE);
         }
@@ -147,8 +151,12 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        if (mLocation != null) {
+            outState.putParcelable(LatLng.class.getSimpleName(), mLocation);
+            outState.putString(PLACE_TEXT, mPlaceText.getText().toString());
+        }
         mMapView.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -172,6 +180,15 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        showMarker(mLocation);
+    }
+
+    private void showMarker(LatLng position) {
+        if (mMap != null && position != null) {
+            mMap.clear();
+            mMap.addMarker(new MarkerOptions().position(position).title("Last known location of the car"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+        }
     }
 
     @Override
@@ -191,10 +208,10 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-        if (mCar != null && mMarker != null) {
+        if (mCar != null && mLocation != null) {
             Coordinates coordinates = new Coordinates();
-            coordinates.setLat(mMarker.getPosition().latitude);
-            coordinates.setLon(mMarker.getPosition().longitude);
+            coordinates.setLat(mLocation.latitude);
+            coordinates.setLon(mLocation.longitude);
             mCar.setLocation(coordinates);
         }
         callback.goToNextStep();
