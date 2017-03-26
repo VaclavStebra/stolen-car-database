@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 
 import static android.app.Activity.RESULT_OK;
 import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
@@ -191,7 +192,10 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         if (mCar != null && mMarker != null) {
-            mCar.setLocation(mMarker.getPosition());
+            Coordinates coordinates = new Coordinates();
+            coordinates.setLat(mMarker.getPosition().latitude);
+            coordinates.setLon(mMarker.getPosition().longitude);
+            mCar.setLocation(coordinates);
         }
         callback.goToNextStep();
     }
