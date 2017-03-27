@@ -31,7 +31,6 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     // TODO: Check if any permissions are needed
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final String CAR_PHOTO = "car_photo";
 
     private Car mCar;
     private Uri mPhotoUri;
@@ -57,12 +56,8 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         View view = inflater.inflate(R.layout.fragment_car_photo_step, container, false);
         ButterKnife.bind(this, view);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(CAR_PHOTO)) {
-            mPhotoUri = savedInstanceState.getParcelable(CAR_PHOTO);
-            showPhoto();
-        } else {
-            mCarPhoto.setVisibility(View.GONE);
-        }
+        mCarPhoto.setVisibility(View.GONE);
+        loadData();
 
         mAddPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,8 +96,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mPhotoUri != null)
-            outState.putParcelable(CAR_PHOTO, mPhotoUri);
+        saveData();
         super.onSaveInstanceState(outState);
     }
 
@@ -112,6 +106,23 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         args.putParcelable(Car.class.getSimpleName(), car);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private void saveData() {
+        if (mCar != null && mPhotoUri != null) {
+            // Temporarily save the photo uri into the photoUrl parameter of the Car object
+            mCar.setPhotoUrl(mPhotoUri.toString());
+        }
+    }
+
+    private void loadData() {
+        if (mCar != null) {
+            String uri = mCar.getPhotoUrl();
+            if (uri != null) {
+                mPhotoUri = Uri.parse(uri);
+                showPhoto();
+            }
+        }
     }
 
     @Override
@@ -131,10 +142,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-        if (mCar != null && mPhotoUri != null) {
-            // Temporarily save the photo uri into the photoUrl parameter of the Car object
-            mCar.setPhotoUrl(mPhotoUri.toString());
-        }
+        saveData();
         callback.goToNextStep();
     }
 
@@ -145,6 +153,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
 
     @Override
     public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
+        saveData();
         callback.goToPrevStep();
     }
 }

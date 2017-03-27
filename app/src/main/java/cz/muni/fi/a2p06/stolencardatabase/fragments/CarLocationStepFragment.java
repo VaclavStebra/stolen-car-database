@@ -119,9 +119,6 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        if (mLocation != null) {
-//            showMap();
-        }
     }
 
     @Override
