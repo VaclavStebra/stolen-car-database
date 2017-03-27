@@ -3,10 +3,10 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +25,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +45,14 @@ import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
 public class CarLocationStepFragment extends Fragment implements BlockingStep, OnMapReadyCallback {
     // TODO: Check if any permissions are needed
 
-    private static final String TAG = "CarLocationStepFragment";
+    // TODO REFACTOR
+
+    private GoogleMap mMap;
+    private LatLng mLocation;
+
+    private Car mCar;
+
+    private static final int PLACE_PICKER_REQUEST = 1;
 
     @BindView(R.id.location_btn)
     Button mSetLocationBtn;
@@ -52,14 +60,6 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     TextView mPlaceText;
     @BindView(R.id.mapView)
     MapView mMapView;
-
-    private GoogleMap mMap;
-    private LatLng mLocation;
-
-    private Car mCar;
-
-    private final int PLACE_PICKER_REQUEST = 1;
-    private static final String PLACE_TEXT = "place_text";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +74,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_car_location_step, container, false);
         ButterKnife.bind(this, view);
+        mMapView.onCreate(savedInstanceState);
 
         mSetLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,29 +90,22 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
             }
         });
 
-        mMapView.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(LatLng.class.getSimpleName())) {
             mLocation = savedInstanceState.getParcelable(LatLng.class.getSimpleName());
-            mMapView.setVisibility(View.VISIBLE);
-            mPlaceText.setText(savedInstanceState.getString(PLACE_TEXT));
-            mPlaceText.setTypeface(Typeface.DEFAULT);
         } else {
             mMapView.setVisibility(View.GONE);
+
+            Coordinates cord = mCar.getLocation();
+            if (cord != null) {
+                mLocation = new LatLng(cord.getLat(), cord.getLon());
+            }
         }
 
+        // TODO fix when mMap is not null
         mMapView.getMapAsync(this);
         mMapView.setClickable(false);
 
         return view;
-    }
-
-    public static CarLocationStepFragment newInstance(Car car) {
-        CarLocationStepFragment fragment = new CarLocationStepFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(Car.class.getSimpleName(), car);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -119,15 +113,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
-            final Place place = getPlace(getContext(), data);
-
-            mPlaceText.setText(String.format("Location: %s", place.getName()));
-            mPlaceText.setTypeface(Typeface.DEFAULT);
-
-            mLocation = place.getLatLng();
-            showMarker(mLocation);
-
-            mMapView.setVisibility(View.VISIBLE);
+            mLocation = getPlace(getContext(), data).getLatLng();
         }
     }
 
@@ -141,6 +127,9 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        if (mLocation != null) {
+            showMap();
+        }
     }
 
     @Override
@@ -153,9 +142,10 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     public void onSaveInstanceState(Bundle outState) {
         if (mLocation != null) {
             outState.putParcelable(LatLng.class.getSimpleName(), mLocation);
-            outState.putString(PLACE_TEXT, mPlaceText.getText().toString());
         }
-        mMapView.onSaveInstanceState(outState);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -174,20 +164,60 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
+    }
+
+    public static CarLocationStepFragment newInstance(Car car) {
+        CarLocationStepFragment fragment = new CarLocationStepFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Car.class.getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        showMarker(mLocation);
+        showMap();
     }
 
-    private void showMarker(LatLng position) {
-        if (mMap != null && position != null) {
+    private void showMap() {
+        if (mMap != null && mLocation != null) {
             mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(position).title("Last known location of the car"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+            mMap.addMarker(new MarkerOptions().position(mLocation));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(mLocation));
+
+            mPlaceText.setText(String.format("Location: %s", formatLatLng(mLocation)));
+            mPlaceText.setTypeface(Typeface.DEFAULT);
+
+            mMapView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private String formatLatLng(LatLng location) {
+        if (location == null) {
+            return "";
+        }
+
+        String[] lat = Location.convert(mLocation.latitude, Location.FORMAT_SECONDS).replace(',', '.').split(":");
+        String latitude = String.format(Locale.getDefault(), "%s°%s'%.1f\"%c", lat[0], lat[1], Float.valueOf(lat[2]),
+                (location.latitude > 0 ? 'N' : 'S'));
+
+        String[] lon = Location.convert(mLocation.longitude, Location.FORMAT_SECONDS).replace(',', '.').split(":");
+        String longitude = String.format(Locale.getDefault(), "%s°%s'%.1f\"%c", lon[0], lon[1], Float.valueOf(lon[2]),
+                (location.longitude > 0 ? 'E' : 'W'));
+
+        return latitude + " " + longitude;
+    }
+
+    private void saveData() {
+        if (mCar != null && mLocation != null) {
+            Coordinates coordinates = new Coordinates();
+            coordinates.setLat(mLocation.latitude);
+            coordinates.setLon(mLocation.longitude);
+            mCar.setLocation(coordinates);
         }
     }
 
@@ -208,23 +238,18 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
-        if (mCar != null && mLocation != null) {
-            Coordinates coordinates = new Coordinates();
-            coordinates.setLat(mLocation.latitude);
-            coordinates.setLon(mLocation.longitude);
-            mCar.setLocation(coordinates);
-        }
+        saveData();
         callback.goToNextStep();
     }
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-        Log.d(TAG, "onCompleteClicked: " + mCar);
         callback.complete();
     }
 
     @Override
     public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
+        saveData();
         callback.goToPrevStep();
     }
 }

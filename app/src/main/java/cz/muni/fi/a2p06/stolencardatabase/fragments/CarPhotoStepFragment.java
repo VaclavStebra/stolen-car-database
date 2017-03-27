@@ -34,6 +34,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     private static final String CAR_PHOTO = "car_photo";
 
     private Car mCar;
+    private Uri mPhotoUri;
 
     @BindView(R.id.add_photo_btn)
     Button mAddPhotoBtn;
@@ -41,8 +42,6 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     ImageView mCarPhoto;
     @BindView(R.id.photo_text)
     TextView mPhotoText;
-
-    private Uri mPhotoUri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         View view = inflater.inflate(R.layout.fragment_car_photo_step, container, false);
         ButterKnife.bind(this, view);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(CAR_PHOTO)) {
             mPhotoUri = savedInstanceState.getParcelable(CAR_PHOTO);
             showPhoto();
         } else {
