@@ -17,6 +17,11 @@ public class Coordinates implements Parcelable {
     public Coordinates() {
     }
 
+    public Coordinates(double lat, double lon) {
+        this.lat = lat;
+        this.lon = lon;
+    }
+
     @PropertyName("lat")
     public double getLat() {
         return lat;
