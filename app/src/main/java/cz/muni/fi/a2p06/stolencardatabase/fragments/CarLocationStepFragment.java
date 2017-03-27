@@ -90,18 +90,9 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
             }
         });
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(LatLng.class.getSimpleName())) {
-            mLocation = savedInstanceState.getParcelable(LatLng.class.getSimpleName());
-        } else {
-            mMapView.setVisibility(View.GONE);
+        loadData();
 
-            Coordinates cord = mCar.getLocation();
-            if (cord != null) {
-                mLocation = new LatLng(cord.getLat(), cord.getLon());
-            }
-        }
-
-        // TODO fix when mMap is not null
+        mMapView.setVisibility(View.GONE);
         mMapView.getMapAsync(this);
         mMapView.setClickable(false);
 
@@ -114,6 +105,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
             mLocation = getPlace(getContext(), data).getLatLng();
+            showMap();
         }
     }
 
@@ -128,7 +120,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
         super.onResume();
         mMapView.onResume();
         if (mLocation != null) {
-            showMap();
+//            showMap();
         }
     }
 
@@ -140,9 +132,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mLocation != null) {
-            outState.putParcelable(LatLng.class.getSimpleName(), mLocation);
-        }
+        saveData();
         if (mMapView != null) {
             mMapView.onSaveInstanceState(outState);
         }
@@ -214,10 +204,16 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
     private void saveData() {
         if (mCar != null && mLocation != null) {
-            Coordinates coordinates = new Coordinates();
-            coordinates.setLat(mLocation.latitude);
-            coordinates.setLon(mLocation.longitude);
-            mCar.setLocation(coordinates);
+            mCar.setLocation(new Coordinates(mLocation.latitude, mLocation.longitude));
+        }
+    }
+
+    private void loadData() {
+        if (mCar != null) {
+            Coordinates cord = mCar.getLocation();
+            if (cord != null) {
+                mLocation = new LatLng(cord.getLat(), cord.getLon());
+            }
         }
     }
 
