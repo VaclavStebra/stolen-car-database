@@ -237,6 +237,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
+        saveData(); // TODO remove
         callback.complete();
     }
 
