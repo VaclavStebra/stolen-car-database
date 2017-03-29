@@ -75,6 +75,7 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
                 break;
             case 3:
                 builder.setTitle("Summary");
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported position " + position);
         }
