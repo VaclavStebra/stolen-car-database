@@ -42,7 +42,6 @@ public class Coordinates implements Parcelable {
         this.lon = lon;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -54,15 +53,15 @@ public class Coordinates implements Parcelable {
         dest.writeDouble(this.lon);
     }
 
-    protected Coordinates(Parcel in) {
-        this.lat = in.readDouble();
-        this.lon = in.readDouble();
+    private Coordinates(Parcel in) {
+        lat = in.readDouble();
+        lon = in.readDouble();
     }
 
-    public static final Parcelable.Creator<Coordinates> CREATOR = new Parcelable.Creator<Coordinates>() {
+    public static final Creator<Coordinates> CREATOR = new Creator<Coordinates>() {
         @Override
-        public Coordinates createFromParcel(Parcel source) {
-            return new Coordinates(source);
+        public Coordinates createFromParcel(Parcel in) {
+            return new Coordinates(in);
         }
 
         @Override

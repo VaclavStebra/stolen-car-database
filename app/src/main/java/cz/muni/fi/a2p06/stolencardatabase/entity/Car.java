@@ -153,7 +153,6 @@ public class Car implements Parcelable {
                 '}';
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -174,7 +173,7 @@ public class Car implements Parcelable {
         dest.writeString(this.district);
     }
 
-    protected Car(Parcel in) {
+    private Car(Parcel in) {
         this.color = in.readString();
         this.engine = in.readString();
         this.manufacturer = in.readString();
@@ -188,10 +187,10 @@ public class Car implements Parcelable {
         this.district = in.readString();
     }
 
-    public static final Parcelable.Creator<Car> CREATOR = new Parcelable.Creator<Car>() {
+    public static final Creator<Car> CREATOR = new Creator<Car>() {
         @Override
-        public Car createFromParcel(Parcel source) {
-            return new Car(source);
+        public Car createFromParcel(Parcel in) {
+            return new Car(in);
         }
 
         @Override
