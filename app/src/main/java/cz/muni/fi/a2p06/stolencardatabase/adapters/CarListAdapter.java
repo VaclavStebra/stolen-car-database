@@ -49,6 +49,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
         DateFormat format = SimpleDateFormat.getDateInstance();
         viewHolder.mStolenDate.setText(format.format(calendar.getTime()));
 
+        // TODO throws IllegalArgumentException if photoUrl is null
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(model.getPhotoUrl());
 
         Glide.with(mFragment)

@@ -37,8 +37,6 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 import static android.app.Activity.RESULT_OK;
 import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
 
-// api key AIzaSyCaEdJBh3oi65FiwFhDvqmNixRjvs9T01I
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -237,7 +235,6 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-        saveData(); // TODO remove
         callback.complete();
     }
 
