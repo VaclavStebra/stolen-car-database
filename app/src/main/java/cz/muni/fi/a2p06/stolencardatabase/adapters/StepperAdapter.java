@@ -11,6 +11,7 @@ import com.stepstone.stepper.viewmodel.StepViewModel;
 
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.BasicCarInfoStepFragment;
+import cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarLocationStepFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarPhotoStepFragment;
 
@@ -30,7 +31,7 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -46,6 +47,9 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
                 break;
             case 2:
                 step = CarLocationStepFragment.newInstance(mCar);
+                break;
+            case 3:
+                step = CarDetailFragment.newInstance(mCar);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported position " + position);
@@ -69,6 +73,8 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
             case 2:
                 builder.setTitle("Location");
                 break;
+            case 3:
+                builder.setTitle("Summary");
             default:
                 throw new IllegalArgumentException("Unsupported position " + position);
         }
