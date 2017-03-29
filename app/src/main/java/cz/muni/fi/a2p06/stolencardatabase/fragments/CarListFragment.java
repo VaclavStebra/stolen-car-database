@@ -59,7 +59,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     @Override
     public void onCarListItemClick(View v, int position) {
         Car car = mCarListAdapter.getItem(position);
-        Log.d(TAG, "onCarListItemClick: " + car);
         if (mListener != null) {
             mListener.onItemClick(car);
         }

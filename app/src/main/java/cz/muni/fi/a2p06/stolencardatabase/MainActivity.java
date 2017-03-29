@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.fragments.AddCarFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
 
@@ -57,7 +58,23 @@ public class MainActivity extends FragmentActivity implements CarListFragment.On
 
     @Override
     public void onAddCarClick() {
-        // TODO: launch AddCar Fragment
+        if (mFragmentContainer != null) {
+            manageAddCarClickOnMobile();
+        } else {
+            manageAddCarClickOnTablet();
+        }
+    }
+
+    private void manageAddCarClickOnMobile() {
+        AddCarFragment addCarFragment = new AddCarFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, addCarFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void manageAddCarClickOnTablet() {
+        // TODO swap fragments
     }
 
     @Override
