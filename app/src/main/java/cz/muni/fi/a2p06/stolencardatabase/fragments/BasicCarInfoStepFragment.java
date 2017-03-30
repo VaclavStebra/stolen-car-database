@@ -21,8 +21,8 @@ import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
@@ -36,6 +36,7 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
  */
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
+    private static final String TAG = "BasicCarInfoStepFragmen";
 
     private Calendar mCalendar;
     private Car mCar;
@@ -95,7 +96,12 @@ public class BasicCarInfoStepFragment extends Fragment
         ButterKnife.bind(this, view);
 
         mCalendar = Calendar.getInstance();
+        prepareUi();
 
+        return view;
+    }
+
+    private void prepareUi() {
         mStolenDate.setInputType(InputType.TYPE_NULL);
         mStolenDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -121,14 +127,33 @@ public class BasicCarInfoStepFragment extends Fragment
         mManufacturer.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.car_manufacturers)));
 
-        return view;
+
+// TODO date and production year are filled even though mCar is empty
+//        fillFields();
+    }
+
+    private void fillFields() {
+        if (mCar != null) {
+            mManufacturer.setText(mCar.getManufacturer());
+            mModel.setText(mCar.getModel());
+            mRegno.setText(mCar.getRegno());
+            mVin.setText(mCar.getVin());
+            mColor.setText(mCar.getColor());
+            mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
+            mEngine.setText(mCar.getEngine());
+
+            mCalendar.setTimeInMillis(mCar.getStolenDate());
+            mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
+
+            int index = Arrays.asList(getResources().getStringArray(R.array.hint_districts)).indexOf(mCar.getDistrict());
+            mDistrict.setSelection(index == -1 ? 0 : index);
+        }
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         mCalendar.set(year, month, dayOfMonth);
-        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-        mStolenDate.setText(dateFormat.format(mCalendar.getTime()));
+        mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
     }
 
     private void showDatePicker() {
