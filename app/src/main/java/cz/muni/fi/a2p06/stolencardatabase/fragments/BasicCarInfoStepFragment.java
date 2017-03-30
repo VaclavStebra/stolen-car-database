@@ -15,14 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
@@ -36,7 +34,6 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
  */
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
-    private static final String TAG = "BasicCarInfoStepFragmen";
 
     private Calendar mCalendar;
     private Car mCar;
@@ -71,8 +68,10 @@ public class BasicCarInfoStepFragment extends Fragment
     @BindView(R.id.layout_input_date)
     TextInputLayout mLayoutStolenDate;
 
-    @BindView(R.id.district_spinner)
-    Spinner mDistrict;
+    @BindView(R.id.input_district)
+    AutoCompleteTextView mDistrict;
+    @BindView(R.id.layout_input_district)
+    TextInputLayout mLayoutDistrict;
 
     @BindView(R.id.input_production_year)
     EditText mProductionYear;
@@ -127,6 +126,19 @@ public class BasicCarInfoStepFragment extends Fragment
         mManufacturer.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.car_manufacturers)));
 
+        mDistrict.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
+                getResources().getStringArray(R.array.hint_districts)));
+        mDistrict.setInputType(InputType.TYPE_NULL);
+        mDistrict.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    mDistrict.showDropDown();
+                }
+                return false;
+            }
+        });
+
 
 // TODO date and production year are filled even though mCar is empty
 //        fillFields();
@@ -141,12 +153,10 @@ public class BasicCarInfoStepFragment extends Fragment
             mColor.setText(mCar.getColor());
             mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
             mEngine.setText(mCar.getEngine());
-
+            mDistrict.setText(mCar.getDistrict());
             mCalendar.setTimeInMillis(mCar.getStolenDate());
             mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
 
-            int index = Arrays.asList(getResources().getStringArray(R.array.hint_districts)).indexOf(mCar.getDistrict());
-            mDistrict.setSelection(index == -1 ? 0 : index);
         }
     }
 
@@ -219,6 +229,11 @@ public class BasicCarInfoStepFragment extends Fragment
             return false;
         }
 
+        if (mDistrict.getText().length() == 0) {
+            mLayoutDistrict.setError(getString(R.string.required_field));
+            return false;
+        }
+
         return true;
     }
 
@@ -256,7 +271,7 @@ public class BasicCarInfoStepFragment extends Fragment
             mCar.setVin(mVin.getText().toString().toUpperCase());
             mCar.setColor(mColor.getText().toString());
             mCar.setStolenDate(mCalendar.getTimeInMillis());
-            mCar.setDistrict(mDistrict.getSelectedItem().toString());
+            mCar.setDistrict(mDistrict.getText().toString());
             if (mProductionYear.getText().length() != 0) {
                 mCar.setProductionYear(Integer.valueOf(mProductionYear.getText().toString()));
             }
