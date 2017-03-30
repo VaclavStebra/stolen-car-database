@@ -3,10 +3,6 @@
     <string name="car_list_item_image">Car photo</string>
     <string name="spz">SPZ:</string>
     <string name="vin">VIN:</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="car_thumbnail">Car thumbnail</string>
     <string name="color">Color</string>
     <string name="spz_text">SPZ</string>
@@ -110,4 +106,74 @@
     <string name="set_location_button">Set Location</string>
     <string name="hint_car_photo_text">Select a photo of your car (optional)</string>
     <string name="select_image_button">Select Photo</string>
+
+    <string-array name="car_manufacturers">
+        <item>Alfa Romeo</item>
+        <item>Aston Martin</item>
+        <item>Audi</item>
+        <item>Acura</item>
+        <item>Bentley</item>
+        <item>BMW</item>
+        <item>Buick</item>
+        <item>Bugatti</item>
+        <item>Chevrolet</item>
+        <item>Cadillac</item>
+        <item>Chrysler</item>
+        <item>Corvette</item>
+        <item>Citroën</item>
+        <item>Dacia</item>
+        <item>Daihatsu</item>
+        <item>Dodge</item>
+        <item>Daewoo</item>
+        <item>Fiat</item>
+        <item>Ferrari</item>
+        <item>Ford</item>
+        <item>GMC</item>
+        <item>Honda</item>
+        <item>Hyundai</item>
+        <item>Hummer</item>
+        <item>Isuzu</item>
+        <item>Infiniti</item>
+        <item>Jeep</item>
+        <item>Jaguar</item>
+        <item>Koenigsegg</item>
+        <item>Lamborghini</item>
+        <item>Land Rover</item>
+        <item>Lancia</item>
+        <item>Lincoln</item>
+        <item>Lexus</item>
+        <item>Lotus</item>
+        <item>Lada</item>
+        <item>Maserati</item>
+        <item>Mazda</item>
+        <item>Maybach</item>
+        <item>McLaren</item>
+        <item>Mercedes Benz</item>
+        <item>Mini</item>
+        <item>Mitsubishi</item>
+        <item>Mustang</item>
+        <item>Nissan</item>
+        <item>Opel</item>
+        <item>Peugeot</item>
+        <item>Pagani</item>
+        <item>Piaggio</item>
+        <item>Porsche</item>
+        <item>Renault</item>
+        <item>Rolls Royce</item>
+        <item>Scania</item>
+        <item>Seat</item>
+        <item>Saab</item>
+        <item>Škoda</item>
+        <item>Shelby</item>
+        <item>Subaru</item>
+        <item>Suzuki</item>
+        <item>Tesla</item>
+        <item>Toyota</item>
+        <item>Tatra</item>
+        <item>TVR</item>
+        <item>Volkswagen</item>
+        <item>Volvo</item>
+        <item>Vauxhall</item>
+        <item>Viper</item>
+    </string-array>
 </resources>
