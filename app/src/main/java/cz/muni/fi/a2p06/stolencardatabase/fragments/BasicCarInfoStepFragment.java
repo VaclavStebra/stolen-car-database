@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -39,7 +41,7 @@ public class BasicCarInfoStepFragment extends Fragment
     private Car mCar;
 
     @BindView(R.id.input_manufacturer)
-    EditText mManufacturer;
+    AutoCompleteTextView mManufacturer;
     @BindView(R.id.layout_input_manufacturer)
     TextInputLayout mLayoutManufacturer;
 
@@ -115,6 +117,9 @@ public class BasicCarInfoStepFragment extends Fragment
                 return false;
             }
         });
+
+        mManufacturer.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
+                getResources().getStringArray(R.array.car_manufacturers)));
 
         return view;
     }

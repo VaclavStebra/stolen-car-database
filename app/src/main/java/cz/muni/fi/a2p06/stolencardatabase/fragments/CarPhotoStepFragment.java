@@ -86,11 +86,6 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
             mPhotoText.setVisibility(View.GONE);
             mCarPhoto.setVisibility(View.VISIBLE);
             mCarPhoto.setImageURI(mPhotoUri);
-//            Glide.with(getActivity())
-//                        .load(mPhotoUri)
-//                        .asBitmap()
-//                        .placeholder(R.drawable.car_placeholder)
-//                        .into(mCarPhoto);
         }
     }
 
