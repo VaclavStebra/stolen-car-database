@@ -32,7 +32,7 @@ public class YearPickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View layout = getActivity().getLayoutInflater().inflate(R.layout.fragment_year_picker, null);
         final NumberPicker picker = (NumberPicker) layout.findViewById(R.id.number_picker);
-        picker.setMinValue(0); // TODO: Set min value
+        picker.setMinValue(1960);
         picker.setMaxValue(Calendar.getInstance().get(Calendar.YEAR));
         picker.setValue(picker.getMaxValue());
         picker.setWrapSelectorWheel(false);
