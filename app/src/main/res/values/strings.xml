@@ -106,6 +106,8 @@
     <string name="set_location_button">Set Location</string>
     <string name="hint_car_photo_text">Select a photo of your car (optional)</string>
     <string name="select_image_button">Select Photo</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="car_manufacturers">
         <item>Alfa Romeo</item>
