@@ -123,10 +123,11 @@ public class BasicCarInfoStepFragment extends Fragment
             }
         });
 
-        mManufacturer.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
+        mManufacturer.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.car_manufacturers)));
+        mManufacturer.setThreshold(1);
 
-        mDistrict.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
+        mDistrict.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.hint_districts)));
         mDistrict.setInputType(InputType.TYPE_NULL);
         mDistrict.setOnTouchListener(new View.OnTouchListener() {
