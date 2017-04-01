@@ -54,7 +54,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
             mNewCar = new Car();
         }
 
-        mStepperLayout.setAdapter(new StepperAdapter(getFragmentManager(), getContext(), mNewCar),
+        mStepperLayout.setAdapter(new StepperAdapter(getChildFragmentManager(), getContext(), mNewCar),
                 currentPosition);
         mStepperLayout.setListener(this);
 
@@ -110,6 +110,8 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         } else {
             writeNewCar();
         }
+
+        getFragmentManager().popBackStack();
     }
 
     @Override
@@ -124,6 +126,5 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     @Override
     public void onReturn() {
-        //
     }
 }
