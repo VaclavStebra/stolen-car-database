@@ -43,14 +43,13 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
 
         viewHolder.mDistrict.setText(model.getDistrict());
 
-        // TODO: Calendar - check if the month is right
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(model.getStolenDate());
         DateFormat format = SimpleDateFormat.getDateInstance();
         viewHolder.mStolenDate.setText(format.format(calendar.getTime()));
 
-        // TODO throws IllegalArgumentException if photoUrl is null
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(model.getPhotoUrl());
+        StorageReference storageReference = model.getPhotoUrl() != null
+                ? FirebaseStorage.getInstance().getReferenceFromUrl(model.getPhotoUrl()) : null;
 
         Glide.with(mFragment)
                 .using(new FirebaseImageLoader())

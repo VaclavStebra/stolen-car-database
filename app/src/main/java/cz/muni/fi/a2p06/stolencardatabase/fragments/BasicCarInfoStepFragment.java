@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -139,25 +141,25 @@ public class BasicCarInfoStepFragment extends Fragment
             }
         });
 
-
-// TODO date and production year are filled even though mCar is empty
-//        fillFields();
+        setTextWatchers();
     }
 
-    private void fillFields() {
-        if (mCar != null) {
-            mManufacturer.setText(mCar.getManufacturer());
-            mModel.setText(mCar.getModel());
-            mRegno.setText(mCar.getRegno());
-            mVin.setText(mCar.getVin());
-            mColor.setText(mCar.getColor());
-            mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
-            mEngine.setText(mCar.getEngine());
-            mDistrict.setText(mCar.getDistrict());
-            mCalendar.setTimeInMillis(mCar.getStolenDate());
-            mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
-
-        }
+    private void setTextWatchers() {
+        mManufacturer.addTextChangedListener(new DefaultTextWatcher(mLayoutManufacturer));
+        mModel.addTextChangedListener(new DefaultTextWatcher(mLayoutModel));
+        mRegno.addTextChangedListener(new DefaultTextWatcher(mLayoutRegno) {
+            @Override
+            public void afterTextChanged(Editable s) {
+                super.afterTextChanged(s);
+                if (s.length() == 3) {
+                    s.append(" ");
+                }
+            }
+        });
+        mVin.addTextChangedListener(new DefaultTextWatcher(mLayoutVin));
+        mStolenDate.addTextChangedListener(new DefaultTextWatcher(mLayoutStolenDate));
+        mColor.addTextChangedListener(new DefaultTextWatcher(mLayoutColor));
+        mDistrict.addTextChangedListener(new DefaultTextWatcher(mLayoutDistrict));
     }
 
     @Override
@@ -197,7 +199,7 @@ public class BasicCarInfoStepFragment extends Fragment
             isValid = false;
         }
 
-        String temp = mRegno.getText().toString().trim().toUpperCase().replace(" ", "");
+        String temp = mRegno.getText().toString().trim().toUpperCase();
 
         if (temp.isEmpty() || !Pattern.matches("[A-Z0-9]{3} [A-Z0-9]{4,5}", temp)) {
             mLayoutRegno.setError(getString(R.string.regno_error_message));
@@ -283,5 +285,29 @@ public class BasicCarInfoStepFragment extends Fragment
     @Override
     public void onBackClicked(StepperLayout.OnBackClickedCallback callback) {
         callback.goToPrevStep();
+    }
+
+    private class DefaultTextWatcher implements TextWatcher {
+
+        private TextInputLayout mInputLayout;
+
+        DefaultTextWatcher(TextInputLayout inputLayout) {
+            mInputLayout = inputLayout;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            mInputLayout.setErrorEnabled(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
     }
 }
