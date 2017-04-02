@@ -79,7 +79,6 @@ public class BasicCarInfoStepFragment extends Fragment
     EditText mEngine;
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,56 +185,51 @@ public class BasicCarInfoStepFragment extends Fragment
     }
 
     private boolean isValidInput() {
+        boolean isValid = true;
+
         if (mManufacturer.getText().length() == 0) {
-            mLayoutManufacturer.setError(getString(R.string.required_field));
-            return false;
+            mLayoutManufacturer.setError(getString(R.string.manufacturer_error_message));
+            isValid = false;
         }
 
         if (mModel.getText().length() == 0) {
-            mLayoutModel.setError(getString(R.string.required_field));
-            return false;
+            mLayoutModel.setError(getString(R.string.model_error_message));
+            isValid = false;
         }
 
-        String temp = mRegno.getText().toString().replace(" ", "");
+        String temp = mRegno.getText().toString().trim().toUpperCase().replace(" ", "");
+
+        if (temp.isEmpty() || !Pattern.matches("[A-Z0-9]{3} [A-Z0-9]{4,5}", temp)) {
+            mLayoutRegno.setError(getString(R.string.regno_error_message));
+            isValid = false;
+        }
+
+        temp = mVin.getText().toString().trim().toUpperCase();
 
         if (temp.isEmpty()) {
-            mLayoutRegno.setError(getString(R.string.required_field));
-            return false;
-        }
-
-        if (temp.length() > 8 || temp.length() < 7) {
-            mLayoutRegno.setError(getString(R.string.invalid_input));
-            return false;
-        }
-
-        temp = mVin.getText().toString().trim();
-
-        if (temp.isEmpty()) {
-            mLayoutVin.setError(getString(R.string.required_field));
-            return false;
-        }
-
-        if (!Pattern.matches("[a-zA-Z0-9]{17}", temp)) {
-            mLayoutVin.setError(getString(R.string.invalid_input));
-            return false;
+            mLayoutVin.setError(getString(R.string.vin_error_empty_message));
+            isValid = false;
+        } else if (!Pattern.matches("[A-Z0-9]{17}", temp)) {
+            mLayoutVin.setError(getString(R.string.vin_error_invalid_message));
+            isValid = false;
         }
 
         if (mColor.getText().length() == 0) {
-            mLayoutColor.setError(getString(R.string.required_field));
-            return false;
+            mLayoutColor.setError(getString(R.string.color_error_message));
+            isValid = false;
         }
 
         if (mStolenDate.getText().length() == 0) {
-            mLayoutStolenDate.setError(getString(R.string.required_field));
-            return false;
+            mLayoutStolenDate.setError(getString(R.string.stolen_date_error_message));
+            isValid = false;
         }
 
         if (mDistrict.getText().length() == 0) {
-            mLayoutDistrict.setError(getString(R.string.required_field));
-            return false;
+            mLayoutDistrict.setError(getString(R.string.district_error_message));
+            isValid = false;
         }
 
-        return true;
+        return isValid;
     }
 
     public static BasicCarInfoStepFragment newInstance(Car car) {
@@ -248,9 +242,7 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public VerificationError verifyStep() {
-//TODO uncomment this
-//        return isValidInput() ? null : new VerificationError("Invalid input");
-        return null;
+        return isValidInput() ? null : new VerificationError("Invalid input");
     }
 
     @Override
