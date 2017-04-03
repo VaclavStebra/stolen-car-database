@@ -140,15 +140,11 @@
             app:layout_constraintRight_toRightOf="@+id/layout_input_color"
             app:layout_constraintTop_toBottomOf="@+id/layout_input_date">
 
-            <AutoCompleteTextView
+            <com.weiwangcn.betterspinner.library.BetterSpinner
                 android:id="@+id/input_district"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:dropDownHeight="250dp"
-                android:ems="10"
-                android:hint="@string/hint_district"
-                android:inputType="textPersonName"
-                />
+                android:hint="@string/hint_district"/>
         </android.support.design.widget.TextInputLayout>
 
         <View

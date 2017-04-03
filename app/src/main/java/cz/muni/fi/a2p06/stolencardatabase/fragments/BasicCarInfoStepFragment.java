@@ -128,18 +128,8 @@ public class BasicCarInfoStepFragment extends Fragment
                 getResources().getStringArray(R.array.car_manufacturers)));
         mManufacturer.setThreshold(1);
 
-        mDistrict.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.hint_districts)));
-        mDistrict.setInputType(InputType.TYPE_NULL);
-        mDistrict.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mDistrict.showDropDown();
-                }
-                return false;
-            }
-        });
+        mDistrict.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line,
+                getResources().getStringArray(R.array.districts)));
 
         setTextWatchers();
     }
