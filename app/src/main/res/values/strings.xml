@@ -3,10 +3,6 @@
     <string name="car_list_item_image">Car photo</string>
     <string name="spz">SPZ:</string>
     <string name="vin">VIN:</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="car_thumbnail">Car thumbnail</string>
     <string name="color">Color</string>
     <string name="spz_text">SPZ</string>
@@ -14,4 +10,178 @@
     <string name="stolen_date">Stolen Date</string>
     <string name="production_year">Production Year</string>
     <string name="engine">Engine</string>
+    <string name="hint_manufacturer">Manufacturer</string>
+    <string name="hint_model">Model</string>
+    <string name="hint_regno">SPZ</string>
+    <string name="hint_vin">VIN</string>
+    <string name="hint_date">Date</string>
+    <string name="hint_color">Color</string>
+    <string name="hint_district">District</string>
+    <string name="hint_production_year">Production Year</string>
+    <string name="hint_engine">Engine</string>
+    <string name="optional">Optional</string>
+    <string-array name="districts">
+        <item>Benešov (Středočeský kraj)</item>
+        <item>Beroun (Středočeský kraj)</item>
+        <item>Blansko (Jihomoravský kraj)</item>
+        <item>Brno-město (Jihomoravský kraj)</item>
+        <item>Brno-venkov (Jihomoravský kraj)</item>
+        <item>Bruntál (Moravskoslezský kraj)</item>
+        <item>Břeclav (Jihomoravský kraj)</item>
+        <item>Česká Lípa (Liberecký kraj)</item>
+        <item>České Budějovice (Jihočeský kraj)</item>
+        <item>Český Krumlov (Jihočeský kraj)</item>
+        <item>Děčín (Ústecký kraj)</item>
+        <item>Domažlice (Plzeňský kraj)</item>
+        <item>Frýdek-Místek (Moravskoslezský kraj)</item>
+        <item>Havlíčkův Brod (Kraj Vysočina)</item>
+        <item>Hodonín (Jihomoravský kraj)</item>
+        <item>Hradec Králové (Královéhradecký kraj)</item>
+        <item>Cheb (Karlovarský kraj)</item>
+        <item>Chomutov (Ústecký kraj)</item>
+        <item>Chrudim (Pardubický kraj)</item>
+        <item>Jablonec nad Nisou (Liberecký kraj)</item>
+        <item>Jeseník (Olomoucký kraj)</item>
+        <item>Jičín (Královéhradecký kraj)</item>
+        <item>Jihlava (Kraj Vysočina)</item>
+        <item>Jindřichův Hradec (Jihočeský kraj)</item>
+        <item>Karlovy Vary (Karlovarský kraj)</item>
+        <item>Karviná (Moravskoslezský kraj)</item>
+        <item>Kladno (Středočeský kraj)</item>
+        <item>Klatovy (Plzeňský kraj)</item>
+        <item>Kolín (Středočeský kraj)</item>
+        <item>Kroměříž (Zlínský kraj)</item>
+        <item>Kutná Hora (Středočeský kraj)</item>
+        <item>Liberec (Liberecký kraj)</item>
+        <item>Litoměřice (Ústecký kraj)</item>
+        <item>Louny (Ústecký kraj)</item>
+        <item>Mělník (Středočeský kraj)</item>
+        <item>Mladá Boleslav (Středočeský kraj)</item>
+        <item>Most (Ústecký kraj)</item>
+        <item>Náchod (Královéhradecký kraj)</item>
+        <item>Nový Jičín (Moravskoslezský kraj)</item>
+        <item>Nymburk (Středočeský kraj)</item>
+        <item>Olomouc (Olomoucký kraj)</item>
+        <item>Opava (Moravskoslezský kraj)</item>
+        <item>Ostrava-město (Moravskoslezský kraj)</item>
+        <item>Pardubice (Pardubický kraj)</item>
+        <item>Pelhřimov (Kraj Vysočina)</item>
+        <item>Písek (Jihočeský kraj)</item>
+        <item>Plzeň-jih (Plzeňský kraj)</item>
+        <item>Plzeň-město (Plzeňský kraj)</item>
+        <item>Plzeň-sever (Plzeňský kraj)</item>
+        <item>Praha (Hlavní město Praha)</item>
+        <item>Praha-východ (Středočeský kraj)</item>
+        <item>Praha-západ (Středočeský kraj)</item>
+        <item>Prachatice (Jihočeský kraj)</item>
+        <item>Prostějov (Olomoucký kraj)</item>
+        <item>Přerov (Olomoucký kraj)</item>
+        <item>Příbram (Středočeský kraj)</item>
+        <item>Rakovník (Středočeský kraj)</item>
+        <item>Rokycany (Plzeňský kraj)</item>
+        <item>Rychnov nad Kněžnou (Královéhradecký kraj)</item>
+        <item>Semily (Liberecký kraj)</item>
+        <item>Sokolov (Karlovarský kraj)</item>
+        <item>Strakonice (Jihočeský kraj)</item>
+        <item>Svitavy (Pardubický kraj)</item>
+        <item>Šumperk (Olomoucký kraj)</item>
+        <item>Tachov (Plzeňský kraj)</item>
+        <item>Tábor (Jihočeský kraj)</item>
+        <item>Teplice (Ústecký kraj)</item>
+        <item>Trutnov (Královéhradecký kraj)</item>
+        <item>Třebíč (Kraj Vysočina)</item>
+        <item>Uherské Hradiště (Zlínský kraj)</item>
+        <item>Ústí nad Labem (Ústecký kraj)</item>
+        <item>Ústí nad Orlicí (Pardubický kraj)</item>
+        <item>Vsetín (Zlínský kraj)</item>
+        <item>Vyškov (Jihomoravský kraj)</item>
+        <item>Zlín (Zlínský kraj)</item>
+        <item>Znojmo (Jihomoravský kraj)</item>
+        <item>Žďár nad Sázavou (Kraj Vysočina)</item>
+    </string-array>
+    <string name="google_maps_key">AIzaSyARCOqR-LsqqnI82VjZ0jI5rMN-xKsaI6w</string>
+    <string name="hint_location_text">Set the last known location of your car (optional)</string>
+    <string name="set_location_button">Set Location</string>
+    <string name="hint_car_photo_text">Select a photo of your car (optional)</string>
+    <string name="select_image_button">Select Photo</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="manufacturer_error_message">Please enter the car manufacturer</string>
+    <string name="model_error_message">Please enter the car model</string>
+    <string name="regno_error_message">Please enter the registration number in format XXX XXXX</string>
+    <string name="color_error_message">Please enter the car color</string>
+    <string name="stolen_date_error_message">Please set the date of the car theft</string>
+    <string name="district_error_message">Please set the district where the car was stolen</string>
+    <string name="vin_error_empty_message">Please enter the car VIN number</string>
+    <string name="vin_error_invalid_message">The VIN number must contain 17 alphanumeric characters</string>
+
+    <string-array name="car_manufacturers">
+        <item>Alfa Romeo</item>
+        <item>Aston Martin</item>
+        <item>Audi</item>
+        <item>Acura</item>
+        <item>Bentley</item>
+        <item>BMW</item>
+        <item>Buick</item>
+        <item>Bugatti</item>
+        <item>Chevrolet</item>
+        <item>Cadillac</item>
+        <item>Chrysler</item>
+        <item>Corvette</item>
+        <item>Citroën</item>
+        <item>Dacia</item>
+        <item>Daihatsu</item>
+        <item>Dodge</item>
+        <item>Daewoo</item>
+        <item>Fiat</item>
+        <item>Ferrari</item>
+        <item>Ford</item>
+        <item>GMC</item>
+        <item>Honda</item>
+        <item>Hyundai</item>
+        <item>Hummer</item>
+        <item>Isuzu</item>
+        <item>Infiniti</item>
+        <item>Jeep</item>
+        <item>Jaguar</item>
+        <item>Koenigsegg</item>
+        <item>Lamborghini</item>
+        <item>Land Rover</item>
+        <item>Lancia</item>
+        <item>Lincoln</item>
+        <item>Lexus</item>
+        <item>Lotus</item>
+        <item>Lada</item>
+        <item>Maserati</item>
+        <item>Mazda</item>
+        <item>Maybach</item>
+        <item>McLaren</item>
+        <item>Mercedes Benz</item>
+        <item>Mini</item>
+        <item>Mitsubishi</item>
+        <item>Mustang</item>
+        <item>Nissan</item>
+        <item>Opel</item>
+        <item>Peugeot</item>
+        <item>Pagani</item>
+        <item>Piaggio</item>
+        <item>Porsche</item>
+        <item>Renault</item>
+        <item>Rolls Royce</item>
+        <item>Scania</item>
+        <item>Seat</item>
+        <item>Saab</item>
+        <item>Škoda</item>
+        <item>Shelby</item>
+        <item>Subaru</item>
+        <item>Suzuki</item>
+        <item>Tesla</item>
+        <item>Toyota</item>
+        <item>Tatra</item>
+        <item>TVR</item>
+        <item>Volkswagen</item>
+        <item>Volvo</item>
+        <item>Vauxhall</item>
+        <item>Viper</item>
+    </string-array>
 </resources>

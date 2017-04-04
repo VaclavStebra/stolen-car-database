@@ -5,7 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cz.muni.fi.a2p06.stolencardatabase.MainActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cz.muni.fi.a2p06.stolencardatabase.MainActivity"
+    tools:showIn="@layout/activity_main"
+    android:baselineAligned="false">
 
     <fragment class="cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment"
         android:id="@+id/car_list_frag"

@@ -1,6 +1,8 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,9 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.stepstone.stepper.Step;
+import com.stepstone.stepper.VerificationError;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +32,7 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
  * Use the {@link CarDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CarDetailFragment extends Fragment {
+public class CarDetailFragment extends Fragment implements Step {
     private Car mCar;
 
     @BindView(R.id.car_detail_photo)
@@ -105,22 +110,34 @@ public class CarDetailFragment extends Fragment {
         populateCarImage();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
         mSPZ.setText(mCar.getRegno());
-        mStolenDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date(mCar.getStolenDate())));
+        mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());
-        mProductionYear.setText(Integer.toString(mCar.getProductionYear()));
+        mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
         mEngine.setText(mCar.getEngine());
     }
 
     private void populateCarImage() {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(mCar.getPhotoUrl());
+        // TODO refactor
+        if (mCar.getPhotoUrl() != null) {
+            RequestManager requestManager = Glide.with(this);
+            Uri photoUri = Uri.parse(mCar.getPhotoUrl());
 
-        Glide.with(this)
-                .using(new FirebaseImageLoader())
-                .load(storageReference)
-                .placeholder(R.drawable.car_placeholder)
-                .centerCrop()
-                .into(mPhoto);
+            if (photoUri.getScheme().equals("content")) {
+                requestManager.load(photoUri).asBitmap()
+                        .placeholder(R.drawable.car_placeholder)
+                        .centerCrop()
+                        .into(mPhoto);
+            } else {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(mCar.getPhotoUrl());
+                requestManager.using(new FirebaseImageLoader())
+                        .load(storageReference)
+                        .placeholder(R.drawable.car_placeholder)
+                        .centerCrop()
+                        .into(mPhoto);
+
+            }
+        }
     }
 
     @Override
@@ -131,5 +148,20 @@ public class CarDetailFragment extends Fragment {
 
     public Car getCar() {
         return mCar;
+    }
+
+    @Override
+    public VerificationError verifyStep() {
+        return null;
+    }
+
+    @Override
+    public void onSelected() {
+
+    }
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+
     }
 }
