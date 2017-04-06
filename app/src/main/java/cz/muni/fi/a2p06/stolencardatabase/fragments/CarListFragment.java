@@ -78,7 +78,39 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        setupSearchView(searchView);
+
+    }
+
+    private void setupSearchView(final SearchView searchView) {
+        //TODO add camera button to searchview
+//        ImageButton btPhoto = new ImageButton(getActivity());
+//        btPhoto.setImageResource(R.drawable.ic_photo_camera_black_24dp);
+//
+////        ((LinearLayout) searchView.getChildAt(0)).addView(btPhoto);
+//
+//        int submit_areaId = searchView.getContext().getResources()
+//                .getIdentifier("android:id/submit_area", null, null);
+//        searchView.setSubmitButtonEnabled(true);
+
+        searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                //
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                if (mCarListAdapter != null) mCarListAdapter.cleanup();
+
+                mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
+                        CarListAdapter.CarItemHolder.class, mRef, CarListFragment.this);
+                mCarList.setAdapter(mCarListAdapter);
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -95,7 +127,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                 mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
                         CarListAdapter.CarItemHolder.class, dataQuery, CarListFragment.this);
                 mCarList.setAdapter(mCarListAdapter);
-                return false;
+
+                searchView.clearFocus();
+                return true;
             }
 
             @Override
