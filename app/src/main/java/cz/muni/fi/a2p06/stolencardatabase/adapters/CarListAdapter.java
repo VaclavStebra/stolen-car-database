@@ -64,7 +64,9 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
         super.onDataChanged();
         if ( ! isDataLoaded) {
             isDataLoaded = true;
-            ((CarListFragment) mFragment).onDataLoaded(getItem(0));
+            if (getItemCount() != 0) {
+                ((CarListFragment) mFragment).onDataLoaded(getItem(0));
+            }
         }
     }
 

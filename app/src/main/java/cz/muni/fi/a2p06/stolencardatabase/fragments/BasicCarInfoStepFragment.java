@@ -138,11 +138,24 @@ public class BasicCarInfoStepFragment extends Fragment
         mManufacturer.addTextChangedListener(new DefaultTextWatcher(mLayoutManufacturer));
         mModel.addTextChangedListener(new DefaultTextWatcher(mLayoutModel));
         mRegno.addTextChangedListener(new DefaultTextWatcher(mLayoutRegno) {
+            private boolean delete;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (count > after) {
+                    delete = true;
+                } else {
+                    delete = false;
+                }
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
-                super.afterTextChanged(s);
-                if (s.length() == 3) {
+                if (s.length() == 3 && !delete) {
                     s.append(" ");
+                }
+                if (s.length() == 4 && delete) {
+                    s.delete(3, 4);
                 }
             }
         });
