@@ -98,7 +98,9 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         ButterKnife.bind(this, view);
         mMapView.onCreate(savedInstanceState);
         mMapView.setVisibility(View.GONE);
-        mMapView.getMapAsync(this);
+        if (mCar != null && mCar.getLocation() != null) {
+            mMapView.getMapAsync(this);
+        }
         if (mCar != null) {
             populateCarDetails();
         }
