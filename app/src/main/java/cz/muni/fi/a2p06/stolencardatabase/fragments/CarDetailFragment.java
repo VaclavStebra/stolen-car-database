@@ -1,5 +1,6 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
@@ -26,13 +33,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CarDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CarDetailFragment extends Fragment implements Step {
+public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallback {
     private Car mCar;
 
     @BindView(R.id.car_detail_photo)
@@ -51,6 +59,8 @@ public class CarDetailFragment extends Fragment implements Step {
     TextView mProductionYear;
     @BindView(R.id.car_detail_engine)
     TextView mEngine;
+    @BindView(R.id.car_map_view)
+    MapView mMapView;
 
 
     public CarDetailFragment() {
@@ -86,6 +96,11 @@ public class CarDetailFragment extends Fragment implements Step {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_car_detail, container, false);
         ButterKnife.bind(this, view);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.setVisibility(View.GONE);
+        if (mCar != null && mCar.getLocation() != null) {
+            mMapView.getMapAsync(this);
+        }
         if (mCar != null) {
             populateCarDetails();
         }
@@ -98,6 +113,45 @@ public class CarDetailFragment extends Fragment implements Step {
         if (savedInstanceState != null) {
             Car car = savedInstanceState.getParcelable(Car.class.getSimpleName());
             updateCarView(car);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mMapView.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMapView.onStop();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mMapView != null) {
+            mMapView.onDestroy();
         }
     }
 
@@ -163,5 +217,17 @@ public class CarDetailFragment extends Fragment implements Step {
     @Override
     public void onError(@NonNull VerificationError error) {
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Coordinates carPos = mCar.getLocation();
+        if (googleMap != null && carPos != null) {
+            LatLng pos = new LatLng(carPos.getLat(), carPos.getLon());
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions().position(pos).title(mCar.getRegno()));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            mMapView.setVisibility(View.VISIBLE);
+        }
     }
 }
