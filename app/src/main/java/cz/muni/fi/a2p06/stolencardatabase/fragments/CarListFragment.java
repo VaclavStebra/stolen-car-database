@@ -1,6 +1,7 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,15 +29,15 @@ import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.ocr.OCRActivity;
 
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
-    private static final String TAG = "CarListFragment";
+
+    private static final int SCAN_REGNO_REQUEST = 1;
 
     private CarListAdapter mCarListAdapter;
-
     private OnCarListFragmentInteractionListener mListener;
-
     private DatabaseReference mRef;
 
     @BindView(R.id.car_list_view)
@@ -90,15 +91,11 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     }
 
     private void setupSearchView(final SearchView searchView) {
-        ImageButton btPhoto = new ImageButton(getActivity());
-        btPhoto.setImageResource(R.drawable.ic_photo_camera_black_24dp);
-        btPhoto.setBackgroundColor(Color.TRANSPARENT);
-
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, convertDptoPx(4), 0);
 
-        ((LinearLayout) searchView.getChildAt(0)).addView(btPhoto, params);
+        ((LinearLayout) searchView.getChildAt(0)).addView(createRegnoScanButton(), params);
 
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
@@ -116,6 +113,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             }
         });
 
+// TODO find better way
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -142,6 +140,21 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                 return false;
             }
         });
+    }
+
+    private ImageButton createRegnoScanButton() {
+        ImageButton btScanRegno = new ImageButton(getActivity());
+        btScanRegno.setImageResource(R.drawable.ic_photo_camera_black_24dp);
+        btScanRegno.setBackgroundColor(Color.TRANSPARENT);
+        btScanRegno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OCRActivity.class);
+                startActivityForResult(intent, SCAN_REGNO_REQUEST);
+            }
+        });
+
+        return btScanRegno;
     }
 
     private int convertDptoPx(int pixelValue) {
