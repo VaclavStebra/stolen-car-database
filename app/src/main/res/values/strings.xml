@@ -185,4 +185,7 @@
         <item>Vauxhall</item>
         <item>Viper</item>
     </string-array>
+
+    <string name="title_activity_ocr">OCRActivity</string>
+    <string name="button_ocr">Tap to read</string>
 </resources>
