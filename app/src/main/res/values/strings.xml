@@ -188,4 +188,5 @@
 
     <string name="title_activity_ocr">OCRActivity</string>
     <string name="button_ocr">Tap to read</string>
+    <string name="low_storage_error">The device does not have enough stoarge</string>
 </resources>

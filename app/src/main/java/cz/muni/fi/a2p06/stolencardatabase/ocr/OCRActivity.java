@@ -1,14 +1,25 @@
 package cz.muni.fi.a2p06.stolencardatabase.ocr;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.text.TextRecognizer;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 
 /**
@@ -16,6 +27,8 @@ import cz.muni.fi.a2p06.stolencardatabase.R;
  * status bar and navigation/system bar) with user interaction.
  */
 public class OCRActivity extends AppCompatActivity {
+    private static final String TAG = "OCRActivity";
+
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -34,7 +47,11 @@ public class OCRActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private View mContentView;
+
+    private CameraSource mCameraSource;
+
+    @BindView(R.id.surfaceView)
+    SurfaceView mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -52,7 +69,7 @@ public class OCRActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -76,17 +93,15 @@ public class OCRActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_ocr);
+        ButterKnife.bind(this);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.surfaceView);
-
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +110,7 @@ public class OCRActivity extends AppCompatActivity {
                 toggle();
             }
         });
+
 
     }
 
@@ -159,5 +175,30 @@ public class OCRActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    private void createCameraSource() {
+        Context context = getApplicationContext();
+
+        TextRecognizer textRecognizer = new TextRecognizer.Builder(context).build();
+        if (!textRecognizer.isOperational()) {
+            Log.w(TAG, "Detector dependencies are not yet available.");
+
+            // Check for low storage.  If there is low storage, the native library will not be
+            // downloaded, so detection will not become operational.
+            IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
+
+            if (hasLowStorage) {
+                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
+                Log.w(TAG, getString(R.string.low_storage_error));
+            }
+        }
+
+        mCameraSource = new CameraSource.Builder(context, textRecognizer)
+                .setAutoFocusEnabled(true)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedFps(15.0f)
+                .build();
     }
 }
