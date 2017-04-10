@@ -1,6 +1,8 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,11 +10,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -85,15 +90,15 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     }
 
     private void setupSearchView(final SearchView searchView) {
-        //TODO add camera button to searchview
-//        ImageButton btPhoto = new ImageButton(getActivity());
-//        btPhoto.setImageResource(R.drawable.ic_photo_camera_black_24dp);
-//
-////        ((LinearLayout) searchView.getChildAt(0)).addView(btPhoto);
-//
-//        int submit_areaId = searchView.getContext().getResources()
-//                .getIdentifier("android:id/submit_area", null, null);
-//        searchView.setSubmitButtonEnabled(true);
+        ImageButton btPhoto = new ImageButton(getActivity());
+        btPhoto.setImageResource(R.drawable.ic_photo_camera_black_24dp);
+        btPhoto.setBackgroundColor(Color.TRANSPARENT);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, convertDptoPx(4), 0);
+
+        ((LinearLayout) searchView.getChildAt(0)).addView(btPhoto, params);
 
         searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
@@ -137,6 +142,15 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                 return false;
             }
         });
+    }
+
+    private int convertDptoPx(int pixelValue) {
+        Resources r = getResources();
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                pixelValue,
+                r.getDisplayMetrics()
+        );
     }
 
     @Override
