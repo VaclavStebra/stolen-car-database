@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
@@ -28,6 +29,9 @@ import cz.muni.fi.a2p06.stolencardatabase.R;
  */
 public class OCRActivity extends AppCompatActivity {
     private static final String TAG = "OCRActivity";
+
+    public static final int SCAN_REGNO_REQUEST = 1;
+    public static final String REGNO_QUERY = "regno_query";
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -52,6 +56,9 @@ public class OCRActivity extends AppCompatActivity {
 
     @BindView(R.id.surfaceView)
     SurfaceView mContentView;
+    @BindView(R.id.scan_text_button)
+    Button btScanText;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -111,6 +118,15 @@ public class OCRActivity extends AppCompatActivity {
             }
         });
 
+        btScanText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent result = new Intent();
+                result.putExtra(REGNO_QUERY, "result");
+                setResult(RESULT_OK, result);
+                finish();
+            }
+        });
 
     }
 

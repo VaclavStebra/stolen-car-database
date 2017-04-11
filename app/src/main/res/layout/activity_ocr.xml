@@ -28,7 +28,7 @@
             tools:ignore="UselessParent">
 
             <Button
-                android:id="@+id/dummy_button"
+                android:id="@+id/scan_text_button"
                 style="?metaButtonBarButtonStyle"
                 android:background="@color/ms_white"
                 android:layout_width="0dp"

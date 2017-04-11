@@ -31,14 +31,16 @@ import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.ocr.OCRActivity;
 
+import static android.app.Activity.RESULT_OK;
+import static cz.muni.fi.a2p06.stolencardatabase.ocr.OCRActivity.SCAN_REGNO_REQUEST;
+
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
-
-    private static final int SCAN_REGNO_REQUEST = 1;
 
     private CarListAdapter mCarListAdapter;
     private OnCarListFragmentInteractionListener mListener;
     private DatabaseReference mRef;
+    private SearchView mSearchView;
 
     @BindView(R.id.car_list_view)
     RecyclerView mCarList;
@@ -82,64 +84,72 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == OCRActivity.SCAN_REGNO_REQUEST && data != null) {
+            mSearchView.setQuery(data.getStringExtra(OCRActivity.REGNO_QUERY), false);
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
 
-        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        setupSearchView(searchView);
-
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        setupSearchView();
     }
 
-    private void setupSearchView(final SearchView searchView) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, convertDptoPx(4), 0);
+    private void setupSearchView() {
+        if (mSearchView != null) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, convertDptoPx(4), 0);
 
-        ((LinearLayout) searchView.getChildAt(0)).addView(createRegnoScanButton(), params);
+            ((LinearLayout) mSearchView.getChildAt(0)).addView(createRegnoScanButton(), params);
 
-        searchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-            @Override
-            public void onViewAttachedToWindow(View v) {
-                //
-            }
-
-            @Override
-            public void onViewDetachedFromWindow(View v) {
-                if (mCarListAdapter != null) mCarListAdapter.cleanup();
-
-                mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
-                        CarListAdapter.CarItemHolder.class, mRef, CarListFragment.this);
-                mCarList.setAdapter(mCarListAdapter);
-            }
-        });
-
-// TODO find better way
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (mCarListAdapter != null) mCarListAdapter.cleanup();
-
-                Query dataQuery = null;
-
-                if (query.length() > 8) {
-                    dataQuery = mRef.orderByChild("vin").equalTo(query);
-                } else {
-                    dataQuery = mRef.orderByChild("regno").equalTo(query);
+            mSearchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    //
                 }
 
-                mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
-                        CarListAdapter.CarItemHolder.class, dataQuery, CarListFragment.this);
-                mCarList.setAdapter(mCarListAdapter);
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    if (mCarListAdapter != null) mCarListAdapter.cleanup();
 
-                searchView.clearFocus();
-                return true;
-            }
+                    mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
+                            CarListAdapter.CarItemHolder.class, mRef, CarListFragment.this);
+                    mCarList.setAdapter(mCarListAdapter);
+                }
+            });
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+            // TODO find better way
+            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (mCarListAdapter != null) mCarListAdapter.cleanup();
+
+                    Query dataQuery = null;
+
+                    if (query.length() > 8) {
+                        dataQuery = mRef.orderByChild("vin").equalTo(query);
+                    } else {
+                        dataQuery = mRef.orderByChild("regno").equalTo(query);
+                    }
+
+                    mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
+                            CarListAdapter.CarItemHolder.class, dataQuery, CarListFragment.this);
+                    mCarList.setAdapter(mCarListAdapter);
+
+                    mSearchView.clearFocus();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+        }
     }
 
     private ImageButton createRegnoScanButton() {
