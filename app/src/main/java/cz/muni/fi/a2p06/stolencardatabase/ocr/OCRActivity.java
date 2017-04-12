@@ -1,12 +1,16 @@
 package cz.muni.fi.a2p06.stolencardatabase.ocr;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.text.TextRecognizer;
 
@@ -23,12 +29,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 public class OCRActivity extends AppCompatActivity {
     private static final String TAG = "OCRActivity";
+
+    // Intent request code to handle updating play services if needed.
+    private static final int RC_HANDLE_GMS = 9001;
 
     public static final int SCAN_REGNO_REQUEST = 1;
     public static final String REGNO_QUERY = "regno_query";
@@ -116,14 +121,15 @@ public class OCRActivity extends AppCompatActivity {
             }
         });
 
-        createCameraSource();
-        try {
-            mOCRCameraView.start(mCameraSource);
-        } catch (IOException | SecurityException ex) {
-            ex.printStackTrace();
+        int rc = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (rc == PackageManager.PERMISSION_GRANTED) {
+            createCameraSource();
+        } else {
+            requestCameraPermission();
         }
 
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -133,6 +139,28 @@ public class OCRActivity extends AppCompatActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startCameraSource();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mOCRCameraView != null) {
+            mOCRCameraView.stop();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mOCRCameraView != null) {
+            mOCRCameraView.release();
+        }
     }
 
     @Override
@@ -188,6 +216,13 @@ public class OCRActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    private void requestCameraPermission() {
+
+    }
+
+    /**
+     * Creates and starts the camera.
+     */
     private void createCameraSource() {
         Context context = getApplicationContext();
 
@@ -211,5 +246,30 @@ public class OCRActivity extends AppCompatActivity {
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(15.0f)
                 .build();
+    }
+
+    /**
+     * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
+     * (e.g., because onResume was called before the camera source was created), this will be called
+     * again when the camera source is created.
+     */
+    private void startCameraSource() throws SecurityException {
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
+                getApplicationContext());
+        if (code != ConnectionResult.SUCCESS) {
+            Dialog dlg =
+                    GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
+            dlg.show();
+        }
+
+        if (mCameraSource != null) {
+            try {
+                mOCRCameraView.start(mCameraSource);
+            } catch (IOException e) {
+                Log.e(TAG, "Unable to start camera source.", e);
+                mCameraSource.release();
+                mCameraSource = null;
+            }
+        }
     }
 }

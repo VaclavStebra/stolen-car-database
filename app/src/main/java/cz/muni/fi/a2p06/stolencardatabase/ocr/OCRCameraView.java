@@ -76,7 +76,6 @@ public class OCRCameraView extends SurfaceView implements SurfaceHolder.Callback
 
     @RequiresPermission(Manifest.permission.CAMERA)
     private void startIfReady() throws IOException, SecurityException {
-        Log.d(TAG, "startIfReady: prepare" + (mStartRequested == true) + " " + (mSurfaceAvailable == true));
         if (mSurfaceAvailable && mStartRequested) {
             Log.d(TAG, "startIfReady: started");
             mCameraSource.start(mHolder);
