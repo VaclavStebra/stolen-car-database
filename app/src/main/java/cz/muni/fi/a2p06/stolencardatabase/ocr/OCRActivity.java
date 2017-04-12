@@ -2,13 +2,19 @@ package cz.muni.fi.a2p06.stolencardatabase.ocr;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -34,6 +40,7 @@ public class OCRActivity extends AppCompatActivity {
 
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
+    private static final int RC_HANDLE_CAMERA_PERM = 2;
 
     public static final int SCAN_REGNO_REQUEST = 1;
     public static final String REGNO_QUERY = "regno_query";
@@ -120,14 +127,6 @@ public class OCRActivity extends AppCompatActivity {
                 toggle();
             }
         });
-
-        int rc = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource();
-        } else {
-            requestCameraPermission();
-        }
-
     }
 
 
@@ -139,6 +138,18 @@ public class OCRActivity extends AppCompatActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        int rc = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (rc == PackageManager.PERMISSION_GRANTED) {
+            createCameraSource();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, RC_HANDLE_CAMERA_PERM);
+        }
     }
 
     @Override
@@ -217,7 +228,47 @@ public class OCRActivity extends AppCompatActivity {
     }
 
     private void requestCameraPermission() {
+        Log.w(TAG, "Camera permission is not granted. Requesting permission");
 
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, RC_HANDLE_CAMERA_PERM);
+        } else {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", OCRActivity.this.getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Camera permission granted - initialize the camera source");
+            createCameraSource();
+        } else {
+            Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                    " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Multitracker sample")
+                    .setMessage(R.string.no_camera_permission)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.grant_access, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestCameraPermission();
+                        }
+                    })
+                    .show();
+        }
     }
 
     /**
