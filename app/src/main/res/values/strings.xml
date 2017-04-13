@@ -186,7 +186,7 @@
         <item>Viper</item>
     </string-array>
 
-    <string name="title_activity_ocr">OCRActivity</string>
+    <string name="title_activity_ocr">SPZ Scanner</string>
     <string name="button_ocr">Tap to read</string>
     <string name="low_storage_error">The device does not have enough stoarge</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>

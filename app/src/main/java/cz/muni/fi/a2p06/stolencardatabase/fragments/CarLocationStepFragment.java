@@ -41,7 +41,7 @@ import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
  * A simple {@link Fragment} subclass.
  */
 public class CarLocationStepFragment extends Fragment implements BlockingStep, OnMapReadyCallback {
-    // TODO: Check if any permissions are needed
+    // TODO: Check if any permissions are needed - try to delete location permissions
 
     // TODO REFACTOR
 

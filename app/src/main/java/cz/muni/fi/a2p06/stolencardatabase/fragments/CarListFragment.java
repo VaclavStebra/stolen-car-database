@@ -29,10 +29,10 @@ import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
-import cz.muni.fi.a2p06.stolencardatabase.ocr.OCRActivity;
+import cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity;
 
 import static android.app.Activity.RESULT_OK;
-import static cz.muni.fi.a2p06.stolencardatabase.ocr.OCRActivity.SCAN_REGNO_REQUEST;
+import static cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity.SCAN_REGNO_REQUEST;
 
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
@@ -85,8 +85,8 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == OCRActivity.SCAN_REGNO_REQUEST && data != null) {
-            mSearchView.setQuery(data.getStringExtra(OCRActivity.REGNO_QUERY), false);
+        if (resultCode == RESULT_OK && requestCode == OcrActivity.SCAN_REGNO_REQUEST && data != null) {
+            mSearchView.setQuery(data.getStringExtra(OcrActivity.REGNO_QUERY), false);
         }
     }
 
@@ -159,7 +159,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         btScanRegno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), OCRActivity.class);
+                Intent intent = new Intent(getActivity(), OcrActivity.class);
                 startActivityForResult(intent, SCAN_REGNO_REQUEST);
             }
         });

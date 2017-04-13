@@ -35,8 +35,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 
-public class OCRActivity extends AppCompatActivity {
-    private static final String TAG = "OCRActivity";
+public class OcrActivity extends AppCompatActivity {
+    private static final String TAG = "OcrActivity";
 
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
@@ -67,7 +67,9 @@ public class OCRActivity extends AppCompatActivity {
     private CameraSource mCameraSource;
 
     @BindView(R.id.ocr_camera_view)
-    OCRCameraView mOCRCameraView;
+    CameraSourcePreview mOcrCameraView;
+    @BindView(R.id.graphicOverlay)
+    GraphicOverlay<OcrGraphic> mGraphicOverlay;
 
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -78,7 +80,7 @@ public class OCRActivity extends AppCompatActivity {
             // Note that some of these constants are new as of API 16 (Jelly Bean)
             // and API 19 (KitKat). It is safe to use them, as they are inlined
             // at compile-time and do nothing on earlier devices.
-            mOCRCameraView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+            mOcrCameraView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -121,7 +123,7 @@ public class OCRActivity extends AppCompatActivity {
         mVisible = true;
 
         // Set up the user interaction to manually show or hide the system UI.
-        mOCRCameraView.setOnClickListener(new View.OnClickListener() {
+        mOcrCameraView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggle();
@@ -161,16 +163,16 @@ public class OCRActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mOCRCameraView != null) {
-            mOCRCameraView.stop();
+        if (mOcrCameraView != null) {
+            mOcrCameraView.stop();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mOCRCameraView != null) {
-            mOCRCameraView.release();
+        if (mOcrCameraView != null) {
+            mOcrCameraView.release();
         }
     }
 
@@ -209,7 +211,7 @@ public class OCRActivity extends AppCompatActivity {
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mOCRCameraView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        mOcrCameraView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
 
@@ -227,6 +229,9 @@ public class OCRActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    /**
+     * Handles the requesting of the camera permission.
+     */
     private void requestCameraPermission() {
         Log.w(TAG, "Camera permission is not granted. Requesting permission");
 
@@ -237,7 +242,7 @@ public class OCRActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent();
             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", OCRActivity.this.getPackageName(), null);
+            Uri uri = Uri.fromParts("package", OcrActivity.this.getPackageName(), null);
             intent.setData(uri);
             startActivity(intent);
         }
@@ -278,6 +283,7 @@ public class OCRActivity extends AppCompatActivity {
         Context context = getApplicationContext();
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(context).build();
+        textRecognizer.setProcessor(new OcrDetectorProcessor(mGraphicOverlay));
         if (!textRecognizer.isOperational()) {
             Log.w(TAG, "Detector dependencies are not yet available.");
 
@@ -293,8 +299,8 @@ public class OCRActivity extends AppCompatActivity {
         }
 
         mCameraSource = new CameraSource.Builder(context, textRecognizer)
-                .setAutoFocusEnabled(true)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setAutoFocusEnabled(true)
                 .setRequestedFps(15.0f)
                 .build();
     }
@@ -315,7 +321,7 @@ public class OCRActivity extends AppCompatActivity {
 
         if (mCameraSource != null) {
             try {
-                mOCRCameraView.start(mCameraSource);
+                mOcrCameraView.start(mCameraSource, mGraphicOverlay);
             } catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
                 mCameraSource.release();

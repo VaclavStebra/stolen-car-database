@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ocr.OCRActivity"
+            android:name=".ocr.OcrActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_ocr"
             android:parentActivityName=".MainActivity"
