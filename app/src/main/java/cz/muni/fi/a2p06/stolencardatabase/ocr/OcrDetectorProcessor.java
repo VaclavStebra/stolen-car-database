@@ -15,11 +15,12 @@
  */
 package cz.muni.fi.a2p06.stolencardatabase.ocr;
 
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
+
+import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
 
 /**
  * A very simple Processor which gets detected TextBlocks and adds them to the overlay
@@ -46,11 +47,9 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
         SparseArray<TextBlock> items = detections.getDetectedItems();
         for (int i = 0; i < items.size(); ++i) {
             TextBlock item = items.valueAt(i);
-            if (item != null && item.getValue() != null) {
-                Log.d("OcrDetectorProcessor", "Text detected! " + item.getValue());
+            if (HelperMethods.isValidRegno(item.getValue())) {
+                mGraphicOverlay.set(new OcrGraphic(mGraphicOverlay, item));
             }
-            OcrGraphic graphic = new OcrGraphic(mGraphicOverlay, item);
-            mGraphicOverlay.add(graphic);
         }
     }
 

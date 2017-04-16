@@ -24,11 +24,11 @@ import com.stepstone.stepper.VerificationError;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
+import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 /**
@@ -37,49 +37,48 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
 
-    private Calendar mCalendar;
-    private Car mCar;
-
     @BindView(R.id.input_manufacturer)
     AutoCompleteTextView mManufacturer;
     @BindView(R.id.layout_input_manufacturer)
     TextInputLayout mLayoutManufacturer;
-
     @BindView(R.id.input_model)
     EditText mModel;
     @BindView(R.id.layout_input_model)
     TextInputLayout mLayoutModel;
-
     @BindView(R.id.input_regno)
     EditText mRegno;
     @BindView(R.id.layout_input_regno)
     TextInputLayout mLayoutRegno;
-
     @BindView(R.id.input_vin)
     EditText mVin;
     @BindView(R.id.layout_input_vin)
     TextInputLayout mLayoutVin;
-
     @BindView(R.id.input_color)
     EditText mColor;
     @BindView(R.id.layout_input_color)
     TextInputLayout mLayoutColor;
-
     @BindView(R.id.input_date)
     EditText mStolenDate;
     @BindView(R.id.layout_input_date)
     TextInputLayout mLayoutStolenDate;
-
     @BindView(R.id.input_district)
     AutoCompleteTextView mDistrict;
     @BindView(R.id.layout_input_district)
     TextInputLayout mLayoutDistrict;
-
     @BindView(R.id.input_production_year)
     EditText mProductionYear;
     @BindView(R.id.input_engine)
     EditText mEngine;
+    private Calendar mCalendar;
+    private Car mCar;
 
+    public static BasicCarInfoStepFragment newInstance(Car car) {
+        BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Car.class.getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -204,7 +203,7 @@ public class BasicCarInfoStepFragment extends Fragment
 
         String temp = mRegno.getText().toString().trim().toUpperCase();
 
-        if (temp.isEmpty() || !Pattern.matches("[A-Z0-9]{3} [A-Z0-9]{4,5}", temp)) {
+        if (!HelperMethods.isValidRegno(temp)) {
             mLayoutRegno.setError(getString(R.string.regno_error_message));
             isValid = false;
         }
@@ -214,7 +213,7 @@ public class BasicCarInfoStepFragment extends Fragment
         if (temp.isEmpty()) {
             mLayoutVin.setError(getString(R.string.vin_error_empty_message));
             isValid = false;
-        } else if (!Pattern.matches("[A-Z0-9]{17}", temp)) {
+        } else if (!HelperMethods.isValidVin(temp)) {
             mLayoutVin.setError(getString(R.string.vin_error_invalid_message));
             isValid = false;
         }
@@ -235,14 +234,6 @@ public class BasicCarInfoStepFragment extends Fragment
         }
 
         return isValid;
-    }
-
-    public static BasicCarInfoStepFragment newInstance(Car car) {
-        BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(Car.class.getSimpleName(), car);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
