@@ -114,6 +114,7 @@
     <string name="district_error_message">Please set the district where the car was stolen</string>
     <string name="vin_error_empty_message">Please enter the car VIN number</string>
     <string name="vin_error_invalid_message">The VIN number must contain 17 alphanumeric characters</string>
+    <string name="logout">Log out</string>
 
     <string-array name="car_manufacturers">
         <item>Alfa Romeo</item>

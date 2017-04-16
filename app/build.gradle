@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "cz.muni.fi.a2p06.stolencardatabase"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -47,6 +47,7 @@ dependencies {
     // Firebase UI
     compile 'com.firebaseui:firebase-ui-storage:1.2.0'
     compile 'com.firebaseui:firebase-ui-database:1.2.0'
+    compile 'com.firebaseui:firebase-ui-auth:1.2.0'
 
     // StepStone Stepper
     compile 'com.stepstone.stepper:material-stepper:3.2.0'
