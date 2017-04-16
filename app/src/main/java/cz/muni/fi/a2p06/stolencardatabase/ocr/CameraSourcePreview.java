@@ -36,7 +36,7 @@ import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
 
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
-
+    // TODO Landscape mode bug
     private Context mContext;
     private SurfaceView mSurfaceView;
     private boolean mStartRequested;
@@ -167,17 +167,13 @@ public class CameraSourcePreview extends ViewGroup {
             // the size to maintain the proper aspect ratio.
             View temp = getChildAt(i);
 
-            if (temp instanceof SurfaceView) {
-                temp.layout(
-                        -1 * childXOffset, -1 * childYOffset,
-                        childWidth - childXOffset, childHeight - childYOffset);
-            } else if (temp instanceof GraphicOverlay) {
-                temp.layout(
-                        -1 * childXOffset, -1 * childYOffset,
-                        childWidth - childXOffset, childHeight - childYOffset);
-            } else if (temp instanceof Button) {
+            if (temp instanceof Button) {
                 int radius = HelperMethods.convertDptoPx(40, mContext);
                 temp.layout(buttonXCentre - radius, buttonYCentre - radius, buttonXCentre + radius, buttonYCentre + radius);
+            } else {
+                temp.layout(
+                        -1 * childXOffset, -1 * childYOffset,
+                        childWidth - childXOffset, childHeight - childYOffset);
             }
         }
 

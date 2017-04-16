@@ -144,11 +144,6 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         public abstract void draw(Canvas canvas);
 
         /**
-         * Returns true if the supplied coordinates are within this graphic.
-         */
-        public abstract boolean contains(float x, float y);
-
-        /**
          * Adjusts a horizontal value of the supplied value from the preview scale to the view
          * scale.
          */

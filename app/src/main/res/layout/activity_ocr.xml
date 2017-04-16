@@ -9,7 +9,6 @@
         android:id="@+id/ocr_camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:keepScreenOn="true">
 
         <cz.muni.fi.a2p06.stolencardatabase.ocr.GraphicOverlay

@@ -28,10 +28,9 @@ import com.google.android.gms.vision.text.TextBlock;
  */
 public class OcrGraphic extends GraphicOverlay.Graphic {
 
-    private int mId;
-
     private static Paint sRectPaint;
     private final TextBlock mText;
+    private int mId;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -59,26 +58,6 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
 
     public TextBlock getTextBlock() {
         return mText;
-    }
-
-    /**
-     * Checks whether a point is within the bounding box of this graphic.
-     * The provided point should be relative to this graphic's containing overlay.
-     *
-     * @param x An x parameter in the relative context of the canvas.
-     * @param y A y parameter in the relative context of the canvas.
-     * @return True if the provided point is contained within this graphic's bounding box.
-     */
-    public boolean contains(float x, float y) {
-        if (mText == null) {
-            return false;
-        }
-        RectF rect = new RectF(mText.getBoundingBox());
-        rect.left = translateX(rect.left);
-        rect.top = translateY(rect.top);
-        rect.right = translateX(rect.right);
-        rect.bottom = translateY(rect.bottom);
-        return (rect.left < x && rect.right > x && rect.top < y && rect.bottom > y);
     }
 
     /**
