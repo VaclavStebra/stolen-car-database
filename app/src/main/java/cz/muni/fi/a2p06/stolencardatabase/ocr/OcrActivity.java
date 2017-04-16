@@ -27,24 +27,23 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 
 public class OcrActivity extends AppCompatActivity {
+    public static final int SCAN_REGNO_REQUEST = 1;
+    public static final String REGNO_QUERY = "regno_query";
     private static final String TAG = "OcrActivity";
-
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-
-    public static final int SCAN_REGNO_REQUEST = 1;
-    public static final String REGNO_QUERY = "regno_query";
-
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -63,14 +62,19 @@ public class OcrActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    private final Runnable mShowPart2Runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Delayed display of UI elements
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
 
-    private CameraSource mCameraSource;
-
+        }
+    };
     @BindView(R.id.ocr_camera_view)
     CameraSourcePreview mOcrCameraView;
-    @BindView(R.id.graphicOverlay)
-    GraphicOverlay<OcrGraphic> mGraphicOverlay;
-
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -88,19 +92,9 @@ public class OcrActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-
-        }
-    };
-
+    @BindView(R.id.graphicOverlay)
+    GraphicOverlay<OcrGraphic> mGraphicOverlay;
+    private CameraSource mCameraSource;
     private boolean mVisible;
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -329,4 +323,22 @@ public class OcrActivity extends AppCompatActivity {
             }
         }
     }
+
+    @OnClick(R.id.ocr_scan_regno_button)
+    public void onClick(View view) {
+        if (mGraphicOverlay != null) {
+            Intent result = new Intent();
+            OcrGraphic graphic = mGraphicOverlay.getGraphic();
+            if (graphic != null) {
+                TextBlock textBlock = graphic.getTextBlock();
+                result.putExtra(REGNO_QUERY, textBlock.getValue());
+                setResult(RESULT_OK, result);
+            } else {
+                Toast.makeText(this, "SPZ wasn't found", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_CANCELED);
+            }
+        }
+        finish();
+    }
+
 }
