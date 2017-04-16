@@ -23,12 +23,16 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
+
+import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
 
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
@@ -106,29 +110,6 @@ public class CameraSourcePreview extends ViewGroup {
         }
     }
 
-    private class SurfaceCallback implements SurfaceHolder.Callback {
-        @Override
-        public void surfaceCreated(SurfaceHolder surface) {
-            mSurfaceAvailable = true;
-            try {
-                startIfReady();
-            } catch (SecurityException se) {
-                Log.e(TAG, "Do not have permission to start the camera", se);
-            } catch (IOException e) {
-                Log.e(TAG, "Could not start camera source.", e);
-            }
-        }
-
-        @Override
-        public void surfaceDestroyed(SurfaceHolder surface) {
-            mSurfaceAvailable = false;
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        }
-    }
-
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int previewWidth = 320;
@@ -141,15 +122,20 @@ public class CameraSourcePreview extends ViewGroup {
             }
         }
 
+        final int viewWidth = right - left;
+        final int viewHeight = bottom - top;
+
+        int buttonXCentre = 0;
+        int buttonYCentre = 0;
+
         // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
         if (isPortraitMode()) {
             int tmp = previewWidth;
             previewWidth = previewHeight;
             previewHeight = tmp;
+            buttonXCentre = viewWidth / 2;
+            buttonYCentre = viewHeight - HelperMethods.convertDptoPx(125, mContext);
         }
-
-        final int viewWidth = right - left;
-        final int viewHeight = bottom - top;
 
         int childWidth;
         int childHeight;
@@ -172,12 +158,26 @@ public class CameraSourcePreview extends ViewGroup {
             childXOffset = (childWidth - viewWidth) / 2;
         }
 
+        Log.d(TAG, "onLayout: x " + buttonXCentre + " y " + buttonYCentre);
+
         for (int i = 0; i < getChildCount(); ++i) {
             // One dimension will be cropped.  We shift child over or up by this offset and adjust
             // the size to maintain the proper aspect ratio.
-            getChildAt(i).layout(
-                    -1 * childXOffset, -1 * childYOffset,
-                    childWidth - childXOffset, childHeight - childYOffset);
+            View temp = getChildAt(i);
+
+            if (temp instanceof SurfaceView) {
+                temp.layout(
+                        -1 * childXOffset, -1 * childYOffset,
+                        childWidth - childXOffset, childHeight - childYOffset);
+            } else if (temp instanceof GraphicOverlay) {
+                temp.layout(
+                        -1 * childXOffset, -1 * childYOffset,
+                        childWidth - childXOffset, childHeight - childYOffset);
+            } else if (temp instanceof Button) {
+                int radius = HelperMethods.convertDptoPx(40, mContext);
+                Log.d(TAG, "onLayout: radius " + radius);
+                temp.layout(buttonXCentre - radius, buttonYCentre - radius, buttonXCentre + radius, buttonYCentre + radius);
+            }
         }
 
         try {
@@ -200,5 +200,28 @@ public class CameraSourcePreview extends ViewGroup {
 
         Log.d(TAG, "isPortraitMode returning false by default");
         return false;
+    }
+
+    private class SurfaceCallback implements SurfaceHolder.Callback {
+        @Override
+        public void surfaceCreated(SurfaceHolder surface) {
+            mSurfaceAvailable = true;
+            try {
+                startIfReady();
+            } catch (SecurityException se) {
+                Log.e(TAG, "Do not have permission to start the camera", se);
+            } catch (IOException e) {
+                Log.e(TAG, "Could not start camera source.", e);
+            }
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder surface) {
+            mSurfaceAvailable = false;
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        }
     }
 }

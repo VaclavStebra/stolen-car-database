@@ -29,4 +29,15 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="ScanRegnoButton" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/bt_scan_regno_text</item>
+        <item name="android:background">@drawable/bt_scan_regno</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

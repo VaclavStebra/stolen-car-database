@@ -2,7 +2,6 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +25,7 @@ import com.google.firebase.database.Query;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
+import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity;
@@ -37,13 +36,12 @@ import static cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity.SCAN_REGNO_REQU
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
 
+    @BindView(R.id.car_list_view)
+    RecyclerView mCarList;
     private CarListAdapter mCarListAdapter;
     private OnCarListFragmentInteractionListener mListener;
     private DatabaseReference mRef;
     private SearchView mSearchView;
-
-    @BindView(R.id.car_list_view)
-    RecyclerView mCarList;
 
     public CarListFragment() {
         // Required empty public constructor
@@ -102,7 +100,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         if (mSearchView != null) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, convertDptoPx(4), 0);
+            params.setMargins(0, 0, HelperMethods.convertDptoPx(4, getContext()), 0);
 
             ((LinearLayout) mSearchView.getChildAt(0)).addView(createRegnoScanButton(), params);
 
@@ -165,15 +163,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         });
 
         return btScanRegno;
-    }
-
-    private int convertDptoPx(int pixelValue) {
-        Resources r = getResources();
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                pixelValue,
-                r.getDisplayMetrics()
-        );
     }
 
     @Override
