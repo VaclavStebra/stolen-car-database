@@ -22,12 +22,9 @@ import android.view.View;
 
 import com.google.android.gms.vision.CameraSource;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * A view which renders a series of custom graphics to be overlaid on top of an associated preview
- * (i.e., the camera preview).  The creator can add graphics objects, update the objects, and remove
+ * (i.e., the camera preview).  The creator can set graphics objects, update the objects, and remove
  * them, triggering the appropriate drawing and invalidation within the view.<p>
  * <p>
  * Supports scaling and mirroring of the graphics relative the camera's preview properties.  The
@@ -50,12 +47,80 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private int mPreviewHeight;
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
-    private Set<T> mGraphics = new HashSet<>();
+    private T mGraphic = null;
+
+    public GraphicOverlay(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    /**
+     * Removes a graphic from the overlay.
+     */
+    public void clear() {
+        synchronized (mLock) {
+            mGraphic = null;
+        }
+        postInvalidate();
+    }
+
+    /**
+     * Adds a graphic to the overlay.
+     */
+    public void set(T graphic) {
+        synchronized (mLock) {
+            mGraphic = graphic;
+        }
+        postInvalidate();
+    }
+
+    /**
+     * Returns the first graphic, if any, that exists at the provided absolute screen coordinates.
+     * These coordinates will be offset by the relative screen position of this view.
+     *
+     * @return First graphic containing the point, or null if no text is detected.
+     */
+    public T getGraphic() {
+        synchronized (mLock) {
+            return mGraphic;
+        }
+    }
+
+    /**
+     * Sets the camera attributes for size and facing direction, which informs how to transform
+     * image coordinates later.
+     */
+    public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
+        synchronized (mLock) {
+            mPreviewWidth = previewWidth;
+            mPreviewHeight = previewHeight;
+            mFacing = facing;
+        }
+        postInvalidate();
+    }
+
+    /**
+     * Draws the overlay with its associated graphic objects.
+     */
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        synchronized (mLock) {
+            if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
+                mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
+                mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
+            }
+
+            if (mGraphic != null) {
+                mGraphic.draw(canvas);
+            }
+        }
+    }
 
     /**
      * Base class for a custom graphics object to be rendered within the graphic overlay.  Subclass
      * this and implement the {@link Graphic#draw(Canvas)} method to define the
-     * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
+     * graphics element.  Add instances to the overlay using {@link GraphicOverlay#set(Graphic)}.
      */
     public static abstract class Graphic {
         private GraphicOverlay mOverlay;
@@ -120,92 +185,6 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
 
         public void postInvalidate() {
             mOverlay.postInvalidate();
-        }
-    }
-
-    public GraphicOverlay(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    /**
-     * Removes all graphics from the overlay.
-     */
-    public void clear() {
-        synchronized (mLock) {
-            mGraphics.clear();
-        }
-        postInvalidate();
-    }
-
-    /**
-     * Adds a graphic to the overlay.
-     */
-    public void add(T graphic) {
-        synchronized (mLock) {
-            mGraphics.add(graphic);
-        }
-        postInvalidate();
-    }
-
-    /**
-     * Removes a graphic from the overlay.
-     */
-    public void remove(T graphic) {
-        synchronized (mLock) {
-            mGraphics.remove(graphic);
-        }
-        postInvalidate();
-    }
-
-    /**
-     * Returns the first graphic, if any, that exists at the provided absolute screen coordinates.
-     * These coordinates will be offset by the relative screen position of this view.
-     *
-     * @return First graphic containing the point, or null if no text is detected.
-     */
-    public T getGraphicAtLocation(float rawX, float rawY) {
-        synchronized (mLock) {
-            // Get the position of this View so the raw location can be offset relative to the view.
-            int[] location = new int[2];
-            this.getLocationOnScreen(location);
-            for (T graphic : mGraphics) {
-                if (graphic.contains(rawX - location[0], rawY - location[1])) {
-                    return graphic;
-                }
-            }
-            return null;
-        }
-    }
-
-    /**
-     * Sets the camera attributes for size and facing direction, which informs how to transform
-     * image coordinates later.
-     */
-    public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
-        synchronized (mLock) {
-            mPreviewWidth = previewWidth;
-            mPreviewHeight = previewHeight;
-            mFacing = facing;
-        }
-        postInvalidate();
-    }
-
-    /**
-     * Draws the overlay with its associated graphic objects.
-     */
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        synchronized (mLock) {
-            if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
-                mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
-                mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
-            }
-
-            for (Graphic graphic : mGraphics) {
-                graphic.draw(canvas);
-            }
         }
     }
 }
