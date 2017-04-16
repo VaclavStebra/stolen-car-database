@@ -133,8 +133,12 @@ public class CameraSourcePreview extends ViewGroup {
             int tmp = previewWidth;
             previewWidth = previewHeight;
             previewHeight = tmp;
+
             buttonXCentre = viewWidth / 2;
             buttonYCentre = viewHeight - HelperMethods.convertDptoPx(125, mContext);
+        } else {
+            buttonXCentre = viewWidth - HelperMethods.convertDptoPx(125, mContext);
+            buttonYCentre = viewHeight / 2;
         }
 
         int childWidth;
@@ -158,8 +162,6 @@ public class CameraSourcePreview extends ViewGroup {
             childXOffset = (childWidth - viewWidth) / 2;
         }
 
-        Log.d(TAG, "onLayout: x " + buttonXCentre + " y " + buttonYCentre);
-
         for (int i = 0; i < getChildCount(); ++i) {
             // One dimension will be cropped.  We shift child over or up by this offset and adjust
             // the size to maintain the proper aspect ratio.
@@ -175,7 +177,6 @@ public class CameraSourcePreview extends ViewGroup {
                         childWidth - childXOffset, childHeight - childYOffset);
             } else if (temp instanceof Button) {
                 int radius = HelperMethods.convertDptoPx(40, mContext);
-                Log.d(TAG, "onLayout: radius " + radius);
                 temp.layout(buttonXCentre - radius, buttonYCentre - radius, buttonXCentre + radius, buttonYCentre + radius);
             }
         }
