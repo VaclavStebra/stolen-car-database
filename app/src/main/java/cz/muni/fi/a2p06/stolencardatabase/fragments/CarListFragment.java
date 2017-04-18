@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -102,9 +103,11 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         if (mSearchView != null) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, HelperMethods.convertDptoPx(4, getContext()), 0);
+            params.gravity = Gravity.CENTER;
 
-            ((LinearLayout) mSearchView.getChildAt(0)).addView(createRegnoScanButton(), params);
+            ((LinearLayout) mSearchView.getChildAt(0)).addView(createRegnoScannerButton(), params);
+
+            mSearchView.setQueryHint(getString(R.string.searchview_query_hint));
 
             mSearchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
@@ -152,11 +155,13 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         }
     }
 
-    private ImageButton createRegnoScanButton() {
-        ImageButton btScanRegno = new ImageButton(getActivity());
-        btScanRegno.setImageResource(R.drawable.ic_photo_camera_black_24dp);
-        btScanRegno.setBackgroundColor(Color.TRANSPARENT);
-        btScanRegno.setOnClickListener(new View.OnClickListener() {
+    private ImageButton createRegnoScannerButton() {
+        ImageButton btRegnoScanner = new ImageButton(getActivity());
+        btRegnoScanner.setImageResource(R.drawable.ic_photo_camera_black_24dp);
+        btRegnoScanner.setBackgroundColor(Color.TRANSPARENT);
+        int padding = HelperMethods.convertDptoPx(8, getContext());
+        btRegnoScanner.setPadding(padding, padding, padding, padding);
+        btRegnoScanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), OcrActivity.class);
@@ -164,7 +169,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             }
         });
 
-        return btScanRegno;
+        return btRegnoScanner;
     }
 
     @Override
