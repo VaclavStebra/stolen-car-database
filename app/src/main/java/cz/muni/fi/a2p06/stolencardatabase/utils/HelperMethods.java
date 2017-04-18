@@ -1,4 +1,4 @@
-package cz.muni.fi.a2p06.stolencardatabase.Utils;
+package cz.muni.fi.a2p06.stolencardatabase.utils;
 
 import android.content.Context;
 import android.util.TypedValue;

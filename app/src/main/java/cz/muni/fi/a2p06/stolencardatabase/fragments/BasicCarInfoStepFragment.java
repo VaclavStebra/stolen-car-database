@@ -28,8 +28,8 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
-import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
  * A simple {@link Fragment} subclass.

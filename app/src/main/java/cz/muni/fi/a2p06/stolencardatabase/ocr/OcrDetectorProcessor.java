@@ -20,7 +20,7 @@ import android.util.SparseArray;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 
-import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
  * A very simple Processor which gets detected TextBlocks and adds them to the overlay

@@ -32,7 +32,7 @@ import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
 
-import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";

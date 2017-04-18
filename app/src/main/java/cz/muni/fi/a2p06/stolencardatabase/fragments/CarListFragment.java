@@ -25,10 +25,10 @@ import com.google.firebase.database.Query;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
-import cz.muni.fi.a2p06.stolencardatabase.Utils.HelperMethods;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 import static android.app.Activity.RESULT_OK;
 import static cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity.SCAN_REGNO_REQUEST;
