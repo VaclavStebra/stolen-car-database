@@ -48,15 +48,15 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         postInvalidate();
     }
 
-    public int getId() {
+    int getId() {
         return mId;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.mId = id;
     }
 
-    public TextBlock getTextBlock() {
+    TextBlock getTextBlock() {
         return mText;
     }
 
@@ -64,7 +64,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      * Draws the text block annotations for position, size, and raw value on the supplied canvas.
      */
     @Override
-    public void draw(Canvas canvas) {
+    void draw(Canvas canvas) {
         if (mText == null) {
             return;
         }
