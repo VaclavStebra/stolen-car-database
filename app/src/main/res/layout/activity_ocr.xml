@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context="cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:keepScreenOn="true"
+             tools:context="cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity">
 
     <cz.muni.fi.a2p06.stolencardatabase.ocr.CameraSourcePreview
         android:id="@+id/ocr_camera_view"
@@ -12,15 +12,15 @@
         android:keepScreenOn="true">
 
         <cz.muni.fi.a2p06.stolencardatabase.ocr.GraphicOverlay
-            android:id="@+id/graphicOverlay"
+            android:id="@+id/ocr_graphicOverlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <Button
             android:id="@+id/ocr_scan_regno_button"
             style="@style/ScanRegnoButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </cz.muni.fi.a2p06.stolencardatabase.ocr.CameraSourcePreview>
 

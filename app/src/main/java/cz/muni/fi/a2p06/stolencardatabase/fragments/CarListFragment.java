@@ -85,6 +85,8 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == OcrActivity.SCAN_REGNO_REQUEST && data != null) {
             mSearchView.setQuery(data.getStringExtra(OcrActivity.REGNO_QUERY), false);
+        } else {
+            mSearchView.setQuery("", false);
         }
     }
 

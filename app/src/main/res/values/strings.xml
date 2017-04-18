@@ -187,9 +187,7 @@
     </string-array>
 
     <string name="title_activity_ocr">SPZ Scanner</string>
-    <string name="button_ocr">Tap to read</string>
-    <string name="low_storage_error">The device does not have enough stoarge</string>
-    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
-    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.</string>
+    <string name="low_storage_error">The device does not have enough storage</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission. Access to the camera is needed for detection. </string>
     <string name="grant_access">Grant Access</string>
 </resources>

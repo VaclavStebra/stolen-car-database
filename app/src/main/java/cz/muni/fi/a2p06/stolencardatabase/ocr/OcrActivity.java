@@ -44,17 +44,6 @@ public class OcrActivity extends AppCompatActivity {
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
     /**
      * Some older devices needs a small delay between UI widget updates
@@ -70,7 +59,6 @@ public class OcrActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.show();
             }
-
         }
     };
     @BindView(R.id.ocr_camera_view)
@@ -92,7 +80,7 @@ public class OcrActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    @BindView(R.id.graphicOverlay)
+    @BindView(R.id.ocr_graphicOverlay)
     GraphicOverlay<OcrGraphic> mGraphicOverlay;
     private CameraSource mCameraSource;
     private boolean mVisible;
@@ -252,7 +240,7 @@ public class OcrActivity extends AppCompatActivity {
                     " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Multitracker sample")
+            builder.setTitle("Camera permission is needed")
                     .setMessage(R.string.no_camera_permission)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -295,7 +283,7 @@ public class OcrActivity extends AppCompatActivity {
         mCameraSource = new CameraSource.Builder(context, textRecognizer)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
-                .setRequestedFps(15.0f)
+                .setRequestedFps(2.0f)
                 .build();
     }
 
@@ -334,7 +322,7 @@ public class OcrActivity extends AppCompatActivity {
                 result.putExtra(REGNO_QUERY, textBlock.getValue());
                 setResult(RESULT_OK, result);
             } else {
-                Toast.makeText(this, "SPZ wasn't found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "SPZ was not found", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_CANCELED);
             }
         }
