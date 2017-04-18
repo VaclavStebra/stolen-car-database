@@ -38,11 +38,9 @@ import butterknife.OnClick;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 
 public class OcrActivity extends AppCompatActivity {
-    private static final String TAG = "OcrActivity";
-
     public static final int SCAN_REGNO_REQUEST = 1;
     public static final String REGNO_QUERY = "regno_query";
-
+    private static final String TAG = "OcrActivity";
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
     private static final int RC_HANDLE_CAMERA_PERM = 2;
@@ -53,20 +51,6 @@ public class OcrActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-
-    @BindView(R.id.ocr_camera_view)
-    CameraSourcePreview mOcrCameraView;
-    @BindView(R.id.ocr_graphicOverlay)
-    GraphicOverlay<OcrGraphic> mGraphicOverlay;
-    private CameraSource mCameraSource;
-    private boolean mVisible;
-
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -77,6 +61,8 @@ public class OcrActivity extends AppCompatActivity {
             }
         }
     };
+    @BindView(R.id.ocr_camera_view)
+    CameraSourcePreview mOcrCameraView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -92,6 +78,16 @@ public class OcrActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+    };
+    @BindView(R.id.ocr_graphicOverlay)
+    GraphicOverlay<OcrGraphic> mGraphicOverlay;
+    private CameraSource mCameraSource;
+    private boolean mVisible;
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
         }
     };
 
@@ -287,7 +283,7 @@ public class OcrActivity extends AppCompatActivity {
         mCameraSource = new CameraSource.Builder(context, textRecognizer)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
-                .setRequestedFps(2.0f)
+                .setRequestedFps(15.0f)
                 .build();
     }
 
