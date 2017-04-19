@@ -237,29 +237,31 @@ public class OcrActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Camera permission granted - initialize the camera source");
-            createCameraSource();
-        } else {
-            Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-                    " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+        if (requestCode == RC_HANDLE_CAMERA_PERM) {
+            if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Camera permission granted - initialize the camera source");
+                createCameraSource();
+            } else {
+                Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Camera permission is needed")
-                    .setMessage(R.string.no_camera_permission)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .setNegativeButton(R.string.grant_access, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            requestCameraPermission();
-                        }
-                    })
-                    .show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Camera permission is needed")
+                        .setMessage(R.string.no_camera_permission)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.grant_access, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestCameraPermission();
+                            }
+                        })
+                        .show();
+            }
         }
     }
 
