@@ -108,7 +108,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             ((LinearLayout) mSearchView.getChildAt(0)).addView(createRegnoScannerButton(), params);
 
             mSearchView.setQueryHint(getString(R.string.searchview_query_hint));
-
+            mSearchView.setMaxWidth(Integer.MAX_VALUE);
             mSearchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
