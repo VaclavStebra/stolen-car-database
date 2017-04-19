@@ -36,6 +36,7 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
  */
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
+    private static final String TAG = "BasicCarInfoStepFragmen";
 
     @BindView(R.id.input_manufacturer)
     AutoCompleteTextView mManufacturer;
@@ -141,20 +142,17 @@ public class BasicCarInfoStepFragment extends Fragment
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (count > after) {
-                    delete = true;
-                } else {
-                    delete = false;
-                }
+                delete = count > after;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 3 && !delete) {
-                    s.append(" ");
-                }
-                if (s.length() == 4 && delete) {
-                    s.delete(3, 4);
+                if (s.length() == 4) {
+                    if (delete) {
+                        s.delete(3, 4);
+                    } else {
+                        s.insert(3, " ");
+                    }
                 }
             }
         });

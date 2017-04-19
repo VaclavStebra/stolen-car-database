@@ -36,8 +36,6 @@ import static android.app.Activity.RESULT_OK;
  */
 public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     private static final String TAG = "CarPhotoStepFragment";
-    // TODO: Check if any permissions are needed
-    // TODO: request permission READ/WRITE_EXTERNAL_STORAGE
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int RC_HANDLE_STORAGE_PERM = 2;
