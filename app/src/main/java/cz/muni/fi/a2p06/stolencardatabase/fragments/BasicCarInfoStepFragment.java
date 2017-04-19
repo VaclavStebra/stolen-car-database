@@ -153,10 +153,19 @@ public class BasicCarInfoStepFragment extends Fragment
                     } else {
                         s.insert(3, " ");
                     }
+                } else if (s.length() == 10) {
+                    s.delete(9, 10);
                 }
             }
         });
-        mVin.addTextChangedListener(new DefaultTextWatcher(mLayoutVin));
+        mVin.addTextChangedListener(new DefaultTextWatcher(mLayoutVin) {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 18) {
+                    s.delete(17, 18);
+                }
+            }
+        });
         mStolenDate.addTextChangedListener(new DefaultTextWatcher(mLayoutStolenDate));
         mColor.addTextChangedListener(new DefaultTextWatcher(mLayoutColor));
         mDistrict.addTextChangedListener(new DefaultTextWatcher(mLayoutDistrict));
@@ -236,8 +245,7 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public VerificationError verifyStep() {
-        return null;
-//        return isValidInput() ? null : new VerificationError("Invalid input");
+        return isValidInput() ? null : new VerificationError("Invalid input");
     }
 
     @Override
