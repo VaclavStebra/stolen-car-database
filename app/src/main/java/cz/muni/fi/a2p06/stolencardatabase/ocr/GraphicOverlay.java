@@ -56,7 +56,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     /**
      * Removes a graphic from the overlay.
      */
-    public void clear() {
+    void clear() {
         synchronized (mLock) {
             mGraphic = null;
         }
@@ -66,7 +66,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     /**
      * Adds a graphic to the overlay.
      */
-    public void set(T graphic) {
+    void set(T graphic) {
         synchronized (mLock) {
             mGraphic = graphic;
         }
@@ -79,7 +79,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      *
      * @return First graphic containing the point, or null if no text is detected.
      */
-    public T getGraphic() {
+    T getGraphic() {
         synchronized (mLock) {
             return mGraphic;
         }
@@ -89,7 +89,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      * Sets the camera attributes for size and facing direction, which informs how to transform
      * image coordinates later.
      */
-    public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
+    void setCameraInfo(int previewWidth, int previewHeight, int facing) {
         synchronized (mLock) {
             mPreviewWidth = previewWidth;
             mPreviewHeight = previewHeight;

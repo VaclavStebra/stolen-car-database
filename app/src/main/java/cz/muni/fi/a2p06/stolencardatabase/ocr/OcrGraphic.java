@@ -41,7 +41,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             sRectPaint = new Paint();
             sRectPaint.setColor(Color.GREEN);
             sRectPaint.setStyle(Paint.Style.STROKE);
-            sRectPaint.setStrokeWidth(4.0f);
+            sRectPaint.setStrokeWidth(6.0f);
         }
 
         // Redraw the overlay, as this graphic has been added.

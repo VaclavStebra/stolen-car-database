@@ -58,6 +58,7 @@ public class OcrActivity extends AppCompatActivity {
     CameraSourcePreview mOcrCameraView;
     @BindView(R.id.ocr_graphicOverlay)
     GraphicOverlay<OcrGraphic> mGraphicOverlay;
+
     private CameraSource mCameraSource;
     private boolean mVisible;
 

@@ -39,6 +39,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @BindView(R.id.car_list_view)
     RecyclerView mCarList;
+
     private CarListAdapter mCarListAdapter;
     private OnCarListFragmentInteractionListener mListener;
     private DatabaseReference mRef;
@@ -125,7 +126,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                 }
             });
 
-            // TODO find better way
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -134,9 +134,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     Query dataQuery = null;
 
                     if (query.length() > 8) {
-                        dataQuery = mRef.orderByChild("vin").equalTo(query);
+                        dataQuery = mRef.orderByChild("vin").startAt(query).limitToFirst(1);
                     } else {
-                        dataQuery = mRef.orderByChild("regno").equalTo(query);
+                        dataQuery = mRef.orderByChild("regno").startAt(query).limitToFirst(1);
                     }
 
                     mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
