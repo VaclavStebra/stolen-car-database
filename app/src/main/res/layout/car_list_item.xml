@@ -22,8 +22,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/car_image"
@@ -63,8 +62,6 @@
                 android:id="@+id/regno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginStart="0dp"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 card_view:layout_constraintBaseline_toBaselineOf="@+id/spz_text"
@@ -75,21 +72,23 @@
                 android:id="@+id/stolen_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:textColor="?android:attr/textColorHint"
                 android:textSize="14sp"
                 card_view:layout_constraintRight_toRightOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/car_image"
-                tools:text="Stolen date"/>
+                tools:text="Stolen date"
+                card_view:layout_constraintLeft_toRightOf="@+id/district"
+                card_view:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                card_view:layout_constraintBottom_toBottomOf="@+id/district"
+                android:layout_marginBottom="0dp"/>
 
             <TextView
                 android:id="@+id/vin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginStart="0dp"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 card_view:layout_constraintBaseline_toBaselineOf="@+id/vin_text"
@@ -98,27 +97,27 @@
 
             <TextView
                 android:id="@+id/district"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:textColor="?android:attr/textColorHint"
                 card_view:layout_constraintLeft_toLeftOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/manuf_and_model"
-                tools:text="District"/>
+                tools:text="District"
+                card_view:layout_constraintRight_toLeftOf="@+id/stolen_date"
+                card_view:layout_constraintHorizontal_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"/>
 
             <TextView
                 android:id="@+id/spz_text"
                 android:layout_width="33dp"
                 android:layout_height="18dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="8dp"
                 android:text="@string/spz"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 card_view:layout_constraintLeft_toLeftOf="@+id/district"
+                android:layout_marginTop="8dp"
                 card_view:layout_constraintTop_toBottomOf="@+id/stolen_date"/>
 
             <TextView
@@ -126,8 +125,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginStart="0dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/vin"
                 android:textColor="?android:attr/textColorSecondary"

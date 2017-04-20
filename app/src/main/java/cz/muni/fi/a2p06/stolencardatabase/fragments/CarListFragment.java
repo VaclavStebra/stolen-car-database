@@ -134,6 +134,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     Query dataQuery = null;
 
                     if (query.length() > 8) {
+                        // TODO
                         dataQuery = mRef.orderByChild("vin").startAt(query).limitToFirst(1);
                     } else {
                         dataQuery = mRef.orderByChild("regno").startAt(query).limitToFirst(1);

@@ -41,6 +41,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
         viewHolder.mRegno.setText(model.getRegno());
         viewHolder.mVin.setText(model.getVin());
 
+        //TODO text length
         viewHolder.mDistrict.setText(model.getDistrict());
 
         Calendar calendar = new GregorianCalendar();
