@@ -288,7 +288,7 @@ public class OcrActivity extends AppCompatActivity {
         mCameraSource = new CameraSource.Builder(context, textRecognizer)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
-                .setRequestedFps(15.0f)
+                .setRequestedFps(30.0f)
                 .build();
     }
 
