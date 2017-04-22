@@ -2,6 +2,7 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
@@ -107,6 +109,7 @@ public class BasicCarInfoStepFragment extends Fragment
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_UP == event.getAction()) {
+                    hideKeyboard(v);
                     showDatePicker();
                 }
                 return false;
@@ -118,6 +121,7 @@ public class BasicCarInfoStepFragment extends Fragment
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_UP == event.getAction()) {
+                    hideKeyboard(v);
                     showYearPicker();
                 }
                 return false;
@@ -241,6 +245,11 @@ public class BasicCarInfoStepFragment extends Fragment
         }
 
         return isValid;
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
