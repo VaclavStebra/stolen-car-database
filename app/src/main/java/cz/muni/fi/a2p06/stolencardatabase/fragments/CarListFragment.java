@@ -134,10 +134,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     Query dataQuery = null;
 
                     if (query.length() > 8) {
-                        // TODO
-                        dataQuery = mRef.orderByChild("vin").startAt(query).limitToFirst(1);
+                        dataQuery = mRef.orderByChild("vin").equalTo(query);
                     } else {
-                        dataQuery = mRef.orderByChild("regno").startAt(query).limitToFirst(1);
+                        dataQuery = mRef.orderByChild("regno").equalTo(query);
                     }
 
                     mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
