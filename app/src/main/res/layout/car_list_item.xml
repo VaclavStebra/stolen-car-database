@@ -9,7 +9,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="8dp"
@@ -20,28 +20,26 @@
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="@dimen/cardview_default_elevation">
 
-        <android.support.constraint.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/car_image"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="215dp"
-                android:background="#E2E2E2"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
                 android:contentDescription="@string/car_list_item_image"
                 android:scaleType="centerCrop"
-                card_view:layout_constraintHorizontal_bias="0.0"
-                card_view:layout_constraintLeft_toLeftOf="parent"
-                card_view:layout_constraintRight_toRightOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/car_placeholder"
-                />
+                card_view:srcCompat="@drawable/car_placeholder"/>
 
             <TextView
                 android:id="@+id/manuf_and_model"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/car_image"
+                android:layout_centerHorizontal="true"
                 android:background="#73000000"
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingBottom="12dp"
@@ -52,88 +50,89 @@
                 android:paddingTop="12dp"
                 android:textColor="?android:attr/textColorPrimaryInverse"
                 android:textSize="22sp"
-                card_view:layout_constraintBottom_toBottomOf="@+id/car_image"
-                card_view:layout_constraintHorizontal_bias="1.0"
-                card_view:layout_constraintLeft_toLeftOf="parent"
-                card_view:layout_constraintRight_toRightOf="parent"
                 tools:text="Manufacturer and model"/>
 
             <TextView
-                android:id="@+id/regno"
+                android:id="@+id/district"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"
-                card_view:layout_constraintBaseline_toBaselineOf="@+id/spz_text"
-                card_view:layout_constraintLeft_toRightOf="@+id/spz_text"
-                tools:text="SPZ"/>
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/car_image"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/stolen_date"
+                android:layout_toStartOf="@+id/stolen_date"
+                android:textColor="?android:attr/textColorHint"
+                tools:text="District"/>
 
             <TextView
                 android:id="@+id/stolen_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/district"
+                android:layout_below="@+id/car_image"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:textColor="?android:attr/textColorHint"
                 android:textSize="14sp"
-                card_view:layout_constraintRight_toRightOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/car_image"
-                tools:text="Stolen date"
-                card_view:layout_constraintLeft_toRightOf="@+id/district"
-                card_view:layout_constraintHorizontal_bias="0.5"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
-                card_view:layout_constraintBottom_toBottomOf="@+id/district"
-                android:layout_marginBottom="0dp"/>
+                tools:text="Stolen date"/>
+
+            <TextView
+                android:id="@+id/spz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/spz_text"
+                android:layout_below="@+id/district"
+                android:layout_toEndOf="@+id/spz_text"
+                android:layout_toRightOf="@+id/spz_text"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"
+                tools:text="SPZ"/>
 
             <TextView
                 android:id="@+id/vin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/vin_text"
+                android:layout_below="@+id/spz"
+                android:layout_toEndOf="@+id/spz_text"
+                android:layout_toRightOf="@+id/spz_text"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
-                card_view:layout_constraintBaseline_toBaselineOf="@+id/vin_text"
-                card_view:layout_constraintLeft_toRightOf="@+id/spz_text"
                 tools:text="VIN"/>
 
             <TextView
-                android:id="@+id/district"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="?android:attr/textColorHint"
-                card_view:layout_constraintLeft_toLeftOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/manuf_and_model"
-                tools:text="District"
-                card_view:layout_constraintRight_toLeftOf="@+id/stolen_date"
-                card_view:layout_constraintHorizontal_weight="1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"/>
-
-            <TextView
                 android:id="@+id/spz_text"
-                android:layout_width="33dp"
-                android:layout_height="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/district"
+                android:layout_alignStart="@+id/district"
+                android:layout_below="@+id/district"
+                android:layout_marginTop="8dp"
                 android:text="@string/spz"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"
-                card_view:layout_constraintLeft_toLeftOf="@+id/district"
-                android:layout_marginTop="8dp"
-                card_view:layout_constraintTop_toBottomOf="@+id/stolen_date"/>
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/vin_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/district"
+                android:layout_alignStart="@+id/district"
+                android:layout_below="@+id/spz_text"
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/vin"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintLeft_toLeftOf="@+id/spz_text"
-                card_view:layout_constraintTop_toBottomOf="@+id/spz_text"
-                card_view:layout_constraintVertical_bias="0.0"/>
-        </android.support.constraint.ConstraintLayout>
+                android:textSize="14sp"/>
+
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>
