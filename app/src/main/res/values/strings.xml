@@ -191,4 +191,5 @@
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission. Access to the camera is needed for detection. </string>
     <string name="grant_access">Grant Access</string>
     <string name="searchview_query_hint">Enter SPZ or VIN number...</string>
+    <string name="car_list_no_items_message">No items found</string>
 </resources>

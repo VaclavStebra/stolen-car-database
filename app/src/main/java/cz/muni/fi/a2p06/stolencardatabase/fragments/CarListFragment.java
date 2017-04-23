@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,6 +25,7 @@ import com.google.firebase.database.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.CarListAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
@@ -39,6 +40,8 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @BindView(R.id.car_list_view)
     RecyclerView mCarList;
+    @BindView(R.id.car_list_empty)
+    TextView mEmptyText;
 
     private CarListAdapter mCarListAdapter;
     private OnCarListFragmentInteractionListener mListener;
@@ -61,6 +64,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         View view = inflater.inflate(R.layout.fragment_car_list, container, false);
         ButterKnife.bind(this, view);
 
+        prepareCarList();
+
+        return view;
+    }
+
+    private void prepareCarList() {
         mRef = FirebaseDatabase.getInstance().getReference("cars");
 
         mCarList.setHasFixedSize(true);
@@ -69,18 +78,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
                 CarListAdapter.CarItemHolder.class, mRef, this);
         mCarList.setAdapter(mCarListAdapter);
-
-        FloatingActionButton addButton = (FloatingActionButton) view.findViewById(R.id.fab);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onAddCarClick();
-                }
-            }
-        });
-
-        return view;
     }
 
     @Override
@@ -200,10 +197,32 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         }
     }
 
-    public void onDataLoaded(Car car) {
+    @OnClick(R.id.car_list_fab)
+    public void onFabClick(View view) {
         if (mListener != null) {
-            mListener.onDataLoaded(car);
+            mListener.onAddCarClick();
         }
+    }
+
+    public void onDataLoaded(Car car) {
+        if (car == null) {
+            showEmptyState();
+        } else {
+            showFilledState();
+            if (mListener != null) {
+                mListener.onDataLoaded(car);
+            }
+        }
+    }
+
+    private void showEmptyState() {
+        mEmptyText.setVisibility(View.VISIBLE);
+        mCarList.setVisibility(View.GONE);
+    }
+
+    private void showFilledState() {
+        mEmptyText.setVisibility(View.GONE);
+        mCarList.setVisibility(View.VISIBLE);
     }
 
     /**
