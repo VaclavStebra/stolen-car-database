@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -108,6 +109,8 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
             mSearchView.setQueryHint(getString(R.string.searchview_query_hint));
             mSearchView.setMaxWidth(Integer.MAX_VALUE);
+            mSearchView.setInputType(InputType.TYPE_CLASS_TEXT |
+                    InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
             mSearchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -238,7 +241,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
      */
     public interface OnCarListFragmentInteractionListener {
         void onItemClick(Car car);
+
         void onAddCarClick();
+
         void onDataLoaded(Car car);
     }
 }
