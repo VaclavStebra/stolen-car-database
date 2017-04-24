@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,7 +110,7 @@ public class CarDetailFragment extends Fragment implements Step {
     private void populateCarDetails() {
         populateCarImage();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
-        mRegno.setText(mCar.getRegno());
+        mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
         mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());

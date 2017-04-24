@@ -38,7 +38,6 @@ import static cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity.SCAN_REGNO_REQU
 
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
-
     @BindView(R.id.car_list_view)
     RecyclerView mCarList;
     @BindView(R.id.car_list_empty)
@@ -137,7 +136,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     if (query.length() > 8) {
                         dataQuery = mRef.orderByChild("vin").equalTo(query);
                     } else {
-                        dataQuery = mRef.orderByChild("regno").equalTo(query);
+                        dataQuery = mRef.orderByChild("regno").equalTo(HelperMethods.formatRegnoForDB(query));
                     }
 
                     mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,

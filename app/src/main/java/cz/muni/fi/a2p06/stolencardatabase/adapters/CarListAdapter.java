@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.CarItemHolder> {
 
@@ -38,7 +39,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
     @Override
     protected void populateViewHolder(CarItemHolder viewHolder, Car model, int position) {
         viewHolder.mManufacturerAndModel.setText(model.getManufacturer() + " " + model.getModel());
-        viewHolder.mRegno.setText(model.getRegno());
+        viewHolder.mRegno.setText(HelperMethods.formatRegnoFromDB(model.getRegno()));
         viewHolder.mVin.setText(model.getVin());
 
         viewHolder.mDistrict.setText(model.getDistrict());

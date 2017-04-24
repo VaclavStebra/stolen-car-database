@@ -38,7 +38,6 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
  */
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
-    private static final String TAG = "BasicCarInfoStepFragmen";
 
     @BindView(R.id.input_manufacturer)
     AutoCompleteTextView mManufacturer;
@@ -269,10 +268,15 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        saveData();
+        callback.goToNextStep();
+    }
+
+    private void saveData() {
         if (mCar != null) {
             mCar.setManufacturer(mManufacturer.getText().toString());
             mCar.setModel(mModel.getText().toString());
-            mCar.setRegno(mRegno.getText().toString().toUpperCase());
+            mCar.setRegno(HelperMethods.formatRegnoForDB(mRegno.getText().toString()));
             mCar.setVin(mVin.getText().toString().toUpperCase());
             mCar.setColor(mColor.getText().toString());
             mCar.setStolenDate(mCalendar.getTimeInMillis());
@@ -284,7 +288,6 @@ public class BasicCarInfoStepFragment extends Fragment
                 mCar.setEngine(mEngine.getText().toString());
             }
         }
-        callback.goToNextStep();
     }
 
     @Override
