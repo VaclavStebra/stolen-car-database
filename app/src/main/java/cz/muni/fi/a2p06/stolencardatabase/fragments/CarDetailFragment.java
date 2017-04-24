@@ -39,8 +39,8 @@ public class CarDetailFragment extends Fragment implements Step {
     ImageView mPhoto;
     @BindView(R.id.car_detail_manufacturer_and_model)
     TextView mManufacturerAndModel;
-    @BindView(R.id.car_detail_spz)
-    TextView mSPZ;
+    @BindView(R.id.car_detail_regno)
+    TextView mRegno;
     @BindView(R.id.car_detail_stolen_date)
     TextView mStolenDate;
     @BindView(R.id.car_detail_color)
@@ -109,7 +109,7 @@ public class CarDetailFragment extends Fragment implements Step {
     private void populateCarDetails() {
         populateCarImage();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
-        mSPZ.setText(mCar.getRegno());
+        mRegno.setText(mCar.getRegno());
         mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());

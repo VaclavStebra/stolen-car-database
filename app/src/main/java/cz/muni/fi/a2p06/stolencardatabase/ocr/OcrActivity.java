@@ -330,7 +330,7 @@ public class OcrActivity extends AppCompatActivity {
                 result.putExtra(REGNO_QUERY, textBlock.getValue());
                 setResult(RESULT_OK, result);
             } else {
-                Toast.makeText(this, "SPZ was not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.searchview_camera_regno_not_found, Toast.LENGTH_SHORT).show();
                 setResult(RESULT_CANCELED);
             }
         }

@@ -84,13 +84,13 @@
                 tools:text="Stolen date"/>
 
             <TextView
-                android:id="@+id/spz"
+                android:id="@+id/regno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/spz_text"
+                android:layout_alignTop="@+id/regno_text"
                 android:layout_below="@+id/district"
-                android:layout_toEndOf="@+id/spz_text"
-                android:layout_toRightOf="@+id/spz_text"
+                android:layout_toEndOf="@+id/regno_text"
+                android:layout_toRightOf="@+id/regno_text"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 tools:text="SPZ"/>
@@ -100,22 +100,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/vin_text"
-                android:layout_below="@+id/spz"
-                android:layout_toEndOf="@+id/spz_text"
-                android:layout_toRightOf="@+id/spz_text"
+                android:layout_below="@+id/regno"
+                android:layout_toEndOf="@+id/regno_text"
+                android:layout_toRightOf="@+id/regno_text"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 tools:text="VIN"/>
 
             <TextView
-                android:id="@+id/spz_text"
+                android:id="@+id/regno_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/district"
                 android:layout_alignStart="@+id/district"
                 android:layout_below="@+id/district"
                 android:layout_marginTop="8dp"
-                android:text="@string/spz"
+                android:text="@string/regno"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"/>
 
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/district"
                 android:layout_alignStart="@+id/district"
-                android:layout_below="@+id/spz_text"
+                android:layout_below="@+id/regno_text"
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="4dp"
                 android:text="@string/vin"

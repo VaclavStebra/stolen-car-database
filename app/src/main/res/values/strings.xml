@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Stolen Car Database</string>
     <string name="car_list_item_image">Car photo</string>
-    <string name="spz">SPZ:</string>
+    <string name="regno">SPZ:</string>
     <string name="vin">VIN:</string>
     <string name="car_thumbnail">Car thumbnail</string>
     <string name="color">Color</string>
-    <string name="spz_text">SPZ</string>
+    <string name="regno_text">SPZ</string>
     <string name="vin_text">VIN</string>
     <string name="stolen_date">Stolen Date</string>
     <string name="production_year">Production Year</string>
@@ -192,4 +192,5 @@
     <string name="grant_access">Grant Access</string>
     <string name="searchview_query_hint">Enter SPZ or VIN number...</string>
     <string name="car_list_no_items_message">No items found</string>
+    <string name="searchview_camera_regno_not_found">SPZ was not found</string>
 </resources>

@@ -38,7 +38,7 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
     @Override
     protected void populateViewHolder(CarItemHolder viewHolder, Car model, int position) {
         viewHolder.mManufacturerAndModel.setText(model.getManufacturer() + " " + model.getModel());
-        viewHolder.mSpz.setText(model.getRegno());
+        viewHolder.mRegno.setText(model.getRegno());
         viewHolder.mVin.setText(model.getVin());
 
         viewHolder.mDistrict.setText(model.getDistrict());
@@ -87,8 +87,8 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
         ImageView mCarImage;
         @BindView(R.id.manuf_and_model)
         TextView mManufacturerAndModel;
-        @BindView(R.id.spz)
-        TextView mSpz;
+        @BindView(R.id.regno)
+        TextView mRegno;
         @BindView(R.id.vin)
         TextView mVin;
         @BindView(R.id.district)

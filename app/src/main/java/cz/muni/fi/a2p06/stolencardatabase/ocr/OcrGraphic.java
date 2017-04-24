@@ -26,7 +26,7 @@ import com.google.android.gms.vision.text.TextBlock;
  * Graphic instance for rendering TextBlock position, size, and ID within an associated graphic
  * overlay view.
  */
-public class OcrGraphic extends GraphicOverlay.Graphic {
+class OcrGraphic extends GraphicOverlay.Graphic {
 
     private static Paint sRectPaint;
     private final TextBlock mText;

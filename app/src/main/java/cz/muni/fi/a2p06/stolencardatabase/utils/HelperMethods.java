@@ -26,4 +26,8 @@ public final class HelperMethods {
     public static boolean isValidVin(String vin) {
         return vin != null && !vin.isEmpty() && Pattern.matches("[A-Z0-9]{17}", vin);
     }
+
+    public static void convert(String regno) {
+
+    }
 }
