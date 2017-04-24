@@ -111,7 +111,7 @@
     <string name="regno_error_message">Please enter the registration number in format XXX XXXX</string>
     <string name="color_error_message">Please enter the car color</string>
     <string name="stolen_date_error_message">Please set the date of the car theft</string>
-    <string name="district_error_message">Please set the district where the car was stolen</string>
+    <string name="district_error_message">Please select the district where the car was stolen</string>
     <string name="vin_error_empty_message">Please enter the car VIN number</string>
     <string name="vin_error_invalid_message">The VIN number must contain 17 alphanumeric characters</string>
     <string name="action_search">Search</string>
