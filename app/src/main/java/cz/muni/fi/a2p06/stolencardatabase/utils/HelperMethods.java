@@ -62,7 +62,7 @@ public final class HelperMethods {
 
     /**
      * Format the registration number into a format suitable for the application.
-     * Use this method only if you are certain that the number comes from the database!
+     * Use this method only if you are sure that the number comes from the database!
      *
      * @param regno registration number to format
      * @return formatted registration number for application
