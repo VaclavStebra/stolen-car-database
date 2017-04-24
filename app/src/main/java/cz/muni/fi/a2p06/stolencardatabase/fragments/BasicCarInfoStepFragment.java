@@ -35,7 +35,10 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link BasicCarInfoStepFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
+
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
 
@@ -73,14 +76,6 @@ public class BasicCarInfoStepFragment extends Fragment
     EditText mEngine;
     private Calendar mCalendar;
     private Car mCar;
-
-    public static BasicCarInfoStepFragment newInstance(Car car) {
-        BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(Car.class.getSimpleName(), car);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -249,6 +244,21 @@ public class BasicCarInfoStepFragment extends Fragment
     private void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param car shared car object.
+     * @return A new instance of fragment BasicCarInfoStepFragment.
+     */
+    public static BasicCarInfoStepFragment newInstance(Car car) {
+        BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Car.class.getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

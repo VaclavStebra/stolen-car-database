@@ -33,7 +33,10 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link CarPhotoStepFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
+
 public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     private static final String TAG = "CarPhotoStepFragment";
 
@@ -115,6 +118,13 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param car shared car object.
+     * @return A new instance of fragment CarPhotoStepFragment.
+     */
     public static CarPhotoStepFragment newInstance(Car car) {
         CarPhotoStepFragment fragment = new CarPhotoStepFragment();
         Bundle args = new Bundle();
