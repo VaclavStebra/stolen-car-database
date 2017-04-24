@@ -72,6 +72,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     private void prepareCarList() {
         mRef = FirebaseDatabase.getInstance().getReference("cars");
 
+        showEmptyState();
         mCarList.setHasFixedSize(true);
         mCarList.setLayoutManager(new LinearLayoutManager(getContext()));
 
