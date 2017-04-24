@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -118,25 +118,22 @@ public class CarDetailFragment extends Fragment implements Step {
     }
 
     private void populateCarImage() {
-        // TODO refactor
         if (mCar.getPhotoUrl() != null) {
-            RequestManager requestManager = Glide.with(this);
             Uri photoUri = Uri.parse(mCar.getPhotoUrl());
+            DrawableTypeRequest drawableTypeRequest = null;
 
             if (photoUri.getScheme().equals("content")) {
-                requestManager.load(photoUri).asBitmap()
-                        .placeholder(R.drawable.car_placeholder)
-                        .centerCrop()
-                        .into(mPhoto);
+                drawableTypeRequest = Glide.with(this).load(photoUri);
             } else {
                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(mCar.getPhotoUrl());
-                requestManager.using(new FirebaseImageLoader())
-                        .load(storageReference)
-                        .placeholder(R.drawable.car_placeholder)
-                        .centerCrop()
-                        .into(mPhoto);
-
+                drawableTypeRequest = Glide.with(this).using(new FirebaseImageLoader())
+                        .load(storageReference);
             }
+
+            drawableTypeRequest.asBitmap()
+                    .placeholder(R.drawable.car_placeholder)
+                    .centerCrop()
+                    .into(mPhoto);
         }
     }
 
