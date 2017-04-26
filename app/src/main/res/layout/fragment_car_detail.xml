@@ -1,9 +1,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp"
-            tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,6 +78,17 @@
                     android:padding="3dp"/>
             </TableRow>
         </TableLayout>
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/car_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            map:cameraZoom="17"
+            map:mapType="normal"
+            map:liteMode="true"
+            map:uiMapToolbar="false"/>
     </LinearLayout>
 
 </ScrollView>
