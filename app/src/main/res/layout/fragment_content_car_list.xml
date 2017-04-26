@@ -1,20 +1,25 @@
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="12dp"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
     android:paddingBottom="12dp"
+    android:paddingTop="12dp"
     tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment">
 
+    <TextView
+        android:id="@+id/car_list_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/car_no_item"
+        android:gravity="center"
+        android:text="@string/car_list_no_items_message"
+        android:textSize="24sp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/car_list_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-</android.support.constraint.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

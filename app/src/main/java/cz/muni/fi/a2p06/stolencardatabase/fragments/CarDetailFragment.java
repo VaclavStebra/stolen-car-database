@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 
 /**
@@ -47,8 +48,8 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     ImageView mPhoto;
     @BindView(R.id.car_detail_manufacturer_and_model)
     TextView mManufacturerAndModel;
-    @BindView(R.id.car_detail_spz)
-    TextView mSPZ;
+    @BindView(R.id.car_detail_regno)
+    TextView mRegno;
     @BindView(R.id.car_detail_stolen_date)
     TextView mStolenDate;
     @BindView(R.id.car_detail_color)
@@ -163,7 +164,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     private void populateCarDetails() {
         populateCarImage();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
-        mSPZ.setText(mCar.getRegno());
+        mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
         mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());
@@ -172,25 +173,22 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     }
 
     private void populateCarImage() {
-        // TODO refactor
         if (mCar.getPhotoUrl() != null) {
-            RequestManager requestManager = Glide.with(this);
             Uri photoUri = Uri.parse(mCar.getPhotoUrl());
+            DrawableTypeRequest drawableTypeRequest = null;
 
             if (photoUri.getScheme().equals("content")) {
-                requestManager.load(photoUri).asBitmap()
-                        .placeholder(R.drawable.car_placeholder)
-                        .centerCrop()
-                        .into(mPhoto);
+                drawableTypeRequest = Glide.with(this).load(photoUri);
             } else {
                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(mCar.getPhotoUrl());
-                requestManager.using(new FirebaseImageLoader())
-                        .load(storageReference)
-                        .placeholder(R.drawable.car_placeholder)
-                        .centerCrop()
-                        .into(mPhoto);
-
+                drawableTypeRequest = Glide.with(this).using(new FirebaseImageLoader())
+                        .load(storageReference);
             }
+
+            drawableTypeRequest.asBitmap()
+                    .placeholder(R.drawable.car_placeholder)
+                    .centerCrop()
+                    .into(mPhoto);
         }
     }
 

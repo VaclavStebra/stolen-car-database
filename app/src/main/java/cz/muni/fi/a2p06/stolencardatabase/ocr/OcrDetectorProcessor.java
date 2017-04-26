@@ -26,7 +26,7 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
  * A very simple Processor which gets detected TextBlocks and adds them to the overlay
  * as OcrGraphics.
  */
-public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
+class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
 
     private GraphicOverlay<OcrGraphic> mGraphicOverlay;
 

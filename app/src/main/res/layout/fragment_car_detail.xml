@@ -31,10 +31,10 @@
             </TableRow>
             <TableRow>
                 <TextView
-                    android:text="@string/spz_text"
+                    android:text="@string/regno_text"
                     android:padding="3dp"/>
                 <TextView
-                    android:id="@+id/car_detail_spz"
+                    android:id="@+id/car_detail_regno"
                     android:padding="3dp"/>
             </TableRow>
             <TableRow>

@@ -2,6 +2,7 @@ package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
@@ -33,7 +35,10 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link BasicCarInfoStepFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
+
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
 
@@ -72,14 +77,6 @@ public class BasicCarInfoStepFragment extends Fragment
     private Calendar mCalendar;
     private Car mCar;
 
-    public static BasicCarInfoStepFragment newInstance(Car car) {
-        BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(Car.class.getSimpleName(), car);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +103,7 @@ public class BasicCarInfoStepFragment extends Fragment
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_UP == event.getAction()) {
+                    hideKeyboard(v);
                     showDatePicker();
                 }
                 return false;
@@ -117,6 +115,7 @@ public class BasicCarInfoStepFragment extends Fragment
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_UP == event.getAction()) {
+                    hideKeyboard(v);
                     showYearPicker();
                 }
                 return false;
@@ -141,24 +140,30 @@ public class BasicCarInfoStepFragment extends Fragment
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (count > after) {
-                    delete = true;
-                } else {
-                    delete = false;
-                }
+                delete = count > after;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 3 && !delete) {
-                    s.append(" ");
-                }
-                if (s.length() == 4 && delete) {
-                    s.delete(3, 4);
+                if (s.length() == 4) {
+                    if (delete) {
+                        s.delete(3, 4);
+                    } else {
+                        s.insert(3, " ");
+                    }
+                } else if (s.length() == 10) {
+                    s.delete(9, 10);
                 }
             }
         });
-        mVin.addTextChangedListener(new DefaultTextWatcher(mLayoutVin));
+        mVin.addTextChangedListener(new DefaultTextWatcher(mLayoutVin) {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 18) {
+                    s.delete(17, 18);
+                }
+            }
+        });
         mStolenDate.addTextChangedListener(new DefaultTextWatcher(mLayoutStolenDate));
         mColor.addTextChangedListener(new DefaultTextWatcher(mLayoutColor));
         mDistrict.addTextChangedListener(new DefaultTextWatcher(mLayoutDistrict));
@@ -236,6 +241,26 @@ public class BasicCarInfoStepFragment extends Fragment
         return isValid;
     }
 
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param car shared car object.
+     * @return A new instance of fragment BasicCarInfoStepFragment.
+     */
+    public static BasicCarInfoStepFragment newInstance(Car car) {
+        BasicCarInfoStepFragment fragment = new BasicCarInfoStepFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Car.class.getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public VerificationError verifyStep() {
         return isValidInput() ? null : new VerificationError("Invalid input");
@@ -253,10 +278,15 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        saveData();
+        callback.goToNextStep();
+    }
+
+    private void saveData() {
         if (mCar != null) {
             mCar.setManufacturer(mManufacturer.getText().toString());
             mCar.setModel(mModel.getText().toString());
-            mCar.setRegno(mRegno.getText().toString().toUpperCase());
+            mCar.setRegno(HelperMethods.formatRegnoForDB(mRegno.getText().toString()));
             mCar.setVin(mVin.getText().toString().toUpperCase());
             mCar.setColor(mColor.getText().toString());
             mCar.setStolenDate(mCalendar.getTimeInMillis());
@@ -268,7 +298,6 @@ public class BasicCarInfoStepFragment extends Fragment
                 mCar.setEngine(mEngine.getText().toString());
             }
         }
-        callback.goToNextStep();
     }
 
     @Override
