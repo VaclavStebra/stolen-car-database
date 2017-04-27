@@ -12,7 +12,6 @@ import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public class SignInActivity extends AppCompatActivity {
 

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements CarListFragment.O
     @BindView(R.id.fragment_container)
     FrameLayout mFragmentContainer;
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
