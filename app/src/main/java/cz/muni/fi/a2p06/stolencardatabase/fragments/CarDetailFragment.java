@@ -1,6 +1,5 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,8 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
-import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,12 +98,13 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         ButterKnife.bind(this, view);
         mMapView.onCreate(savedInstanceState);
         mMapView.setVisibility(View.GONE);
-        if (mCar != null && mCar.getLocation() != null) {
-            mMapView.getMapAsync(this);
-        }
         if (mCar != null) {
             populateCarDetails();
+            if (mCar.getLocation() != null) {
+                mMapView.getMapAsync(this);
+            }
         }
+
         return view;
     }
 
@@ -175,7 +175,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     private void populateCarImage() {
         if (mCar.getPhotoUrl() != null) {
             Uri photoUri = Uri.parse(mCar.getPhotoUrl());
-            DrawableTypeRequest drawableTypeRequest = null;
+            DrawableTypeRequest drawableTypeRequest;
 
             if (photoUri.getScheme().equals("content")) {
                 drawableTypeRequest = Glide.with(this).load(photoUri);

@@ -20,6 +20,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.DrawableTypeRequest;
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
@@ -108,7 +113,21 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         if (mPhotoUri != null) {
             mPhotoText.setVisibility(View.GONE);
             mCarPhoto.setVisibility(View.VISIBLE);
-            mCarPhoto.setImageURI(mPhotoUri);
+
+            DrawableTypeRequest drawableTypeRequest;
+
+            if (mPhotoUri.getScheme().equals("content")) {
+                drawableTypeRequest = Glide.with(this).load(mPhotoUri);
+            } else {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(mCar.getPhotoUrl());
+                drawableTypeRequest = Glide.with(this).using(new FirebaseImageLoader())
+                        .load(storageReference);
+            }
+
+            drawableTypeRequest.asBitmap()
+                    .placeholder(R.drawable.car_placeholder)
+                    .centerCrop()
+                    .into(mCarPhoto);
         }
     }
 
