@@ -39,6 +39,10 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
 
+    public AddCarFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,7 +55,11 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
             mNewCar = savedInstanceState.getParcelable(Car.class.getSimpleName());
             currentPosition = savedInstanceState.getInt(CURRENT_STEP_POSITION_KEY);
         } else {
-            mNewCar = new Car();
+            if (getArguments() != null) {
+                mNewCar = getArguments().getParcelable(Car.class.getSimpleName());
+            } else {
+                mNewCar = new Car();
+            }
         }
 
         mStepperLayout.setAdapter(new StepperAdapter(getChildFragmentManager(), getContext(), mNewCar),
@@ -102,6 +110,20 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         }
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param car car object.
+     * @return A new instance of fragment AddCarFragment.
+     */
+    public static AddCarFragment newInstance(Car car) {
+        AddCarFragment fragment = new AddCarFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Car.class.getSimpleName(), car);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCompleted(View completeButton) {
