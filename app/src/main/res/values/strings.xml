@@ -99,7 +99,8 @@
         <item>Znojmo (Jihomoravský kraj)</item>
         <item>Žďár nad Sázavou (Kraj Vysočina)</item>
     </string-array>
-    <string name="google_maps_key">AIzaSyARCOqR-LsqqnI82VjZ0jI5rMN-xKsaI6w</string>
+
+
     <string name="hint_location_text">Set the last known location of your car (optional)</string>
     <string name="set_location_button">Set Location</string>
     <string name="hint_car_photo_text">Select a photo of your car (optional)</string>
@@ -114,7 +115,9 @@
     <string name="district_error_message">Please select the district where the car was stolen</string>
     <string name="vin_error_empty_message">Please enter the car VIN number</string>
     <string name="vin_error_invalid_message">The VIN number must contain 17 alphanumeric characters</string>
+    <string name="logout">Log out</string>
     <string name="action_search">Search</string>
+
 
     <string-array name="car_manufacturers">
         <item>Alfa Romeo</item>
@@ -185,6 +188,8 @@
         <item>Vauxhall</item>
         <item>Viper</item>
     </string-array>
+  
+    <string name="google_maps_key">AIzaSyARCOqR-LsqqnI82VjZ0jI5rMN-xKsaI6w</string>
 
     <string name="title_activity_ocr">SPZ Scanner</string>
     <string name="low_storage_error">The device does not have enough storage</string>
