@@ -1,11 +1,18 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +33,19 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link CarPhotoStepFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
+
 public class CarPhotoStepFragment extends Fragment implements BlockingStep {
-    // TODO: Check if any permissions are needed
+    private static final String TAG = "CarPhotoStepFragment";
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int RC_HANDLE_STORAGE_PERM = 2;
 
     private Car mCar;
     private Uri mPhotoUri;
+    private boolean storagePermissionAlreadyRequested;
 
     @BindView(R.id.add_photo_btn)
     Button mAddPhotoBtn;
@@ -59,12 +71,23 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         mCarPhoto.setVisibility(View.GONE);
         loadData();
 
+        storagePermissionAlreadyRequested = false;
+
         mAddPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent photoIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                photoIntent.setType("image/*");
-                startActivityForResult(Intent.createChooser(photoIntent, "Select Picture"), PICK_IMAGE_REQUEST);
+                int rc = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (rc == PackageManager.PERMISSION_GRANTED) {
+                    Intent photoIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    photoIntent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(photoIntent, "Select Picture"), PICK_IMAGE_REQUEST);
+                } else {
+                    if (storagePermissionAlreadyRequested) {
+                        requestPermission();
+                    } else {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RC_HANDLE_STORAGE_PERM);
+                    }
+                }
             }
         });
 
@@ -95,6 +118,13 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param car shared car object.
+     * @return A new instance of fragment CarPhotoStepFragment.
+     */
     public static CarPhotoStepFragment newInstance(Car car) {
         CarPhotoStepFragment fragment = new CarPhotoStepFragment();
         Bundle args = new Bundle();
@@ -116,6 +146,37 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
             if (uri != null) {
                 mPhotoUri = Uri.parse(uri);
                 showPhoto();
+            }
+        }
+    }
+
+    private void requestPermission() {
+        Log.w(TAG, "WRITE_EXTERNAL_STORAGE permission is not granted. Requesting permission");
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RC_HANDLE_STORAGE_PERM);
+        } else {
+            Snackbar.make(getView(), "Access to external storage is needed", Snackbar.LENGTH_LONG).setAction("Grant Access", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                }
+            }).show();
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == RC_HANDLE_STORAGE_PERM) {
+            storagePermissionAlreadyRequested = true;
+            if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mAddPhotoBtn.performClick();
             }
         }
     }

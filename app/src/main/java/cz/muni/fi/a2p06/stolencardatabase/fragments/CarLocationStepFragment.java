@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +36,14 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 
 import static android.app.Activity.RESULT_OK;
-import static com.google.android.gms.location.places.ui.PlacePicker.getPlace;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link CarLocationStepFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
 public class CarLocationStepFragment extends Fragment implements BlockingStep, OnMapReadyCallback {
-    // TODO: Check if any permissions are needed
-
-    // TODO REFACTOR
+    private static final String TAG = "CarLocationStepFragment";
 
     private GoogleMap mMap;
     private LatLng mLocation;
@@ -59,6 +59,10 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     @BindView(R.id.mapView)
     MapView mMapView;
 
+    public CarLocationStepFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +76,6 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_car_location_step, container, false);
         ButterKnife.bind(this, view);
-        mMapView.onCreate(savedInstanceState);
 
         mSetLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,49 +83,49 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
                 try {
                     PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                     startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
+                    Log.e(TAG, "onClick: GooglePlayServices error thrown: ", e);
                 }
             }
         });
 
         loadData();
-
-        mMapView.setVisibility(View.GONE);
-        mMapView.getMapAsync(this);
-        mMapView.setClickable(false);
+        prepareMapView(savedInstanceState);
 
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
-            mLocation = getPlace(getContext(), data).getLatLng();
-            showMap();
+    private void prepareMapView(Bundle savedInstanceState) {
+        if (mMapView != null) {
+            mMapView.onCreate(savedInstanceState);
+            mMapView.setVisibility(View.GONE);
+            mMapView.getMapAsync(this);
+            mMapView.setClickable(false);
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mMapView.onStart();
+        if (mMapView != null) {
+            mMapView.onStart();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        if (mMapView != null) {
+            mMapView.onResume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
     }
 
     @Override
@@ -137,13 +140,17 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     @Override
     public void onStop() {
         super.onStop();
-        mMapView.onStop();
+        if (mMapView != null) {
+            mMapView.onStop();
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 
     @Override
@@ -154,6 +161,23 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
+            mLocation = PlacePicker.getPlace(getContext(), data).getLatLng();
+            showMap();
+        }
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param car shared car object.
+     * @return A new instance of fragment CarLocationStepFragment.
+     */
     public static CarLocationStepFragment newInstance(Car car) {
         CarLocationStepFragment fragment = new CarLocationStepFragment();
         Bundle args = new Bundle();

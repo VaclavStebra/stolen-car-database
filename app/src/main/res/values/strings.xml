@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Stolen Car Database</string>
     <string name="car_list_item_image">Car photo</string>
-    <string name="spz">SPZ:</string>
+    <string name="regno">SPZ:</string>
     <string name="vin">VIN:</string>
     <string name="car_thumbnail">Car thumbnail</string>
     <string name="color">Color</string>
-    <string name="spz_text">SPZ</string>
+    <string name="regno_text">SPZ</string>
     <string name="vin_text">VIN</string>
     <string name="stolen_date">Stolen Date</string>
     <string name="production_year">Production Year</string>
@@ -112,10 +112,12 @@
     <string name="regno_error_message">Please enter the registration number in format XXX XXXX</string>
     <string name="color_error_message">Please enter the car color</string>
     <string name="stolen_date_error_message">Please set the date of the car theft</string>
-    <string name="district_error_message">Please set the district where the car was stolen</string>
+    <string name="district_error_message">Please select the district where the car was stolen</string>
     <string name="vin_error_empty_message">Please enter the car VIN number</string>
     <string name="vin_error_invalid_message">The VIN number must contain 17 alphanumeric characters</string>
     <string name="logout">Log out</string>
+    <string name="action_search">Search</string>
+
 
     <string-array name="car_manufacturers">
         <item>Alfa Romeo</item>
@@ -186,7 +188,14 @@
         <item>Vauxhall</item>
         <item>Viper</item>
     </string-array>
+  
     <string name="google_maps_key">AIzaSyARCOqR-LsqqnI82VjZ0jI5rMN-xKsaI6w</string>
-    <string name="facebook_application_id" translatable="false">205496749953321</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb205496749953321</string>
+
+    <string name="title_activity_ocr">SPZ Scanner</string>
+    <string name="low_storage_error">The device does not have enough storage</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission. Access to the camera is needed for detection. </string>
+    <string name="grant_access">Grant Access</string>
+    <string name="searchview_query_hint">Enter SPZ or VIN number...</string>
+    <string name="car_list_no_items_message">No items found</string>
+    <string name="searchview_camera_regno_not_found">SPZ was not found</string>
 </resources>
