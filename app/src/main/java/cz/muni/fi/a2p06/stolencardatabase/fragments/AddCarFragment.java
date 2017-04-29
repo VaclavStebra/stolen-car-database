@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -33,6 +35,7 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 public class AddCarFragment extends Fragment implements StepperLayout.StepperListener {
 
     private static final String CURRENT_STEP_POSITION_KEY = "position";
+    private static final String TAG = "AddCarFragment";
 
     private Car mNewCar;
 
@@ -105,6 +108,13 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     @Override
     public void onCompleted(View completeButton) {
+        try {
+            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            mNewCar.setUserUid(uid);
+        } catch (Exception e) {
+            Log.w(TAG, "Invalid user");
+            mNewCar.setUserUid(null);
+        }
         if (mNewCar.getPhotoUrl() != null) {
             writeNewCarWithPhoto();
         } else {
