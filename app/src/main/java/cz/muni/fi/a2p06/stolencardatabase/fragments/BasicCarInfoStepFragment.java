@@ -42,6 +42,9 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
 
+    private Calendar mCalendar;
+    private Car mCar;
+
     @BindView(R.id.input_manufacturer)
     AutoCompleteTextView mManufacturer;
     @BindView(R.id.layout_input_manufacturer)
@@ -74,8 +77,6 @@ public class BasicCarInfoStepFragment extends Fragment
     EditText mProductionYear;
     @BindView(R.id.input_engine)
     EditText mEngine;
-    private Calendar mCalendar;
-    private Car mCar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +94,7 @@ public class BasicCarInfoStepFragment extends Fragment
 
         mCalendar = Calendar.getInstance();
         prepareUi();
+        fillFields();
 
         return view;
     }
@@ -193,6 +195,24 @@ public class BasicCarInfoStepFragment extends Fragment
         yearPickerFragment.show(getActivity().getFragmentManager(), "YearPicker");
     }
 
+    private void fillFields() {
+        if (mCar != null) {
+            mManufacturer.setText(mCar.getManufacturer());
+            mModel.setText(mCar.getModel());
+            mRegno.setText(mCar.getRegno());
+            mVin.setText(mCar.getVin());
+            if (mCar.getStolenDate() != 0) {
+                mStolenDate.setText(String.valueOf(mCar.getStolenDate()));
+            }
+            mColor.setText(mCar.getColor());
+            mDistrict.setText(mCar.getDistrict());
+            if (mCar.getProductionYear() != 0) {
+                mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
+            }
+            mEngine.setText(mCar.getEngine());
+        }
+    }
+
     private boolean isValidInput() {
         boolean isValid = true;
 
@@ -248,7 +268,7 @@ public class BasicCarInfoStepFragment extends Fragment
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment using the provided parameter.
      *
      * @param car shared car object.
      * @return A new instance of fragment BasicCarInfoStepFragment.
