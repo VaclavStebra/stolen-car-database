@@ -1,6 +1,5 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
@@ -21,6 +22,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
@@ -31,6 +34,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
@@ -62,6 +66,8 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     TextView mEngine;
     @BindView(R.id.car_map_view)
     MapView mMapView;
+    @BindView(R.id.delete_car)
+    Button mDeleteButton;
 
 
     public CarDetailFragment() {
@@ -156,6 +162,11 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         }
     }
 
+    @OnClick(R.id.delete_car)
+    public void onDeleteCarClick(View view) {
+        Toast.makeText(getContext(), "TODO delete car", Toast.LENGTH_LONG).show();
+    }
+
     public void updateCarView(Car car) {
         mCar = car;
         populateCarDetails();
@@ -163,6 +174,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
 
     private void populateCarDetails() {
         populateCarImage();
+        toggleDeleteButtonVisibility();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
         mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
         mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
@@ -226,6 +238,18 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
             googleMap.addMarker(new MarkerOptions().position(pos).title(mCar.getRegno()));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
             mMapView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void toggleDeleteButtonVisibility() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userUid = user.getUid();
+            if (userUid.equals(mCar.getUserUid())) {
+                mDeleteButton.setVisibility(View.VISIBLE);
+            } else {
+                mDeleteButton.setVisibility(View.GONE);
+            }
         }
     }
 }

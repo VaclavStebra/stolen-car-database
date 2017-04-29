@@ -119,6 +119,7 @@
     <string name="my_cars">My cars</string>
     <string name="all_cars">All cars</string>
     <string name="action_search">Search</string>
+    <string name="delete_car">Delete car</string>
 
 
     <string-array name="car_manufacturers">
