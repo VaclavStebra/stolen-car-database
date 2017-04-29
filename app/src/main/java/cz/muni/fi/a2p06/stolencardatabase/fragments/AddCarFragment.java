@@ -32,9 +32,14 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 public class AddCarFragment extends Fragment implements StepperLayout.StepperListener {
 
-    private static final String CURRENT_STEP_POSITION_KEY = "position";
+    private static final String ADD_CAR_CURRENT_STEP_POSITION_KEY = "position";
+    private static final String ADD_CAR_MODE_KEY = "mode";
+    private static final int ADD_CAR_MODE_CREATE = 1;
+    private static final int ADD_CAR_MODE_UPDATE = 2;
+
 
     private Car mNewCar;
+    private int mMode;
 
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
@@ -53,9 +58,11 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
         if (savedInstanceState != null) {
             mNewCar = savedInstanceState.getParcelable(Car.class.getSimpleName());
-            currentPosition = savedInstanceState.getInt(CURRENT_STEP_POSITION_KEY);
-        } else {
-            if (getArguments() != null) {
+            mMode = savedInstanceState.getInt(ADD_CAR_MODE_KEY);
+            currentPosition = savedInstanceState.getInt(ADD_CAR_CURRENT_STEP_POSITION_KEY);
+        } else if (getArguments() != null) {
+            mMode = getArguments().getInt(ADD_CAR_MODE_KEY);
+            if (mMode == ADD_CAR_MODE_UPDATE) {
                 mNewCar = getArguments().getParcelable(Car.class.getSimpleName());
             } else {
                 mNewCar = new Car();
@@ -72,7 +79,8 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(Car.class.getSimpleName(), mNewCar);
-        outState.putInt(CURRENT_STEP_POSITION_KEY, mStepperLayout.getCurrentStepPosition());
+        outState.putInt(ADD_CAR_CURRENT_STEP_POSITION_KEY, mStepperLayout.getCurrentStepPosition());
+        outState.putInt(ADD_CAR_MODE_KEY, mMode);
         super.onSaveInstanceState(outState);
     }
 
@@ -112,25 +120,54 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment for updating the provided car object
+     * details.
      *
-     * @param car car object.
+     * @param car provided car object.
      * @return A new instance of fragment AddCarFragment.
      */
     public static AddCarFragment newInstance(Car car) {
-        AddCarFragment fragment = new AddCarFragment();
         Bundle args = new Bundle();
         args.putParcelable(Car.class.getSimpleName(), car);
+        args.putInt(ADD_CAR_MODE_KEY, ADD_CAR_MODE_UPDATE);
+        return AddCarFragment.newInstance(args);
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment for adding a new car to a database.
+     *
+     * @return A new instance of fragment AddCarFragment.
+     */
+    public static AddCarFragment newInstance() {
+        Bundle args = new Bundle();
+        args.putInt(ADD_CAR_MODE_KEY, ADD_CAR_MODE_CREATE);
+        return AddCarFragment.newInstance(args);
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided arguments.
+     *
+     * @param args Bundle object with arguments.
+     * @return A new instance of fragment AddCarFragment.
+     */
+    private static AddCarFragment newInstance(Bundle args) {
+        AddCarFragment fragment = new AddCarFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCompleted(View completeButton) {
-        if (mNewCar.getPhotoUrl() != null) {
-            writeNewCarWithPhoto();
-        } else {
-            writeNewCar();
+        if (mMode == ADD_CAR_MODE_CREATE) {
+            if (mNewCar.getPhotoUrl() != null) {
+                writeNewCarWithPhoto();
+            } else {
+                writeNewCar();
+            }
+        } else if (mMode == ADD_CAR_MODE_UPDATE) {
+            // update car details
         }
 
         getFragmentManager().popBackStack();

@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements CarListFragment.O
     }
 
     private void manageAddCarClickOnMobile() {
-        AddCarFragment addCarFragment = new AddCarFragment();
+        AddCarFragment addCarFragment = AddCarFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, addCarFragment);
         transaction.addToBackStack(null);
