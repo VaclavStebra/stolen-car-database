@@ -14,12 +14,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -96,6 +98,27 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
         mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         setupSearchView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.my_cars:
+                boolean onlyMyCars = item.getTitle() == getString(R.string.my_cars);
+                toggleFilterMyCarsMenuText(item);
+                filterMyCars(onlyMyCars);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void toggleFilterMyCarsMenuText(MenuItem item) {
+        if (item.getTitle() == getString(R.string.my_cars)) {
+            item.setTitle(getString(R.string.all_cars));
+        } else {
+            item.setTitle(getString(R.string.my_cars));
+        }
     }
 
     private void setupSearchView() {
@@ -226,6 +249,22 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     private void showFilledState() {
         mEmptyText.setVisibility(View.GONE);
         mCarList.setVisibility(View.VISIBLE);
+    }
+
+    private void filterMyCars(boolean onlyMyCars) {
+        if (mCarListAdapter != null) mCarListAdapter.cleanup();
+
+        Query dataQuery;
+        if (onlyMyCars) {
+            String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            dataQuery = mRef.orderByChild("user_uid").equalTo(userUid);
+        } else {
+            dataQuery = mRef;
+        }
+
+        mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
+                CarListAdapter.CarItemHolder.class, dataQuery, CarListFragment.this);
+        mCarList.setAdapter(mCarListAdapter);
     }
 
     /**
