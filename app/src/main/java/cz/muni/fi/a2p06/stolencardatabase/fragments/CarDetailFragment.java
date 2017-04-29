@@ -1,10 +1,12 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
@@ -46,7 +54,9 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
  * create an instance of this fragment.
  */
 public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallback {
+    private static final String TAG = "CarDetailFragment";
     private Car mCar;
+    private OnCarDetailFragmentInteractionListener mListener;
 
     @BindView(R.id.car_detail_photo)
     ImageView mPhoto;
@@ -124,6 +134,23 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCarDetailFragmentInteractionListener) {
+            mListener = (OnCarDetailFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnCarDetailFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mMapView.onStart();
@@ -164,7 +191,28 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
 
     @OnClick(R.id.delete_car)
     public void onDeleteCarClick(View view) {
-        Toast.makeText(getContext(), "TODO delete car", Toast.LENGTH_LONG).show();
+        deleteCar();
+        if (mListener != null) {
+            mListener.onDeleteCar();
+        }
+    }
+
+    private void deleteCar() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
+        Query query = ref.orderByChild("regno").equalTo(mCar.getRegno());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    snapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled", databaseError.toException());
+            }
+        });
     }
 
     public void updateCarView(Car car) {
@@ -251,5 +299,9 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                 mDeleteButton.setVisibility(View.GONE);
             }
         }
+    }
+
+    public interface OnCarDetailFragmentInteractionListener {
+        void onDeleteCar();
     }
 }

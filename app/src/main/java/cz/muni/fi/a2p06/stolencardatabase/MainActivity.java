@@ -24,7 +24,9 @@ import cz.muni.fi.a2p06.stolencardatabase.fragments.AddCarFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
 
-public class MainActivity extends AppCompatActivity implements CarListFragment.OnCarListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements
+        CarListFragment.OnCarListFragmentInteractionListener,
+        CarDetailFragment.OnCarDetailFragmentInteractionListener {
 
     @Nullable
     @BindView(R.id.fragment_container)
@@ -149,5 +151,26 @@ public class MainActivity extends AppCompatActivity implements CarListFragment.O
                         finish();
                     }
                 });
+    }
+
+    @Override
+    public void onDeleteCar() {
+        if (mFragmentContainer != null) {
+            manageDeleteCarClickOnMobile();
+        } else {
+            manageDeleteCarClickOnTablet();
+        }
+    }
+
+    private void manageDeleteCarClickOnMobile() {
+        CarListFragment carListFragment = new CarListFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, carListFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void manageDeleteCarClickOnTablet() {
+        // TODO
     }
 }
