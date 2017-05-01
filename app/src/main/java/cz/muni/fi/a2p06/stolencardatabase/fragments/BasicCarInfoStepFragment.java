@@ -199,11 +199,10 @@ public class BasicCarInfoStepFragment extends Fragment
         if (mCar != null) {
             mManufacturer.setText(mCar.getManufacturer());
             mModel.setText(mCar.getModel());
-            mRegno.setText(mCar.getRegno());
+            mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
             mVin.setText(mCar.getVin());
-            if (mCar.getStolenDate() != 0) {
-                mStolenDate.setText(String.valueOf(mCar.getStolenDate()));
-            }
+            mCalendar.setTimeInMillis(mCar.getStolenDate());
+            mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTimeInMillis()));
             mColor.setText(mCar.getColor());
             mDistrict.setText(mCar.getDistrict());
             if (mCar.getProductionYear() != 0) {
