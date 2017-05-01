@@ -77,8 +77,7 @@ public class Coordinates implements Parcelable {
 
         Coordinates that = (Coordinates) o;
 
-        if (Double.compare(that.lat, lat) != 0) return false;
-        return Double.compare(that.lon, lon) == 0;
+        return (Double.compare(that.lat, lat) == 0) && Double.compare(that.lon, lon) == 0;
 
     }
 
