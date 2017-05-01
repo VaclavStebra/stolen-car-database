@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -31,14 +35,15 @@ import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 
 public class AddCarFragment extends Fragment implements StepperLayout.StepperListener {
+    private static final String TAG = "AddCarFragment";
 
     private static final String ADD_CAR_CURRENT_STEP_POSITION_KEY = "position";
     private static final String ADD_CAR_MODE_KEY = "mode";
+    private static final String ADD_CAR_CAR_KEY = "car";
     private static final int ADD_CAR_MODE_CREATE = 1;
     private static final int ADD_CAR_MODE_UPDATE = 2;
 
-
-    private Car mNewCar;
+    private Car mCar;
     private int mMode;
 
     @BindView(R.id.stepperLayout)
@@ -57,19 +62,24 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         int currentPosition = 0;
 
         if (savedInstanceState != null) {
-            mNewCar = savedInstanceState.getParcelable(Car.class.getSimpleName());
+            mCar = savedInstanceState.getParcelable(Car.class.getSimpleName());
             mMode = savedInstanceState.getInt(ADD_CAR_MODE_KEY);
             currentPosition = savedInstanceState.getInt(ADD_CAR_CURRENT_STEP_POSITION_KEY);
         } else if (getArguments() != null) {
             mMode = getArguments().getInt(ADD_CAR_MODE_KEY);
             if (mMode == ADD_CAR_MODE_UPDATE) {
-                mNewCar = getArguments().getParcelable(Car.class.getSimpleName());
+                mCar = getArguments().getParcelable(Car.class.getSimpleName());
+                if (mCar != null) {
+                    obtainCarKey(mCar.getRegno());
+                } else {
+                    throw new IllegalArgumentException("Car was not provided");
+                }
             } else {
-                mNewCar = new Car();
+                mCar = new Car();
             }
         }
 
-        mStepperLayout.setAdapter(new StepperAdapter(getChildFragmentManager(), getContext(), mNewCar),
+        mStepperLayout.setAdapter(new StepperAdapter(getChildFragmentManager(), getContext(), mCar),
                 currentPosition);
         mStepperLayout.setListener(this);
 
@@ -78,44 +88,10 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(Car.class.getSimpleName(), mNewCar);
+        outState.putParcelable(Car.class.getSimpleName(), mCar);
         outState.putInt(ADD_CAR_CURRENT_STEP_POSITION_KEY, mStepperLayout.getCurrentStepPosition());
         outState.putInt(ADD_CAR_MODE_KEY, mMode);
         super.onSaveInstanceState(outState);
-    }
-
-    private void writeNewCar() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("cars").push();
-        databaseReference.setValue(mNewCar);
-    }
-
-    private void writeNewCarWithPhoto() {
-        try {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("car_photos/" + mNewCar.getRegno());
-            UploadTask uploadTask = storageReference.putStream(getActivity().getContentResolver().openInputStream(Uri.parse(mNewCar.getPhotoUrl())));
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "The upload of the photo was not successful", Toast.LENGTH_SHORT).show();
-                    mNewCar.setPhotoUrl(null);
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    @SuppressWarnings("VisibleForTests") StorageMetadata metadata = taskSnapshot.getMetadata();
-                    if (metadata != null) {
-                        mNewCar.setPhotoUrl(metadata.getDownloadUrl().toString());
-                    }
-                }
-            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    writeNewCar();
-                }
-            });
-        } catch (FileNotFoundException ex) {
-            Toast.makeText(getActivity(), "File not found: " + mNewCar.getPhotoUrl(), Toast.LENGTH_SHORT).show();
-        }
     }
 
     /**
@@ -158,16 +134,73 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         return fragment;
     }
 
+    private void obtainCarKey(String regno) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("cars");
+        databaseReference.orderByChild("regno").equalTo(regno).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    Log.d(TAG, "onDataChange: item " + dataSnapshot.getValue(Car.class));
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        getArguments().putString(ADD_CAR_CAR_KEY, ds.getRef().getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void writeNewCar() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("cars").push();
+        databaseReference.setValue(mCar);
+    }
+
+    private void writeNewCarWithPhoto() {
+        try {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno());
+            UploadTask uploadTask = storageReference.putStream(getActivity().getContentResolver().openInputStream(Uri.parse(mCar.getPhotoUrl())));
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getActivity(), "The upload of the photo was not successful", Toast.LENGTH_SHORT).show();
+                    mCar.setPhotoUrl(null);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    @SuppressWarnings("VisibleForTests") StorageMetadata metadata = taskSnapshot.getMetadata();
+                    if (metadata != null) {
+                        mCar.setPhotoUrl(metadata.getDownloadUrl().toString());
+                    }
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    writeNewCar();
+                }
+            });
+        } catch (FileNotFoundException ex) {
+            Toast.makeText(getActivity(), "File not found: " + mCar.getPhotoUrl(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateCar() {
+
+    }
+
     @Override
     public void onCompleted(View completeButton) {
         if (mMode == ADD_CAR_MODE_CREATE) {
-            if (mNewCar.getPhotoUrl() != null) {
+            if (mCar.getPhotoUrl() != null) {
                 writeNewCarWithPhoto();
             } else {
                 writeNewCar();
             }
         } else if (mMode == ADD_CAR_MODE_UPDATE) {
-            // update car details
+            updateCar();
         }
 
         getFragmentManager().popBackStack();
