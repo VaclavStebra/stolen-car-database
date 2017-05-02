@@ -1,5 +1,6 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -160,8 +161,9 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     private void writeNewCarWithPhoto() {
         try {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno());
-            UploadTask uploadTask = storageReference.putStream(getActivity().getContentResolver().openInputStream(Uri.parse(mCar.getPhotoUrl())));
+            StorageReference storageReference =
+                    FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno());
+            UploadTask uploadTask = storageReference.putStream(getContext().getContentResolver().openInputStream(Uri.parse(mCar.getPhotoUrl())));
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -183,7 +185,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                 }
             });
         } catch (FileNotFoundException ex) {
-            Toast.makeText(getActivity(), "File not found: " + mCar.getPhotoUrl(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Car photo not found: " + mCar.getPhotoUrl(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,9 +194,10 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         Log.d(TAG, "updateCar: called with carKey: " + carKey);
         if (carKey != null) {
             mDatabaseReference.child(carKey).addListenerForSingleValueEvent(
-                    new UpdateValueEventListener(mDatabaseReference.child(carKey)));
+                    new UpdateValueEventListener(getContext(), mDatabaseReference.child(carKey)));
         } else {
-            Toast.makeText(getActivity(), "Update is not possible. Please check your internet connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),
+                    "Update is not possible. Please check your internet connection", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -231,8 +234,10 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     private class UpdateValueEventListener implements ValueEventListener {
 
         private DatabaseReference mReference;
+        private Context mContext;
 
-        UpdateValueEventListener(DatabaseReference reference) {
+        UpdateValueEventListener(@NonNull Context context, @NonNull DatabaseReference reference) {
+            mContext = context;
             mReference = reference;
         }
 
@@ -240,55 +245,104 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         public void onDataChange(DataSnapshot dataSnapshot) {
             Car oldCar = dataSnapshot.getValue(Car.class);
             if (oldCar != null) {
-                if (!oldCar.getManufacturer().equals(mCar.getManufacturer())) {
-                    mReference.child("manufacturer").setValue(mCar.getManufacturer());
-                }
-                if (!oldCar.getModel().equals(mCar.getModel())) {
-                    mReference.child("model").setValue(mCar.getModel());
-                }
-                if (!oldCar.getRegno().equals(mCar.getRegno())) {
-                    mReference.child("regno").setValue(mCar.getRegno());
-                }
-                if (!oldCar.getVin().equals(mCar.getVin())) {
-                    mReference.child("vin").setValue(mCar.getVin());
-                }
-                if (!oldCar.getModel().equals(mCar.getModel())) {
-                    mReference.child("model").setValue(mCar.getModel());
-                }
-                if (!oldCar.getColor().equals(mCar.getColor())) {
-                    mReference.child("color").setValue(mCar.getColor());
-                }
-                if (oldCar.getStolenDate() != mCar.getStolenDate()) {
-                    mReference.child("stolen_date").setValue(mCar.getStolenDate());
-                }
-                if (mCar.getLocation() == null && oldCar.getLocation() != null) {
-                    mReference.child("location").removeValue();
-                }
-                if (mCar.getLocation() != null && !mCar.getLocation().equals(oldCar.getLocation())) {
-                    mReference.child("location").setValue(mCar.getLocation());
-                }
-                if (mCar.getEngine() == null && oldCar.getEngine() != null) {
-                    mReference.child("engine").removeValue();
-                }
-                if (mCar.getEngine() != null && !mCar.getEngine().equals(oldCar.getEngine())) {
-                    mReference.child("engine").setValue(mCar.getEngine());
-                }
-                if (mCar.getProductionYear() == null && oldCar.getProductionYear() != null) {
-                    mReference.child("production_year").removeValue();
-                }
-                if (mCar.getProductionYear() != null && !mCar.getProductionYear().equals(oldCar.getProductionYear())) {
-                    mReference.child("production_year").setValue(mCar.getProductionYear());
-                }
-                if (mCar.getPhotoUrl() == null && oldCar.getPhotoUrl() != null) {
-                    removePhoto(oldCar.getPhotoUrl());
-                    mReference.child("photo_url").removeValue();
-                }
-                // TODO update photo
+                updateCarDetails(oldCar);
             }
         }
 
-        private void removePhoto(String photoUrl) {
+        private void updateCarDetails(Car oldCar) {
+            if (!oldCar.getManufacturer().equals(mCar.getManufacturer())) {
+                mReference.child("manufacturer").setValue(mCar.getManufacturer());
+            }
+            if (!oldCar.getModel().equals(mCar.getModel())) {
+                mReference.child("model").setValue(mCar.getModel());
+            }
+            if (!oldCar.getRegno().equals(mCar.getRegno())) {
+                mReference.child("regno").setValue(mCar.getRegno());
+            }
+            if (!oldCar.getVin().equals(mCar.getVin())) {
+                mReference.child("vin").setValue(mCar.getVin());
+            }
+            if (!oldCar.getModel().equals(mCar.getModel())) {
+                mReference.child("model").setValue(mCar.getModel());
+            }
+            if (!oldCar.getColor().equals(mCar.getColor())) {
+                mReference.child("color").setValue(mCar.getColor());
+            }
+            if (oldCar.getStolenDate() != mCar.getStolenDate()) {
+                mReference.child("stolen_date").setValue(mCar.getStolenDate());
+            }
+            if (mCar.getLocation() == null && oldCar.getLocation() != null) {
+                mReference.child("location").removeValue();
+            }
+            if (mCar.getLocation() != null && !mCar.getLocation().equals(oldCar.getLocation())) {
+                mReference.child("location").setValue(mCar.getLocation());
+            }
+            if (mCar.getEngine() == null && oldCar.getEngine() != null) {
+                mReference.child("engine").removeValue();
+            }
+            if (mCar.getEngine() != null && !mCar.getEngine().equals(oldCar.getEngine())) {
+                mReference.child("engine").setValue(mCar.getEngine());
+            }
+            if (mCar.getProductionYear() == null && oldCar.getProductionYear() != null) {
+                mReference.child("production_year").removeValue();
+            }
+            if (mCar.getProductionYear() != null && !mCar.getProductionYear().equals(oldCar.getProductionYear())) {
+                mReference.child("production_year").setValue(mCar.getProductionYear());
+            }
+            if (mCar.getPhotoUrl() == null && oldCar.getPhotoUrl() != null) {
+                removePhotoFromDb(oldCar.getPhotoUrl());
+                mReference.child("photo_url").removeValue();
+            }
+            if (mCar.getPhotoUrl() != null && !mCar.getPhotoUrl().equals(oldCar.getPhotoUrl())) {
+                removePhotoFromDb(oldCar.getRegno());
+                setNewPhoto();
+            }
+        }
 
+        private void removePhotoFromDb(String regno) {
+            if (regno != null && !regno.isEmpty()) {
+                StorageReference storageReference =
+                        FirebaseStorage.getInstance().getReference().child("car_photos/" + regno);
+                storageReference.delete().addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "An exception was thrown during the removing of an old photo of a car: ", e);
+                    }
+                });
+            }
+
+        }
+
+        private void setNewPhoto() {
+            if (mCar.getPhotoUrl() != null) {
+                try {
+                    StorageReference storageReference =
+                            FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno());
+                    UploadTask uploadTask = storageReference.putStream(mContext.getContentResolver().openInputStream(Uri.parse(mCar.getPhotoUrl())));
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "The upload of the photo was not successful", Toast.LENGTH_SHORT).show();
+                            mCar.setPhotoUrl(null);
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests") StorageMetadata metadata = taskSnapshot.getMetadata();
+                            if (metadata != null) {
+                                mCar.setPhotoUrl(metadata.getDownloadUrl().toString());
+                            }
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            mReference.child("photo_url").setValue(mCar.getPhotoUrl());
+                        }
+                    });
+                } catch (FileNotFoundException ex) {
+                    Toast.makeText(getActivity(), "Car photo not found: " + mCar.getPhotoUrl(), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
 
         @Override
