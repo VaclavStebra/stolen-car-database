@@ -45,6 +45,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     private Car mCar;
     private int mMode;
+    private DatabaseReference mDatabaseReference;
 
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
@@ -58,6 +59,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_car, container, false);
         ButterKnife.bind(this, view);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("cars");
 
         int currentPosition = 0;
 
@@ -136,8 +138,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     private void obtainCarKey(String regno) {
         Log.d(TAG, "obtainCarKey: called");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("cars");
-        databaseReference.orderByChild("regno").equalTo(regno).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.orderByChild("regno").equalTo(regno).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
@@ -154,8 +155,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     }
 
     private void writeNewCar() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("cars").push();
-        databaseReference.setValue(mCar);
+        mDatabaseReference.push().setValue(mCar);
     }
 
     private void writeNewCarWithPhoto() {
@@ -191,61 +191,8 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         String carKey = getArguments().getString(ADD_CAR_CAR_KEY);
         Log.d(TAG, "updateCar: called with carKey: " + carKey);
         if (carKey != null) {
-            final DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                    .getReference("cars").child(carKey);
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Car oldCar = dataSnapshot.getValue(Car.class);
-                    if (oldCar != null) {
-                        if (!oldCar.getManufacturer().equals(mCar.getManufacturer())) {
-                            databaseReference.child("manufacturer").setValue(mCar.getManufacturer());
-                        }
-                        if (!oldCar.getModel().equals(mCar.getModel())) {
-                            databaseReference.child("model").setValue(mCar.getModel());
-                        }
-                        if (!oldCar.getRegno().equals(mCar.getRegno())) {
-                            databaseReference.child("regno").setValue(mCar.getRegno());
-                        }
-                        if (!oldCar.getVin().equals(mCar.getVin())) {
-                            databaseReference.child("vin").setValue(mCar.getVin());
-                        }
-                        if (!oldCar.getModel().equals(mCar.getModel())) {
-                            databaseReference.child("model").setValue(mCar.getModel());
-                        }
-                        if (!oldCar.getColor().equals(mCar.getColor())) {
-                            databaseReference.child("color").setValue(mCar.getColor());
-                        }
-                        if (oldCar.getStolenDate() != mCar.getStolenDate()) {
-                            databaseReference.child("stolen_date").setValue(mCar.getStolenDate());
-                        }
-                        if (mCar.getLocation() != null && !mCar.getLocation().equals(oldCar.getLocation())) {
-                            databaseReference.child("location").setValue(mCar.getLocation());
-                        }
-                        if (mCar.getLocation() == null && oldCar.getLocation() != null) {
-                            databaseReference.child("location").removeValue();
-                        }
-                        if (mCar.getEngine() != null && !mCar.getEngine().equals(oldCar.getEngine())) {
-                            databaseReference.child("engine").setValue(mCar.getEngine());
-                        }
-                        if (mCar.getEngine() == null && oldCar.getEngine() != null) {
-                            databaseReference.child("engine").removeValue();
-                        }
-                        if (mCar.getProductionYear() != null && !mCar.getProductionYear().equals(oldCar.getProductionYear())) {
-                            databaseReference.child("production_year").setValue(mCar.getProductionYear());
-                        }
-                        if (mCar.getProductionYear() == null && oldCar.getProductionYear() != null) {
-                            databaseReference.child("production_year").removeValue();
-                        }
-                        // TODO update photo
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            mDatabaseReference.child(carKey).addListenerForSingleValueEvent(
+                    new UpdateValueEventListener(mDatabaseReference.child(carKey)));
         } else {
             Toast.makeText(getActivity(), "Update is not possible. Please check your internet connection", Toast.LENGTH_SHORT).show();
         }
@@ -279,5 +226,74 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     @Override
     public void onReturn() {
+    }
+
+    private class UpdateValueEventListener implements ValueEventListener {
+
+        private DatabaseReference mReference;
+
+        UpdateValueEventListener(DatabaseReference reference) {
+            mReference = reference;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            Car oldCar = dataSnapshot.getValue(Car.class);
+            if (oldCar != null) {
+                if (!oldCar.getManufacturer().equals(mCar.getManufacturer())) {
+                    mReference.child("manufacturer").setValue(mCar.getManufacturer());
+                }
+                if (!oldCar.getModel().equals(mCar.getModel())) {
+                    mReference.child("model").setValue(mCar.getModel());
+                }
+                if (!oldCar.getRegno().equals(mCar.getRegno())) {
+                    mReference.child("regno").setValue(mCar.getRegno());
+                }
+                if (!oldCar.getVin().equals(mCar.getVin())) {
+                    mReference.child("vin").setValue(mCar.getVin());
+                }
+                if (!oldCar.getModel().equals(mCar.getModel())) {
+                    mReference.child("model").setValue(mCar.getModel());
+                }
+                if (!oldCar.getColor().equals(mCar.getColor())) {
+                    mReference.child("color").setValue(mCar.getColor());
+                }
+                if (oldCar.getStolenDate() != mCar.getStolenDate()) {
+                    mReference.child("stolen_date").setValue(mCar.getStolenDate());
+                }
+                if (mCar.getLocation() == null && oldCar.getLocation() != null) {
+                    mReference.child("location").removeValue();
+                }
+                if (mCar.getLocation() != null && !mCar.getLocation().equals(oldCar.getLocation())) {
+                    mReference.child("location").setValue(mCar.getLocation());
+                }
+                if (mCar.getEngine() == null && oldCar.getEngine() != null) {
+                    mReference.child("engine").removeValue();
+                }
+                if (mCar.getEngine() != null && !mCar.getEngine().equals(oldCar.getEngine())) {
+                    mReference.child("engine").setValue(mCar.getEngine());
+                }
+                if (mCar.getProductionYear() == null && oldCar.getProductionYear() != null) {
+                    mReference.child("production_year").removeValue();
+                }
+                if (mCar.getProductionYear() != null && !mCar.getProductionYear().equals(oldCar.getProductionYear())) {
+                    mReference.child("production_year").setValue(mCar.getProductionYear());
+                }
+                if (mCar.getPhotoUrl() == null && oldCar.getPhotoUrl() != null) {
+                    removePhoto(oldCar.getPhotoUrl());
+                    mReference.child("photo_url").removeValue();
+                }
+                // TODO update photo
+            }
+        }
+
+        private void removePhoto(String photoUrl) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
     }
 }
