@@ -135,12 +135,12 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     }
 
     private void obtainCarKey(String regno) {
+        Log.d(TAG, "obtainCarKey: called");
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("cars");
         databaseReference.orderByChild("regno").equalTo(regno).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
-                    Log.d(TAG, "onDataChange: item " + dataSnapshot.getValue(Car.class));
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         getArguments().putString(ADD_CAR_CAR_KEY, ds.getRef().getKey());
                     }
@@ -188,6 +188,55 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     }
 
     private void updateCar() {
+        String carKey = getArguments().getString(ADD_CAR_CAR_KEY);
+        Log.d(TAG, "updateCar: called with carKey: " + carKey);
+        if (carKey != null) {
+            final DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                    .getReference("cars").child(carKey);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Car oldCar = dataSnapshot.getValue(Car.class);
+                    if (oldCar != null) {
+                        if (!oldCar.getManufacturer().equals(mCar.getManufacturer())) {
+                            databaseReference.child("manufacturer").setValue(mCar.getManufacturer());
+                        }
+                        if (!oldCar.getModel().equals(mCar.getModel())) {
+                            databaseReference.child("model").setValue(mCar.getModel());
+                        }
+                        if (!oldCar.getRegno().equals(mCar.getRegno())) {
+                            databaseReference.child("regno").setValue(mCar.getRegno());
+                        }
+                        if (!oldCar.getVin().equals(mCar.getVin())) {
+                            databaseReference.child("vin").setValue(mCar.getVin());
+                        }
+                        if (!oldCar.getModel().equals(mCar.getModel())) {
+                            databaseReference.child("model").setValue(mCar.getModel());
+                        }
+                        if (!oldCar.getColor().equals(mCar.getColor())) {
+                            databaseReference.child("color").setValue(mCar.getColor());
+                        }
+                        if (oldCar.getStolenDate() != mCar.getStolenDate()) {
+                            databaseReference.child("stolen_date").setValue(mCar.getStolenDate());
+                        }
+                        if (!oldCar.getLocation().equals(mCar.getLocation())) {
+                            databaseReference.child("location").setValue(mCar.getLocation());
+                        }
+                        if (mCar.getEngine() != null && !mCar.getEngine().equals(oldCar.getEngine())) {
+                            databaseReference.child("engine").setValue(mCar.getEngine());
+                        }
+                        // TODO update production_year and photo
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), "Update is not possible. Please check your internet connection", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
