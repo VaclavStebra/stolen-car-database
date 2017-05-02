@@ -219,13 +219,25 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                         if (oldCar.getStolenDate() != mCar.getStolenDate()) {
                             databaseReference.child("stolen_date").setValue(mCar.getStolenDate());
                         }
-                        if (!oldCar.getLocation().equals(mCar.getLocation())) {
+                        if (mCar.getLocation() != null && !mCar.getLocation().equals(oldCar.getLocation())) {
                             databaseReference.child("location").setValue(mCar.getLocation());
+                        }
+                        if (mCar.getLocation() == null && oldCar.getLocation() != null) {
+                            databaseReference.child("location").removeValue();
                         }
                         if (mCar.getEngine() != null && !mCar.getEngine().equals(oldCar.getEngine())) {
                             databaseReference.child("engine").setValue(mCar.getEngine());
                         }
-                        // TODO update production_year and photo
+                        if (mCar.getEngine() == null && oldCar.getEngine() != null) {
+                            databaseReference.child("engine").removeValue();
+                        }
+                        if (mCar.getProductionYear() != null && !mCar.getProductionYear().equals(oldCar.getProductionYear())) {
+                            databaseReference.child("production_year").setValue(mCar.getProductionYear());
+                        }
+                        if (mCar.getProductionYear() == null && oldCar.getProductionYear() != null) {
+                            databaseReference.child("production_year").removeValue();
+                        }
+                        // TODO update photo
                     }
                 }
 

@@ -205,7 +205,7 @@ public class BasicCarInfoStepFragment extends Fragment
             mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTimeInMillis()));
             mColor.setText(mCar.getColor());
             mDistrict.setText(mCar.getDistrict());
-            if (mCar.getProductionYear() != 0) {
+            if (mCar.getProductionYear() != null) {
                 mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
             }
             mEngine.setText(mCar.getEngine());
@@ -312,9 +312,13 @@ public class BasicCarInfoStepFragment extends Fragment
             mCar.setDistrict(mDistrict.getText().toString());
             if (mProductionYear.getText().length() != 0) {
                 mCar.setProductionYear(Integer.valueOf(mProductionYear.getText().toString()));
+            } else {
+                mCar.setProductionYear(null);
             }
             if (mEngine.getText().length() != 0) {
                 mCar.setEngine(mEngine.getText().toString());
+            } else {
+                mCar.setEngine(null);
             }
         }
     }

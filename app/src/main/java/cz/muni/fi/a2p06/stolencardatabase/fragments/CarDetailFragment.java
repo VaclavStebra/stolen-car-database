@@ -168,8 +168,16 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());
-        mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
-        mEngine.setText(mCar.getEngine());
+        if (mCar.getProductionYear() != null) {
+            mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
+        } else {
+            mProductionYear.setVisibility(View.GONE);
+        }
+        if (mCar.getEngine() != null) {
+            mEngine.setText(mCar.getEngine());
+        } else {
+            mEngine.setVisibility(View.GONE);
+        }
     }
 
     private void populateCarImage() {

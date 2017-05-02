@@ -33,7 +33,7 @@ public final class HelperMethods {
      * @return true if the registration number is valid, false otherwise
      */
     public static boolean isValidRegno(String regno) {
-        return regno != null && !regno.isEmpty() && Pattern.matches("[A-Z0-9]{3}[ ]?[A-Z0-9-]{4,5}", regno);
+        return regno != null && !regno.isEmpty() && Pattern.matches("[A-Z0-9]{3}[ \n]?[A-Z0-9-]{4,5}", regno);
     }
 
     /**
