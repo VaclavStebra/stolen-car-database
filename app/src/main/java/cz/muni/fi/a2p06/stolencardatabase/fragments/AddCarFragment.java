@@ -34,6 +34,7 @@ import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 public class AddCarFragment extends Fragment implements StepperLayout.StepperListener {
     private static final String TAG = "AddCarFragment";
@@ -290,27 +291,13 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                 mReference.child("production_year").setValue(mCar.getProductionYear());
             }
             if (mCar.getPhotoUrl() == null && oldCar.getPhotoUrl() != null) {
-                removePhotoFromDb(oldCar.getPhotoUrl());
+                HelperMethods.removePhotoFromDb(oldCar.getPhotoUrl());
                 mReference.child("photo_url").removeValue();
             }
             if (mCar.getPhotoUrl() != null && !mCar.getPhotoUrl().equals(oldCar.getPhotoUrl())) {
-                removePhotoFromDb(oldCar.getPhotoUrl());
+                HelperMethods.removePhotoFromDb(oldCar.getPhotoUrl());
                 setNewPhoto();
             }
-        }
-
-        private void removePhotoFromDb(String photoUrl) {
-            if (photoUrl != null && !photoUrl.isEmpty()) {
-                StorageReference storageReference =
-                        FirebaseStorage.getInstance().getReferenceFromUrl(photoUrl);
-                storageReference.delete().addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "An exception was thrown during removing the old photo of the car: ", e);
-                    }
-                });
-            }
-
         }
 
         private void setNewPhoto() {

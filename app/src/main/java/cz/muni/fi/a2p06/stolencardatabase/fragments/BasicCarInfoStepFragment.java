@@ -189,9 +189,15 @@ public class BasicCarInfoStepFragment extends Fragment
         mProductionYear.setText(String.valueOf(number));
     }
 
+    @Override
+    public void onYearDeleted() {
+        mProductionYear.setText("");
+    }
+
     private void showYearPicker() {
         YearPickerFragment yearPickerFragment = new YearPickerFragment();
-        yearPickerFragment.setOnYearSetListener(this);
+        String productionYear = mProductionYear.getText().toString();
+        yearPickerFragment.setOnYearSetListener(this, productionYear.isEmpty() ? null : Integer.valueOf(productionYear));
         yearPickerFragment.show(getActivity().getFragmentManager(), "YearPicker");
     }
 

@@ -20,12 +20,16 @@ public class YearPickerFragment extends DialogFragment {
 
     interface OnYearSetListener {
         void onYearSet(int number);
+
+        void onYearDeleted();
     }
 
     private OnYearSetListener mListener;
+    private Integer mCurrentValue;
 
-    public void setOnYearSetListener(OnYearSetListener listener) {
+    public void setOnYearSetListener(OnYearSetListener listener, Integer value) {
         this.mListener = listener;
+        this.mCurrentValue = value;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class YearPickerFragment extends DialogFragment {
         final NumberPicker picker = (NumberPicker) layout.findViewById(R.id.number_picker);
         picker.setMinValue(1960);
         picker.setMaxValue(Calendar.getInstance().get(Calendar.YEAR));
-        picker.setValue(picker.getMaxValue());
+        picker.setValue(mCurrentValue == null ? picker.getMaxValue() : mCurrentValue);
         picker.setWrapSelectorWheel(false);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -55,6 +59,17 @@ public class YearPickerFragment extends DialogFragment {
                         //
                     }
                 });
+
+        if (mCurrentValue != null) {
+            builder.setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (mListener != null) {
+                        mListener.onYearDeleted();
+                    }
+                }
+            });
+        }
 
         return builder.create();
     }
