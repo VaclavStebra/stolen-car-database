@@ -24,10 +24,10 @@
             android:paddingStart="16dp">
 
             <TextView
-                android:id="@+id/photo_text"
+                android:id="@+id/car_photo_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hint_car_photo_text"
+                android:text="@string/car_photo_hint_text"
                 android:textAlignment="center"
                 android:textStyle="italic"/>
 
@@ -49,14 +49,14 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/add_photo_btn"
+                    android:id="@+id/car_photo_add_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/select_image_button"/>
+                    android:text="@string/car_photo_select_image_btn"/>
 
                 <Button
-                    android:id="@+id/delete_photo_btn"
+                    android:id="@+id/car_photo_delete_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/delete"/>

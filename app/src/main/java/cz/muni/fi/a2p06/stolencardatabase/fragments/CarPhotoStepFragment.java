@@ -52,13 +52,13 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     private Uri mPhotoUri;
     private boolean storagePermissionAlreadyRequested;
 
-    @BindView(R.id.add_photo_btn)
+    @BindView(R.id.car_photo_add_btn)
     Button mAddPhotoBtn;
-    @BindView(R.id.delete_photo_btn)
+    @BindView(R.id.car_photo_delete_btn)
     Button mDeletePhotoButton;
     @BindView(R.id.car_photo_view)
     ImageView mCarPhoto;
-    @BindView(R.id.photo_text)
+    @BindView(R.id.car_photo_text)
     TextView mPhotoText;
 
     @Override
