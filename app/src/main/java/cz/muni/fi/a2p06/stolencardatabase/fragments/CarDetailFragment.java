@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -195,7 +194,6 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
             }
 
             drawableTypeRequest.asBitmap()
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .placeholder(R.drawable.car_placeholder)
                     .centerCrop()
                     .into(mPhoto);

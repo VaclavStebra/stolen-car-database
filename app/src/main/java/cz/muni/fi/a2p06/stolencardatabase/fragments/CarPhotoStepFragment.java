@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -126,7 +125,6 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
             }
 
             drawableTypeRequest.asBitmap()
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .placeholder(R.drawable.car_placeholder)
                     .centerCrop()
                     .into(mCarPhoto);

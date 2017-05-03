@@ -162,7 +162,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     private void writeNewCarWithPhoto() {
         try {
             StorageReference storageReference =
-                    FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno());
+                    FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno() + "-" + System.currentTimeMillis());
             UploadTask uploadTask = storageReference.putStream(getContext().getContentResolver().openInputStream(Uri.parse(mCar.getPhotoUrl())));
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -294,19 +294,19 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                 mReference.child("photo_url").removeValue();
             }
             if (mCar.getPhotoUrl() != null && !mCar.getPhotoUrl().equals(oldCar.getPhotoUrl())) {
-                removePhotoFromDb(oldCar.getRegno());
+                removePhotoFromDb(oldCar.getPhotoUrl());
                 setNewPhoto();
             }
         }
 
-        private void removePhotoFromDb(String regno) {
-            if (regno != null && !regno.isEmpty()) {
+        private void removePhotoFromDb(String photoUrl) {
+            if (photoUrl != null && !photoUrl.isEmpty()) {
                 StorageReference storageReference =
-                        FirebaseStorage.getInstance().getReference().child("car_photos/" + regno);
+                        FirebaseStorage.getInstance().getReferenceFromUrl(photoUrl);
                 storageReference.delete().addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "An exception was thrown during the removing of an old photo of a car: ", e);
+                        Log.e(TAG, "An exception was thrown during removing the old photo of the car: ", e);
                     }
                 });
             }
@@ -317,7 +317,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
             if (mCar.getPhotoUrl() != null) {
                 try {
                     StorageReference storageReference =
-                            FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno());
+                            FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno() + "-" + System.currentTimeMillis());
                     UploadTask uploadTask = storageReference.putStream(mContext.getContentResolver().openInputStream(Uri.parse(mCar.getPhotoUrl())));
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override

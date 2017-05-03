@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.Query;
@@ -56,7 +55,6 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
         Glide.with(mFragment)
                 .using(new FirebaseImageLoader())
                 .load(storageReference)
-                .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                 .placeholder(R.drawable.car_placeholder)
                 .centerCrop()
                 .into(viewHolder.mCarImage);
