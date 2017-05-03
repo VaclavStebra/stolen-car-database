@@ -57,8 +57,12 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     TextView mVin;
     @BindView(R.id.car_detail_production_year)
     TextView mProductionYear;
+    @BindView(R.id.car_detail_production_year_text)
+    TextView mProductionYearText;
     @BindView(R.id.car_detail_engine)
     TextView mEngine;
+    @BindView(R.id.car_detail_engine_text)
+    TextView mEngineText;
     @BindView(R.id.car_map_view)
     MapView mMapView;
 
@@ -172,11 +176,13 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
             mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
         } else {
             mProductionYear.setVisibility(View.GONE);
+            mProductionYearText.setVisibility(View.GONE);
         }
         if (mCar.getEngine() != null) {
             mEngine.setText(mCar.getEngine());
         } else {
             mEngine.setVisibility(View.GONE);
+            mEngineText.setVisibility(View.GONE);
         }
     }
 
@@ -197,6 +203,8 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                     .placeholder(R.drawable.car_placeholder)
                     .centerCrop()
                     .into(mPhoto);
+        } else {
+            mPhoto.setVisibility(View.GONE);
         }
     }
 

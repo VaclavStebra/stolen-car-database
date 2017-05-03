@@ -54,6 +54,8 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
 
     @BindView(R.id.add_photo_btn)
     Button mAddPhotoBtn;
+    @BindView(R.id.delete_photo_btn)
+    Button mDeletePhotoButton;
     @BindView(R.id.car_photo_view)
     ImageView mCarPhoto;
     @BindView(R.id.photo_text)
@@ -73,7 +75,14 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         View view = inflater.inflate(R.layout.fragment_car_photo_step, container, false);
         ButterKnife.bind(this, view);
 
+        prepareUi();
+
+        return view;
+    }
+
+    private void prepareUi() {
         mCarPhoto.setVisibility(View.GONE);
+        mDeletePhotoButton.setVisibility(View.GONE);
         loadData();
 
         storagePermissionAlreadyRequested = false;
@@ -96,7 +105,18 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
             }
         });
 
-        return view;
+        mDeletePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCarPhoto.getDrawable() != null) {
+                    mPhotoUri = null;
+                    mCarPhoto.setImageResource(R.drawable.car_placeholder);
+                    mCarPhoto.setVisibility(View.GONE);
+                    mDeletePhotoButton.setVisibility(View.GONE);
+                    mPhotoText.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -113,6 +133,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         if (mPhotoUri != null) {
             mPhotoText.setVisibility(View.GONE);
             mCarPhoto.setVisibility(View.VISIBLE);
+            mDeletePhotoButton.setVisibility(View.VISIBLE);
 
             DrawableTypeRequest drawableTypeRequest;
 
@@ -126,7 +147,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
 
             drawableTypeRequest.asBitmap()
                     .placeholder(R.drawable.car_placeholder)
-                    .centerCrop()
+                    .fitCenter()
                     .into(mCarPhoto);
         }
     }
@@ -153,9 +174,9 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     }
 
     private void saveData() {
-        if (mCar != null && mPhotoUri != null) {
+        if (mCar != null) {
             // Temporarily save the photo uri into the photoUrl parameter of the Car object
-            mCar.setPhotoUrl(mPhotoUri.toString());
+            mCar.setPhotoUrl(mPhotoUri == null ? null : mPhotoUri.toString());
         }
     }
 

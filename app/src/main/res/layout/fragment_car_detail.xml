@@ -64,6 +64,7 @@
             </TableRow>
             <TableRow>
                 <TextView
+                    android:id="@+id/car_detail_production_year_text"
                     android:text="@string/production_year"
                     android:padding="3dp"/>
                 <TextView
@@ -72,6 +73,7 @@
             </TableRow>
             <TableRow>
                 <TextView
+                    android:id="@+id/car_detail_engine_text"
                     android:text="@string/engine"
                     android:padding="3dp"/>
                 <TextView
