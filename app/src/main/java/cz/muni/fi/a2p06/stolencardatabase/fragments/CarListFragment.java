@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -38,15 +39,23 @@ import static cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity.SCAN_REGNO_REQU
 
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
+    private static final String TAG = "CarListFragment";
+    
     @BindView(R.id.car_list_view)
     RecyclerView mCarList;
     @BindView(R.id.car_list_empty)
     TextView mEmptyText;
 
+    private static final String QUERY_KEY = "query";
+    private static final String IS_SEARCH_SUBMITTED_KEY = "submitted_search";
+
     private CarListAdapter mCarListAdapter;
     private OnCarListFragmentInteractionListener mListener;
     private DatabaseReference mRef;
+
     private SearchView mSearchView;
+    private String mQuery;
+    private boolean mIsSearchSubmitted;
 
     public CarListFragment() {
         // Required empty public constructor
@@ -55,6 +64,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mQuery = savedInstanceState.getString(QUERY_KEY);
+            mIsSearchSubmitted = savedInstanceState.getBoolean(IS_SEARCH_SUBMITTED_KEY);
+        }
+
         setHasOptionsMenu(true);
     }
 
@@ -84,21 +99,40 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == OcrActivity.SCAN_REGNO_REQUEST && data != null) {
-            mSearchView.setQuery(data.getStringExtra(OcrActivity.REGNO_QUERY), false);
+            mQuery = data.getStringExtra(OcrActivity.REGNO_QUERY);
+            if (mSearchView != null) {
+                mSearchView.setQuery(data.getStringExtra(OcrActivity.REGNO_QUERY), false);
+            }
         } else {
-            mSearchView.setQuery("", false);
+            mQuery = "";
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mSearchView.isShown()) {
+            outState.putString(QUERY_KEY, mSearchView.getQuery().toString());
+            outState.putBoolean(IS_SEARCH_SUBMITTED_KEY, mIsSearchSubmitted);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.action_search);
 
-        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        setupSearchView();
+        setupSearchView((SearchView) searchViewItem.getActionView());
+
+        if (mQuery != null && mSearchView != null) {
+            searchViewItem.expandActionView();
+            mSearchView.setQuery(mQuery, mIsSearchSubmitted);
+        }
     }
 
-    private void setupSearchView() {
+    private void setupSearchView(SearchView searchView) {
+        mSearchView = searchView;
+
         if (mSearchView != null) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -113,7 +147,6 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             mSearchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
-                    //
                 }
 
                 @Override
@@ -123,6 +156,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
                             CarListAdapter.CarItemHolder.class, mRef, CarListFragment.this);
                     mCarList.setAdapter(mCarListAdapter);
+
+                    mQuery = null;
+                    mIsSearchSubmitted = false;
                 }
             });
 
@@ -144,11 +180,16 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     mCarList.setAdapter(mCarListAdapter);
 
                     mSearchView.clearFocus();
+                    mIsSearchSubmitted = true;
+
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
+                    if (!newText.isEmpty()) {
+                        mIsSearchSubmitted = false;
+                    }
                     return false;
                 }
             });
