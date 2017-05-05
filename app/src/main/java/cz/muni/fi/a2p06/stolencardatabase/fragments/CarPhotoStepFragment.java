@@ -41,16 +41,16 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link CarPhotoStepFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-
 public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     private static final String TAG = "CarPhotoStepFragment";
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int RC_HANDLE_STORAGE_PERM = 2;
+    private static final String CAR_PHOTO_PERMISSION_REQUESTED = "permission";
 
     private Car mCar;
     private Uri mPhotoUri;
-    private boolean storagePermissionAlreadyRequested;
+    private boolean mStoragePermissionAlreadyRequested;
 
     @BindView(R.id.car_photo_add_btn)
     Button mAddPhotoBtn;
@@ -64,6 +64,9 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mStoragePermissionAlreadyRequested = savedInstanceState.getBoolean(CAR_PHOTO_PERMISSION_REQUESTED);
+        }
         if (getArguments() != null) {
             mCar = getArguments().getParcelable(Car.class.getSimpleName());
         }
@@ -85,8 +88,6 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         mDeletePhotoButton.setVisibility(View.GONE);
         loadData();
 
-        storagePermissionAlreadyRequested = false;
-
         mAddPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +97,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
                     photoIntent.setType("image/*");
                     startActivityForResult(Intent.createChooser(photoIntent, "Select Picture"), PICK_IMAGE_REQUEST);
                 } else {
-                    if (storagePermissionAlreadyRequested) {
+                    if (mStoragePermissionAlreadyRequested) {
                         requestPermission();
                     } else {
                         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RC_HANDLE_STORAGE_PERM);
@@ -155,6 +156,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         saveData();
+        outState.putBoolean(CAR_PHOTO_PERMISSION_REQUESTED, mStoragePermissionAlreadyRequested);
         super.onSaveInstanceState(outState);
     }
 
@@ -197,16 +199,17 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RC_HANDLE_STORAGE_PERM);
         } else {
-            Snackbar.make(getView(), "Access to external storage is needed", Snackbar.LENGTH_LONG).setAction("Grant Access", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
-                    intent.setData(uri);
-                    startActivity(intent);
-                }
-            }).show();
+            Snackbar.make(getView(), R.string.car_photo_permission_message, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.car_photo_grant_access, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent();
+                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        }
+                    }).show();
 
         }
     }
@@ -214,7 +217,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == RC_HANDLE_STORAGE_PERM) {
-            storagePermissionAlreadyRequested = true;
+            mStoragePermissionAlreadyRequested = true;
             if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mAddPhotoBtn.performClick();
             }

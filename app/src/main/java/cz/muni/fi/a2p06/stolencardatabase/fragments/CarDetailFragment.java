@@ -25,9 +25,6 @@ import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
@@ -169,7 +166,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         populateCarImage();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
         mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
-        mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
+        mStolenDate.setText(HelperMethods.formatDate(mCar.getStolenDate()));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());
         if (mCar.getProductionYear() != null) {

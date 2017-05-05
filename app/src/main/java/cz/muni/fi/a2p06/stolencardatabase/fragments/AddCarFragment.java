@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +35,12 @@ import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link CarPhotoStepFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class AddCarFragment extends Fragment implements StepperLayout.StepperListener {
-    private static final String TAG = "AddCarFragment";
 
     private static final String ADD_CAR_CURRENT_STEP_POSITION_KEY = "position";
     private static final String ADD_CAR_MODE_KEY = "mode";
@@ -76,7 +79,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                 if (mCar != null) {
                     obtainCarKey(mCar.getRegno());
                 } else {
-                    throw new IllegalArgumentException("Car was not provided");
+                    throw new IllegalArgumentException(getString(R.string.error_car_not_provided));
                 }
             } else {
                 mCar = new Car();
@@ -108,8 +111,8 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
      */
     public static AddCarFragment newInstance(Car car) {
         Bundle args = new Bundle();
-        args.putParcelable(Car.class.getSimpleName(), car);
         args.putInt(ADD_CAR_MODE_KEY, ADD_CAR_MODE_UPDATE);
+        args.putParcelable(Car.class.getSimpleName(), car);
         return AddCarFragment.newInstance(args);
     }
 
@@ -139,14 +142,12 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     }
 
     private void obtainCarKey(String regno) {
-        Log.d(TAG, "obtainCarKey: called");
         mDatabaseReference.orderByChild("regno").equalTo(regno).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        getArguments().putString(ADD_CAR_CAR_KEY, ds.getRef().getKey());
-                    }
+                    DataSnapshot ds = dataSnapshot.getChildren().iterator().next();
+                    getArguments().putString(ADD_CAR_CAR_KEY, ds.getRef().getKey());
                 }
             }
 
@@ -165,10 +166,11 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
             StorageReference storageReference =
                     FirebaseStorage.getInstance().getReference().child("car_photos/" + mCar.getRegno() + "-" + System.currentTimeMillis());
             UploadTask uploadTask = storageReference.putStream(getContext().getContentResolver().openInputStream(Uri.parse(mCar.getPhotoUrl())));
+
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "The upload of the photo was not successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.error_car_photo_upload, Toast.LENGTH_SHORT).show();
                     mCar.setPhotoUrl(null);
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -185,20 +187,20 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                     writeNewCar();
                 }
             });
+
         } catch (FileNotFoundException ex) {
-            Toast.makeText(getActivity(), "Car photo not found: " + mCar.getPhotoUrl(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.error_car_photo_not_found, mCar.getPhotoUrl()), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateCar() {
         String carKey = getArguments().getString(ADD_CAR_CAR_KEY);
-        Log.d(TAG, "updateCar: called with carKey: " + carKey);
         if (carKey != null) {
             mDatabaseReference.child(carKey).addListenerForSingleValueEvent(
                     new UpdateValueEventListener(getContext(), mDatabaseReference.child(carKey)));
         } else {
             Toast.makeText(getActivity(),
-                    "Update is not possible. Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    R.string.error_update_not_possible, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -309,7 +311,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "The upload of the photo was not successful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.error_car_photo_upload, Toast.LENGTH_SHORT).show();
                             mCar.setPhotoUrl(null);
                         }
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -327,7 +329,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                         }
                     });
                 } catch (FileNotFoundException ex) {
-                    Toast.makeText(getActivity(), "Car photo not found: " + mCar.getPhotoUrl(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_car_photo_not_found, mCar.getPhotoUrl()), Toast.LENGTH_SHORT).show();
                 }
             }
         }

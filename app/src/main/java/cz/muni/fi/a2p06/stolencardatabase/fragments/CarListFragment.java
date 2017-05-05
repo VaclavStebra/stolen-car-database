@@ -35,19 +35,17 @@ import cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 import static android.app.Activity.RESULT_OK;
-import static cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity.SCAN_REGNO_REQUEST;
 
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
-    private static final String TAG = "CarListFragment";
-    
+
     @BindView(R.id.car_list_view)
     RecyclerView mCarList;
     @BindView(R.id.car_list_empty)
-    TextView mEmptyText;
+    TextView mEmptyStateText;
 
-    private static final String QUERY_KEY = "query";
-    private static final String IS_SEARCH_SUBMITTED_KEY = "submitted_search";
+    private static final String CAR_LIST_QUERY_KEY = "query";
+    private static final String CAR_LIST_IS_SEARCH_SUBMITTED_KEY = "submitted_search";
 
     private CarListAdapter mCarListAdapter;
     private OnCarListFragmentInteractionListener mListener;
@@ -66,8 +64,8 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mQuery = savedInstanceState.getString(QUERY_KEY);
-            mIsSearchSubmitted = savedInstanceState.getBoolean(IS_SEARCH_SUBMITTED_KEY);
+            mQuery = savedInstanceState.getString(CAR_LIST_QUERY_KEY);
+            mIsSearchSubmitted = savedInstanceState.getBoolean(CAR_LIST_IS_SEARCH_SUBMITTED_KEY);
         }
 
         setHasOptionsMenu(true);
@@ -102,10 +100,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mIsSearchSubmitted = false;
+
         if (resultCode == RESULT_OK && requestCode == OcrActivity.SCAN_REGNO_REQUEST && data != null) {
             mQuery = data.getStringExtra(OcrActivity.REGNO_QUERY);
             if (mSearchView != null) {
-                mSearchView.setQuery(data.getStringExtra(OcrActivity.REGNO_QUERY), false);
+                mSearchView.setQuery(mQuery, mIsSearchSubmitted);
             }
         } else {
             mQuery = "";
@@ -115,8 +115,8 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mSearchView.isShown()) {
-            outState.putString(QUERY_KEY, mSearchView.getQuery().toString());
-            outState.putBoolean(IS_SEARCH_SUBMITTED_KEY, mIsSearchSubmitted);
+            outState.putString(CAR_LIST_QUERY_KEY, mSearchView.getQuery().toString());
+            outState.putBoolean(CAR_LIST_IS_SEARCH_SUBMITTED_KEY, mIsSearchSubmitted);
         }
         super.onSaveInstanceState(outState);
     }
@@ -148,6 +148,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             mSearchView.setMaxWidth(Integer.MAX_VALUE);
             mSearchView.setInputType(InputType.TYPE_CLASS_TEXT |
                     InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+
             mSearchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -194,7 +195,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     if (!newText.isEmpty()) {
                         mIsSearchSubmitted = false;
                     }
-                    return false;
+                    return true;
                 }
             });
         }
@@ -210,7 +211,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), OcrActivity.class);
-                startActivityForResult(intent, SCAN_REGNO_REQUEST);
+                startActivityForResult(intent, OcrActivity.SCAN_REGNO_REQUEST);
             }
         });
 
@@ -264,12 +265,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     }
 
     private void showEmptyState() {
-        mEmptyText.setVisibility(View.VISIBLE);
+        mEmptyStateText.setVisibility(View.VISIBLE);
         mCarList.setVisibility(View.GONE);
     }
 
     private void showFilledState() {
-        mEmptyText.setVisibility(View.GONE);
+        mEmptyStateText.setVisibility(View.GONE);
         mCarList.setVisibility(View.VISIBLE);
     }
 

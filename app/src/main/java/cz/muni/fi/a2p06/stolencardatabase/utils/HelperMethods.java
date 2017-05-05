@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
 import static android.content.ContentValues.TAG;
@@ -99,5 +100,15 @@ public final class HelperMethods {
                 }
             });
         }
+    }
+
+    /**
+     * Format the time in milliseconds to the readable format
+     *
+     * @param timeInMillis time in milliseconds
+     * @return formatted time
+     */
+    public static String formatDate(long timeInMillis) {
+        return SimpleDateFormat.getDateInstance().format(timeInMillis);
     }
 }

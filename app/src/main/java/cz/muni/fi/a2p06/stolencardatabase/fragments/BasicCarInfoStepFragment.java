@@ -24,7 +24,6 @@ import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -174,7 +173,7 @@ public class BasicCarInfoStepFragment extends Fragment
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         mCalendar.set(year, month, dayOfMonth);
-        mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
+        mStolenDate.setText(HelperMethods.formatDate(mCalendar.getTimeInMillis()));
     }
 
     private void showDatePicker() {
@@ -197,7 +196,8 @@ public class BasicCarInfoStepFragment extends Fragment
     private void showYearPicker() {
         YearPickerFragment yearPickerFragment = new YearPickerFragment();
         String productionYear = mProductionYear.getText().toString();
-        yearPickerFragment.setOnYearSetListener(this, productionYear.isEmpty() ? null : Integer.valueOf(productionYear));
+        yearPickerFragment.setOnYearSetListener(this);
+        yearPickerFragment.setCurrentValue(productionYear.isEmpty() ? null : Integer.valueOf(productionYear));
         yearPickerFragment.show(getActivity().getFragmentManager(), "YearPicker");
     }
 
@@ -209,7 +209,7 @@ public class BasicCarInfoStepFragment extends Fragment
             mVin.setText(mCar.getVin());
             if (mCar.getStolenDate() != 0) {
                 mCalendar.setTimeInMillis(mCar.getStolenDate());
-                mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTimeInMillis()));
+                mStolenDate.setText(HelperMethods.formatDate(mCalendar.getTimeInMillis()));
             }
             mColor.setText(mCar.getColor());
             mDistrict.setText(mCar.getDistrict());
@@ -269,7 +269,8 @@ public class BasicCarInfoStepFragment extends Fragment
     }
 
     private void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm =
+                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 

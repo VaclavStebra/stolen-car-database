@@ -27,8 +27,11 @@ public class YearPickerFragment extends DialogFragment {
     private OnYearSetListener mListener;
     private Integer mCurrentValue;
 
-    public void setOnYearSetListener(OnYearSetListener listener, Integer value) {
+    public void setOnYearSetListener(OnYearSetListener listener) {
         this.mListener = listener;
+    }
+
+    public void setCurrentValue(Integer value) {
         this.mCurrentValue = value;
     }
 

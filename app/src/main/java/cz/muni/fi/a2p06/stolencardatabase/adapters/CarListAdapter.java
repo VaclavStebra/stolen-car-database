@@ -14,11 +14,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
@@ -41,13 +36,8 @@ public class CarListAdapter extends FirebaseRecyclerAdapter<Car, CarListAdapter.
         viewHolder.mManufacturerAndModel.setText(model.getManufacturer() + " " + model.getModel());
         viewHolder.mRegno.setText(HelperMethods.formatRegnoFromDB(model.getRegno()));
         viewHolder.mVin.setText(model.getVin());
-
         viewHolder.mDistrict.setText(model.getDistrict());
-
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTimeInMillis(model.getStolenDate());
-        DateFormat format = SimpleDateFormat.getDateInstance();
-        viewHolder.mStolenDate.setText(format.format(calendar.getTime()));
+        viewHolder.mStolenDate.setText(HelperMethods.formatDate(model.getStolenDate()));
 
         StorageReference storageReference = model.getPhotoUrl() != null
                 ? FirebaseStorage.getInstance().getReferenceFromUrl(model.getPhotoUrl()) : null;
