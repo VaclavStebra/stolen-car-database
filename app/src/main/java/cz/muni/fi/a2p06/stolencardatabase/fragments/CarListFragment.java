@@ -89,7 +89,11 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
         showEmptyState();
         mCarList.setHasFixedSize(true);
-        mCarList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setReverseLayout(true);
+        manager.setStackFromEnd(true);
+        mCarList.setLayoutManager(manager);
 
         mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
                 CarListAdapter.CarItemHolder.class, mRef, this);
