@@ -99,12 +99,10 @@
         <item>Znojmo (Jihomoravský kraj)</item>
         <item>Žďár nad Sázavou (Kraj Vysočina)</item>
     </string-array>
-
-
-    <string name="hint_location_text">Set the last known location of your car (optional)</string>
-    <string name="set_location_button">Set Location</string>
-    <string name="hint_car_photo_text">Select a photo of your car (optional)</string>
-    <string name="select_image_button">Select Photo</string>
+    <string name="car_location_hint_text">Set the last known location of your car (optional)</string>
+    <string name="car_location_set_button">Set Location</string>
+    <string name="car_photo_hint_text">Select a photo of your car (optional)</string>
+    <string name="car_photo_select_image_btn">Select Photo</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="manufacturer_error_message">Please enter the car manufacturer</string>
@@ -200,5 +198,12 @@
     <string name="grant_access">Grant Access</string>
     <string name="searchview_query_hint">Enter SPZ or VIN number...</string>
     <string name="car_list_no_items_message">No items found</string>
-    <string name="searchview_camera_regno_not_found">SPZ was not found</string>
+    <string name="searchview_camera_regno_not_found">SPZ not found</string>
+    <string name="delete">Delete</string>
+    <string name="error_car_photo_upload">The upload of the photo was not successful</string>
+    <string name="error_car_photo_not_found">Car photo not found: %1$s</string>
+    <string name="error_update_not_possible">Update is not possible. Please check your internet connection</string>
+    <string name="error_car_not_provided">The car was not provided</string>
+    <string name="car_photo_permission_message">Access to external storage is needed</string>
+    <string name="car_photo_grant_access">Grant Access</string>
 </resources>

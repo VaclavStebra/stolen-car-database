@@ -37,16 +37,13 @@ import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
-import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,8 +69,12 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     TextView mVin;
     @BindView(R.id.car_detail_production_year)
     TextView mProductionYear;
+    @BindView(R.id.car_detail_production_year_text)
+    TextView mProductionYearText;
     @BindView(R.id.car_detail_engine)
     TextView mEngine;
+    @BindView(R.id.car_detail_engine_text)
+    TextView mEngineText;
     @BindView(R.id.car_map_view)
     MapView mMapView;
     @BindView(R.id.delete_car)
@@ -115,12 +116,13 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         ButterKnife.bind(this, view);
         mMapView.onCreate(savedInstanceState);
         mMapView.setVisibility(View.GONE);
-        if (mCar != null && mCar.getLocation() != null) {
-            mMapView.getMapAsync(this);
-        }
         if (mCar != null) {
             populateCarDetails();
+            if (mCar.getLocation() != null) {
+                mMapView.getMapAsync(this);
+            }
         }
+
         return view;
     }
 
@@ -225,17 +227,27 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         toggleDeleteButtonVisibility();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
         mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
-        mStolenDate.setText(SimpleDateFormat.getDateInstance().format(new Date(mCar.getStolenDate())));
+        mStolenDate.setText(HelperMethods.formatDate(mCar.getStolenDate()));
         mColor.setText(mCar.getColor());
         mVin.setText(mCar.getVin());
-        mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
-        mEngine.setText(mCar.getEngine());
+        if (mCar.getProductionYear() != null) {
+            mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
+        } else {
+            mProductionYear.setVisibility(View.GONE);
+            mProductionYearText.setVisibility(View.GONE);
+        }
+        if (mCar.getEngine() != null) {
+            mEngine.setText(mCar.getEngine());
+        } else {
+            mEngine.setVisibility(View.GONE);
+            mEngineText.setVisibility(View.GONE);
+        }
     }
 
     private void populateCarImage() {
         if (mCar.getPhotoUrl() != null) {
             Uri photoUri = Uri.parse(mCar.getPhotoUrl());
-            DrawableTypeRequest drawableTypeRequest = null;
+            DrawableTypeRequest drawableTypeRequest;
 
             if (photoUri.getScheme().equals("content")) {
                 drawableTypeRequest = Glide.with(this).load(photoUri);
@@ -249,6 +261,8 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                     .placeholder(R.drawable.car_placeholder)
                     .centerCrop()
                     .into(mPhoto);
+        } else {
+            mPhoto.setVisibility(View.GONE);
         }
     }
 

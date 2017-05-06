@@ -24,9 +24,15 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
     private Car mCar;
 
 
-    public StepperAdapter(@NonNull FragmentManager fm, @NonNull Context context, Car car) {
+    public StepperAdapter(@NonNull FragmentManager fm, @NonNull Context context, @NonNull Car car) {
         super(fm, context);
         this.mCar = car;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        // POSITION_NONE makes it possible to reload the PagerAdapter
+        return POSITION_NONE;
     }
 
     @Override

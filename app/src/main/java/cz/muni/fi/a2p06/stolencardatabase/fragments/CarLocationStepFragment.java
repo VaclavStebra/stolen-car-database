@@ -49,14 +49,17 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     private LatLng mLocation;
 
     private Car mCar;
+    private boolean mLocationChanged;
 
     private static final int PLACE_PICKER_REQUEST = 1;
 
-    @BindView(R.id.location_btn)
+    @BindView(R.id.car_location_set_btn)
     Button mSetLocationBtn;
-    @BindView(R.id.place_text)
+    @BindView(R.id.car_location_delete_btn)
+    Button mDeleteBtn;
+    @BindView(R.id.car_location_text)
     TextView mPlaceText;
-    @BindView(R.id.mapView)
+    @BindView(R.id.car_location_mapView)
     MapView mMapView;
 
     public CarLocationStepFragment() {
@@ -77,6 +80,12 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
         View view = inflater.inflate(R.layout.fragment_car_location_step, container, false);
         ButterKnife.bind(this, view);
 
+        prepareUi(savedInstanceState);
+
+        return view;
+    }
+
+    private void prepareUi(Bundle savedInstanceState) {
         mSetLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,10 +98,21 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
             }
         });
 
+        mDeleteBtn.setVisibility(View.GONE);
+        mDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLocation = null;
+                mMapView.setVisibility(View.GONE);
+                mDeleteBtn.setVisibility(View.GONE);
+                mPlaceText.setText(R.string.car_location_hint_text);
+                mPlaceText.setTypeface(null, Typeface.ITALIC);
+                mLocationChanged = true;
+            }
+        });
+
         loadData();
         prepareMapView(savedInstanceState);
-
-        return view;
     }
 
     private void prepareMapView(Bundle savedInstanceState) {
@@ -167,6 +187,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
 
         if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
             mLocation = PlacePicker.getPlace(getContext(), data).getLatLng();
+            mLocationChanged = true;
             showMap();
         }
     }
@@ -202,6 +223,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
             mPlaceText.setTypeface(Typeface.DEFAULT);
 
             mMapView.setVisibility(View.VISIBLE);
+            mDeleteBtn.setVisibility(View.VISIBLE);
         }
     }
 
@@ -222,8 +244,8 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     }
 
     private void saveData() {
-        if (mCar != null && mLocation != null) {
-            mCar.setLocation(new Coordinates(mLocation.latitude, mLocation.longitude));
+        if (mCar != null) {
+            mCar.setLocation(mLocation == null ? null : new Coordinates(mLocation.latitude, mLocation.longitude));
         }
     }
 
@@ -254,6 +276,10 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         saveData();
+        if (mLocationChanged) {
+            callback.getStepperLayout().getAdapter().getPagerAdapter().notifyDataSetChanged();
+            mLocationChanged = false;
+        }
         callback.goToNextStep();
     }
 
