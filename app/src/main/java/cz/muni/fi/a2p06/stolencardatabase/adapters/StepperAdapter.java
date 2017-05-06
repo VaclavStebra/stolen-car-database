@@ -55,7 +55,7 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
                 step = CarLocationStepFragment.newInstance(mCar);
                 break;
             case 3:
-                step = CarDetailFragment.newInstance(mCar);
+                step = CarDetailFragment.newInstance(mCar, false);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported position " + position);

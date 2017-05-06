@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void manageCarClickOnMobile(Car car) {
-        CarDetailFragment carDetailFragment = CarDetailFragment.newInstance(car);
+        CarDetailFragment carDetailFragment = CarDetailFragment.newInstance(car, true);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, carDetailFragment);
         transaction.addToBackStack(null);
@@ -166,6 +166,15 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onEditCar(Car car) {
+        if (mFragmentContainer != null) {
+            manageEditCarClickOnMobile(car);
+        } else {
+            manageEditCarClickOnTablet(car);
+        }
+    }
+
     private void manageDeleteCarClickOnMobile() {
         CarListFragment carListFragment = new CarListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -191,5 +200,17 @@ public class MainActivity extends AppCompatActivity implements
                 Log.w(TAG, "onCancelled", databaseError.toException());
             }
         });
+    }
+
+    private void manageEditCarClickOnMobile(Car car) {
+        AddCarFragment addCarFragment = AddCarFragment.newInstance(car);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, addCarFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void manageEditCarClickOnTablet(Car car) {
+        // TODO swap fragments
     }
 }

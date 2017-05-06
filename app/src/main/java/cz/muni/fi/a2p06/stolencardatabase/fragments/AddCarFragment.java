@@ -214,10 +214,10 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         if (mMode == ADD_CAR_MODE_CREATE) {
             try {
                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                mNewCar.setUserUid(uid);
+                mCar.setUserUid(uid);
             } catch (Exception e) {
                 Log.w(TAG, "Invalid user");
-                mNewCar.setUserUid(null);
+                mCar.setUserUid(null);
             }
             if (mCar.getPhotoUrl() != null) {
                 writeNewCarWithPhoto();
