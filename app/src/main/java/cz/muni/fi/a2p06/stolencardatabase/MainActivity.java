@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.firebase.ui.auth.AuthUI;
@@ -30,6 +33,7 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.AddCarFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment;
 import cz.muni.fi.a2p06.stolencardatabase.fragments.CarListFragment;
+import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 public class MainActivity extends AppCompatActivity implements
         CarListFragment.OnCarListFragmentInteractionListener,
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements
     @Nullable
     @BindView(R.id.fragment_container)
     FrameLayout mFragmentContainer;
+    @BindView(R.id.main_activity_root_view)
+    CoordinatorLayout mRootView;
 
     private FirebaseAuth mAuth;
 
@@ -158,12 +164,52 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDeleteCar() {
+    public void onDeleteCar(final Car car) {
         if (mFragmentContainer != null) {
             manageDeleteCarClickOnMobile();
         } else {
             manageDeleteCarClickOnTablet();
         }
+        Snackbar snackbar = Snackbar
+                .make(mRootView, "Car is deleted", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Snackbar snackbar1 = Snackbar.make(mRootView, "Car is restored!", Snackbar.LENGTH_SHORT);
+                        snackbar1.show();
+                    }
+                }).addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int dismissType) {
+                        super.onDismissed(transientBottomBar, dismissType);
+                        if(dismissType == DISMISS_EVENT_TIMEOUT || dismissType == DISMISS_EVENT_SWIPE
+                                || dismissType == DISMISS_EVENT_MANUAL) {
+                            deleteCar(car);
+                        }
+                    }
+                });
+        snackbar.show();
+    }
+
+
+    private void deleteCar(Car car) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
+        Query query = ref.orderByChild("regno").equalTo(car.getRegno());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Car car = snapshot.getValue(Car.class);
+                    HelperMethods.removePhotoFromDb(car.getPhotoUrl());
+                    snapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled", databaseError.toException());
+            }
+        });
     }
 
     @Override
