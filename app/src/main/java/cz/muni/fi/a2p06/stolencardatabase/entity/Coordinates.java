@@ -5,11 +5,13 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.PropertyName;
 
+import java.io.Serializable;
+
 /**
  * Created by Vaclav Stebra
  */
 
-public class Coordinates implements Parcelable {
+public class Coordinates implements Parcelable, Serializable {
 
     private double lat;
     private double lon;

@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.PropertyName;
 
+import java.util.HashMap;
+
 /**
  * Created by Vaclav Stebra
  */
@@ -23,6 +25,7 @@ public class Car implements Parcelable {
     private Coordinates location;
     private String district;
     private String userUid;
+    private HashMap<String, Coordinates> reportedLocation;
 
     public Car() {
     }
@@ -151,6 +154,16 @@ public class Car implements Parcelable {
         this.userUid = uid;
     }
 
+    @PropertyName("reported_location")
+    public HashMap<String, Coordinates> getReportedLocation() {
+        return reportedLocation;
+    }
+
+    @PropertyName("reported_location")
+    public void setReportedLocation(HashMap<String, Coordinates> reportedLocation) {
+        this.reportedLocation = reportedLocation;
+    }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -184,6 +197,7 @@ public class Car implements Parcelable {
         dest.writeParcelable(this.location, flags);
         dest.writeString(this.district);
         dest.writeString(this.userUid);
+        dest.writeSerializable(this.reportedLocation);
     }
 
     private Car(Parcel in) {
@@ -199,6 +213,7 @@ public class Car implements Parcelable {
         this.location = in.readParcelable(Coordinates.class.getClassLoader());
         this.district = in.readString();
         this.userUid = in.readString();
+        this.reportedLocation = (HashMap<String, Coordinates>) in.readSerializable();
     }
 
     public static final Creator<Car> CREATOR = new Creator<Car>() {

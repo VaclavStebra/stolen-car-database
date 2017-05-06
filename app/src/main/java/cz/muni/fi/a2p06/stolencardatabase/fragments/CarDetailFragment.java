@@ -1,17 +1,28 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
@@ -24,6 +35,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
@@ -45,6 +62,8 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallback {
     private static final String TAG = "CarDetailFragment";
     private static final String SHOW_BUTTONS = "SHOW_BUTTONS";
+    private static final int REQUEST_LOCATION_PERMISSIONS = 200;
+
     private Car mCar;
     private OnCarDetailFragmentInteractionListener mListener;
     private boolean mShowButtons;
@@ -290,7 +309,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     }
 
     private void toggleButtonsVisibility() {
-        if ( ! mShowButtons) {
+        if (!mShowButtons) {
             mDeleteButton.setVisibility(View.GONE);
             mEditButton.setVisibility(View.GONE);
             return;
@@ -305,6 +324,90 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                 mDeleteButton.setVisibility(View.GONE);
                 mEditButton.setVisibility(View.GONE);
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION_PERMISSIONS) {
+            if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Location permission granted - get location");
+                reportLocation();
+            } else {
+                Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Location permission is needed")
+                        .setMessage(R.string.no_location_permission)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.grant_access, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestLocationPermission();
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
+        }
+    }
+
+    private void requestLocationPermission() {
+        Log.w(TAG, "Location permission is not granted. Requesting permission");
+
+        if (this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            this.requestPermissions(new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+            },
+                    REQUEST_LOCATION_PERMISSIONS);
+        } else {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", CarDetailFragment.class.getPackage().getName(), null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
+    }
+
+    @OnClick(R.id.report_location)
+    public void reportLocation() {
+        int coarse_location_perm = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        int fine_location_perm = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        if (coarse_location_perm == PackageManager.PERMISSION_GRANTED
+                && fine_location_perm == PackageManager.PERMISSION_GRANTED) {
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            final Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                Log.d(TAG, String.valueOf(location.getLatitude()));
+                Log.d(TAG, String.valueOf(location.getLongitude()));
+                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
+                Query query = ref.orderByChild("regno").equalTo(mCar.getRegno());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            String key = snapshot.getKey();
+                            ref.child(key).child("reported_location").push().setValue(new Coordinates(location.getLatitude(), location.getLongitude()));
+                        }
+                        Toast.makeText(getContext(), "Location reported", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "onCancelled", databaseError.toException());
+                    }
+                });
+            }
+        } else {
+            this.requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSIONS);
         }
     }
 
