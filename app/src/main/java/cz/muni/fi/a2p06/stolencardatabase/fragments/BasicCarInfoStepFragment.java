@@ -24,7 +24,6 @@ import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -41,6 +40,9 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 public class BasicCarInfoStepFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, BlockingStep, YearPickerFragment.OnYearSetListener {
+
+    private Calendar mCalendar;
+    private Car mCar;
 
     @BindView(R.id.input_manufacturer)
     AutoCompleteTextView mManufacturer;
@@ -74,8 +76,6 @@ public class BasicCarInfoStepFragment extends Fragment
     EditText mProductionYear;
     @BindView(R.id.input_engine)
     EditText mEngine;
-    private Calendar mCalendar;
-    private Car mCar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +93,7 @@ public class BasicCarInfoStepFragment extends Fragment
 
         mCalendar = Calendar.getInstance();
         prepareUi();
+        fillFields();
 
         return view;
     }
@@ -172,7 +173,7 @@ public class BasicCarInfoStepFragment extends Fragment
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         mCalendar.set(year, month, dayOfMonth);
-        mStolenDate.setText(SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
+        mStolenDate.setText(HelperMethods.formatDate(mCalendar.getTimeInMillis()));
     }
 
     private void showDatePicker() {
@@ -187,10 +188,36 @@ public class BasicCarInfoStepFragment extends Fragment
         mProductionYear.setText(String.valueOf(number));
     }
 
+    @Override
+    public void onYearDeleted() {
+        mProductionYear.setText("");
+    }
+
     private void showYearPicker() {
         YearPickerFragment yearPickerFragment = new YearPickerFragment();
+        String productionYear = mProductionYear.getText().toString();
         yearPickerFragment.setOnYearSetListener(this);
+        yearPickerFragment.setCurrentValue(productionYear.isEmpty() ? null : Integer.valueOf(productionYear));
         yearPickerFragment.show(getActivity().getFragmentManager(), "YearPicker");
+    }
+
+    private void fillFields() {
+        if (mCar != null) {
+            mManufacturer.setText(mCar.getManufacturer());
+            mModel.setText(mCar.getModel());
+            mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
+            mVin.setText(mCar.getVin());
+            if (mCar.getStolenDate() != 0) {
+                mCalendar.setTimeInMillis(mCar.getStolenDate());
+                mStolenDate.setText(HelperMethods.formatDate(mCalendar.getTimeInMillis()));
+            }
+            mColor.setText(mCar.getColor());
+            mDistrict.setText(mCar.getDistrict());
+            if (mCar.getProductionYear() != null) {
+                mProductionYear.setText(String.valueOf(mCar.getProductionYear()));
+            }
+            mEngine.setText(mCar.getEngine());
+        }
     }
 
     private boolean isValidInput() {
@@ -242,13 +269,14 @@ public class BasicCarInfoStepFragment extends Fragment
     }
 
     private void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm =
+                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * this fragment using the provided parameter.
      *
      * @param car shared car object.
      * @return A new instance of fragment BasicCarInfoStepFragment.
@@ -293,9 +321,13 @@ public class BasicCarInfoStepFragment extends Fragment
             mCar.setDistrict(mDistrict.getText().toString());
             if (mProductionYear.getText().length() != 0) {
                 mCar.setProductionYear(Integer.valueOf(mProductionYear.getText().toString()));
+            } else {
+                mCar.setProductionYear(null);
             }
             if (mEngine.getText().length() != 0) {
                 mCar.setEngine(mEngine.getText().toString());
+            } else {
+                mCar.setEngine(null);
             }
         }
     }

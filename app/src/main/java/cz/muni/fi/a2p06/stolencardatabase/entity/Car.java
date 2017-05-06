@@ -15,7 +15,7 @@ public class Car implements Parcelable {
     private String engine;
     private String manufacturer;
     private String photoUrl;
-    private int productionYear;
+    private Integer productionYear;
     private String regno;
     private long stolenDate;
     private String model;
@@ -71,12 +71,12 @@ public class Car implements Parcelable {
     }
 
     @PropertyName("production_year")
-    public int getProductionYear() {
+    public Integer getProductionYear() {
         return productionYear;
     }
 
     @PropertyName("production_year")
-    public void setProductionYear(int productionYear) {
+    public void setProductionYear(Integer productionYear) {
         this.productionYear = productionYear;
     }
 
@@ -164,7 +164,7 @@ public class Car implements Parcelable {
         dest.writeString(this.engine);
         dest.writeString(this.manufacturer);
         dest.writeString(this.photoUrl);
-        dest.writeInt(this.productionYear);
+        dest.writeValue(this.productionYear);
         dest.writeString(this.regno);
         dest.writeLong(this.stolenDate);
         dest.writeString(this.model);
@@ -178,7 +178,7 @@ public class Car implements Parcelable {
         this.engine = in.readString();
         this.manufacturer = in.readString();
         this.photoUrl = in.readString();
-        this.productionYear = in.readInt();
+        this.productionYear = (Integer) in.readValue(Integer.class.getClassLoader());
         this.regno = in.readString();
         this.stolenDate = in.readLong();
         this.model = in.readString();

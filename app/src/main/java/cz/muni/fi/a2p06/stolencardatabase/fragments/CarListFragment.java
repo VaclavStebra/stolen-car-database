@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -34,19 +35,25 @@ import cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 import static android.app.Activity.RESULT_OK;
-import static cz.muni.fi.a2p06.stolencardatabase.ocr.OcrActivity.SCAN_REGNO_REQUEST;
 
 
 public class CarListFragment extends Fragment implements CarListAdapter.CarItemHolder.OnCarItemClickListener {
+
     @BindView(R.id.car_list_view)
     RecyclerView mCarList;
     @BindView(R.id.car_list_empty)
-    TextView mEmptyText;
+    TextView mEmptyStateText;
+
+    private static final String CAR_LIST_QUERY_KEY = "query";
+    private static final String CAR_LIST_IS_SEARCH_SUBMITTED_KEY = "submitted_search";
 
     private CarListAdapter mCarListAdapter;
     private OnCarListFragmentInteractionListener mListener;
     private DatabaseReference mRef;
+
     private SearchView mSearchView;
+    private String mQuery;
+    private boolean mIsSearchSubmitted;
 
     public CarListFragment() {
         // Required empty public constructor
@@ -55,6 +62,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mQuery = savedInstanceState.getString(CAR_LIST_QUERY_KEY);
+            mIsSearchSubmitted = savedInstanceState.getBoolean(CAR_LIST_IS_SEARCH_SUBMITTED_KEY);
+        }
+
         setHasOptionsMenu(true);
     }
 
@@ -74,7 +87,11 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
         showEmptyState();
         mCarList.setHasFixedSize(true);
-        mCarList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setReverseLayout(true);
+        manager.setStackFromEnd(true);
+        mCarList.setLayoutManager(manager);
 
         mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
                 CarListAdapter.CarItemHolder.class, mRef, this);
@@ -83,22 +100,43 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mIsSearchSubmitted = false;
+
         if (resultCode == RESULT_OK && requestCode == OcrActivity.SCAN_REGNO_REQUEST && data != null) {
-            mSearchView.setQuery(data.getStringExtra(OcrActivity.REGNO_QUERY), false);
+            mQuery = data.getStringExtra(OcrActivity.REGNO_QUERY);
+            if (mSearchView != null) {
+                mSearchView.setQuery(mQuery, mIsSearchSubmitted);
+            }
         } else {
-            mSearchView.setQuery("", false);
+            mQuery = "";
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mSearchView.isShown()) {
+            outState.putString(CAR_LIST_QUERY_KEY, mSearchView.getQuery().toString());
+            outState.putBoolean(CAR_LIST_IS_SEARCH_SUBMITTED_KEY, mIsSearchSubmitted);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.action_search);
 
-        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        setupSearchView();
+        setupSearchView((SearchView) searchViewItem.getActionView());
+
+        if (mQuery != null && mSearchView != null) {
+            searchViewItem.expandActionView();
+            mSearchView.setQuery(mQuery, mIsSearchSubmitted);
+        }
     }
 
-    private void setupSearchView() {
+    private void setupSearchView(SearchView searchView) {
+        mSearchView = searchView;
+
         if (mSearchView != null) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -110,10 +148,10 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             mSearchView.setMaxWidth(Integer.MAX_VALUE);
             mSearchView.setInputType(InputType.TYPE_CLASS_TEXT |
                     InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+
             mSearchView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
-                    //
                 }
 
                 @Override
@@ -123,6 +161,9 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     mCarListAdapter = new CarListAdapter(Car.class, R.layout.car_list_item,
                             CarListAdapter.CarItemHolder.class, mRef, CarListFragment.this);
                     mCarList.setAdapter(mCarListAdapter);
+
+                    mQuery = null;
+                    mIsSearchSubmitted = false;
                 }
             });
 
@@ -144,12 +185,17 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
                     mCarList.setAdapter(mCarListAdapter);
 
                     mSearchView.clearFocus();
+                    mIsSearchSubmitted = true;
+
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    return false;
+                    if (!newText.isEmpty()) {
+                        mIsSearchSubmitted = false;
+                    }
+                    return true;
                 }
             });
         }
@@ -165,7 +211,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), OcrActivity.class);
-                startActivityForResult(intent, SCAN_REGNO_REQUEST);
+                startActivityForResult(intent, OcrActivity.SCAN_REGNO_REQUEST);
             }
         });
 
@@ -219,12 +265,12 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
     }
 
     private void showEmptyState() {
-        mEmptyText.setVisibility(View.VISIBLE);
+        mEmptyStateText.setVisibility(View.VISIBLE);
         mCarList.setVisibility(View.GONE);
     }
 
     private void showFilledState() {
-        mEmptyText.setVisibility(View.GONE);
+        mEmptyStateText.setVisibility(View.GONE);
         mCarList.setVisibility(View.VISIBLE);
     }
 

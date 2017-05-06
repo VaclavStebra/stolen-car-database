@@ -3,37 +3,51 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:gravity="center"
               android:orientation="vertical"
               android:padding="16dp"
-              android:gravity="center"
               tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarLocationStepFragment">
     <!-- TODO Landscape layout_weights-->
 
     <TextView
-        android:id="@+id/place_text"
+        android:id="@+id/car_location_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/hint_location_text"
+        android:text="@string/car_location_hint_text"
         android:textStyle="italic"/>
 
     <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+        android:id="@+id/car_location_mapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
         android:layout_weight="2"
         map:cameraZoom="17"
-        map:mapType="normal"
         map:liteMode="true"
+        map:mapType="normal"
         map:uiMapToolbar="false"/>
 
-    <Button
-        android:id="@+id/location_btn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/set_location_button"/>
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/car_location_set_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/car_location_set_button"/>
+
+        <Button
+            android:id="@+id/car_location_delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"/>
+
+    </LinearLayout>
 
 </LinearLayout>

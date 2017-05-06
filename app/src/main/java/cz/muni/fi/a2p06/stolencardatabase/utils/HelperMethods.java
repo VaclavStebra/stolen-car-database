@@ -1,9 +1,18 @@
 package cz.muni.fi.a2p06.stolencardatabase.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.util.TypedValue;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Static class with helper methods
@@ -33,7 +42,7 @@ public final class HelperMethods {
      * @return true if the registration number is valid, false otherwise
      */
     public static boolean isValidRegno(String regno) {
-        return regno != null && !regno.isEmpty() && Pattern.matches("[A-Z0-9]{3}[ ]?[A-Z0-9-]{4,5}", regno);
+        return regno != null && !regno.isEmpty() && Pattern.matches("[A-Z0-9]{3}[ \n]?[A-Z0-9-]{4,5}", regno);
     }
 
     /**
@@ -73,5 +82,33 @@ public final class HelperMethods {
         }
 
         return new StringBuilder(regno).insert(3, " ").toString().toUpperCase();
+    }
+
+    /**
+     * Remove the photo from the Firebase storage based on the URL of the photo
+     *
+     * @param photoUrl URL of the car photo to delete
+     */
+    public static void removePhotoFromDb(String photoUrl) {
+        if (photoUrl != null && !photoUrl.isEmpty()) {
+            StorageReference storageReference =
+                    FirebaseStorage.getInstance().getReferenceFromUrl(photoUrl);
+            storageReference.delete().addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "An exception was thrown during removing the old photo of the car: ", e);
+                }
+            });
+        }
+    }
+
+    /**
+     * Format the time in milliseconds to the readable format
+     *
+     * @param timeInMillis time in milliseconds
+     * @return formatted time
+     */
+    public static String formatDate(long timeInMillis) {
+        return SimpleDateFormat.getDateInstance().format(timeInMillis);
     }
 }
