@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -42,6 +44,7 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
  */
 public class AddCarFragment extends Fragment implements StepperLayout.StepperListener {
 
+    private static final String TAG = "AddCarFragment";
     private static final String ADD_CAR_CURRENT_STEP_POSITION_KEY = "position";
     private static final String ADD_CAR_MODE_KEY = "mode";
     private static final String ADD_CAR_CAR_KEY = "car";
@@ -208,6 +211,13 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     @Override
     public void onCompleted(View completeButton) {
         if (mMode == ADD_CAR_MODE_CREATE) {
+            try {
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                mCar.setUserUid(uid);
+            } catch (Exception e) {
+                Log.w(TAG, "Invalid user");
+                mCar.setUserUid(null);
+            }
             if (mCar.getPhotoUrl() != null) {
                 writeNewCarWithPhoto();
             } else {

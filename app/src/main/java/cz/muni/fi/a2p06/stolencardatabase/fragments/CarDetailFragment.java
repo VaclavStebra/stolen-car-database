@@ -1,5 +1,6 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
@@ -27,6 +31,7 @@ import com.stepstone.stepper.VerificationError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
@@ -38,7 +43,11 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
  * create an instance of this fragment.
  */
 public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallback {
+    private static final String TAG = "CarDetailFragment";
+    private static final String SHOW_BUTTONS = "SHOW_BUTTONS";
     private Car mCar;
+    private OnCarDetailFragmentInteractionListener mListener;
+    private boolean mShowButtons;
 
     @BindView(R.id.car_detail_photo)
     ImageView mPhoto;
@@ -62,6 +71,10 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     TextView mEngineText;
     @BindView(R.id.car_map_view)
     MapView mMapView;
+    @BindView(R.id.delete_car)
+    Button mDeleteButton;
+    @BindView(R.id.edit_car)
+    Button mEditButton;
 
 
     public CarDetailFragment() {
@@ -75,9 +88,10 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
      * @param car car to display.
      * @return A new instance of fragment CarDetailFragment.
      */
-    public static CarDetailFragment newInstance(Car car) {
+    public static CarDetailFragment newInstance(Car car, boolean showButtons) {
         CarDetailFragment fragment = new CarDetailFragment();
         Bundle args = new Bundle();
+        args.putBoolean(SHOW_BUTTONS, showButtons);
         args.putParcelable(Car.class.getSimpleName(), car);
         fragment.setArguments(args);
         return fragment;
@@ -88,6 +102,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mCar = getArguments().getParcelable(Car.class.getSimpleName());
+            mShowButtons = getArguments().getBoolean(SHOW_BUTTONS);
         }
     }
 
@@ -116,6 +131,23 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
             Car car = savedInstanceState.getParcelable(Car.class.getSimpleName());
             updateCarView(car);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCarDetailFragmentInteractionListener) {
+            mListener = (OnCarDetailFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnCarDetailFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -157,6 +189,20 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         }
     }
 
+    @OnClick(R.id.delete_car)
+    public void onDeleteCarClick(View view) {
+        if (mListener != null) {
+            mListener.onDeleteCar(mCar);
+        }
+    }
+
+    @OnClick(R.id.edit_car)
+    public void onEditCarClick(View view) {
+        if (mListener != null) {
+            mListener.onEditCar(mCar);
+        }
+    }
+
     public void updateCarView(Car car) {
         mCar = car;
         populateCarDetails();
@@ -164,6 +210,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
 
     private void populateCarDetails() {
         populateCarImage();
+        toggleButtonsVisibility();
         mManufacturerAndModel.setText(mCar.getManufacturer() + " " + mCar.getModel());
         mRegno.setText(HelperMethods.formatRegnoFromDB(mCar.getRegno()));
         mStolenDate.setText(HelperMethods.formatDate(mCar.getStolenDate()));
@@ -240,5 +287,29 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
             mMapView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void toggleButtonsVisibility() {
+        if ( ! mShowButtons) {
+            mDeleteButton.setVisibility(View.GONE);
+            mEditButton.setVisibility(View.GONE);
+            return;
+        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userUid = user.getUid();
+            if (userUid.equals(mCar.getUserUid())) {
+                mDeleteButton.setVisibility(View.VISIBLE);
+                mEditButton.setVisibility(View.VISIBLE);
+            } else {
+                mDeleteButton.setVisibility(View.GONE);
+                mEditButton.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public interface OnCarDetailFragmentInteractionListener {
+        void onDeleteCar(Car car);
+        void onEditCar(Car car);
     }
 }

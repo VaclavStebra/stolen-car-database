@@ -22,6 +22,7 @@ public class Car implements Parcelable {
     private String vin;
     private Coordinates location;
     private String district;
+    private String userUid;
 
     public Car() {
     }
@@ -140,6 +141,16 @@ public class Car implements Parcelable {
         this.district = district;
     }
 
+    @PropertyName("user_uid")
+    public String getUserUid() {
+        return userUid;
+    }
+
+    @PropertyName("user_uid")
+    public void setUserUid(String uid) {
+        this.userUid = uid;
+    }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -150,6 +161,7 @@ public class Car implements Parcelable {
                 ", model='" + model + '\'' +
                 ", vin='" + vin + '\'' +
                 ", district='" + district + '\'' +
+                ", userUID='" + userUid + '\'' +
                 '}';
     }
 
@@ -171,6 +183,7 @@ public class Car implements Parcelable {
         dest.writeString(this.vin);
         dest.writeParcelable(this.location, flags);
         dest.writeString(this.district);
+        dest.writeString(this.userUid);
     }
 
     private Car(Parcel in) {
@@ -185,6 +198,7 @@ public class Car implements Parcelable {
         this.vin = in.readString();
         this.location = in.readParcelable(Coordinates.class.getClassLoader());
         this.district = in.readString();
+        this.userUid = in.readString();
     }
 
     public static final Creator<Car> CREATOR = new Creator<Car>() {

@@ -114,7 +114,11 @@
     <string name="vin_error_empty_message">Please enter the car VIN number</string>
     <string name="vin_error_invalid_message">The VIN number must contain 17 alphanumeric characters</string>
     <string name="logout">Log out</string>
+    <string name="my_cars">My cars</string>
+    <string name="all_cars">All cars</string>
     <string name="action_search">Search</string>
+    <string name="delete_car">Delete car</string>
+    <string name="edit_car">Edit car</string>
 
 
     <string-array name="car_manufacturers">
