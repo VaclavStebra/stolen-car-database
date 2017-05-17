@@ -44,7 +44,6 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
  */
 public class AddCarFragment extends Fragment implements StepperLayout.StepperListener {
 
-    private static final String CURRENT_STEP_POSITION_KEY = "position";
     private static final String TAG = "AddCarFragment";
     private static final String ADD_CAR_CURRENT_STEP_POSITION_KEY = "position";
     private static final String ADD_CAR_MODE_KEY = "mode";
