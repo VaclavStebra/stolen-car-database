@@ -46,17 +46,9 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.main_activity_root_view)
     CoordinatorLayout mRootView;
 
-    private FirebaseAuth mAuth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() == null) {
-            Intent loginIntent = new Intent(MainActivity.this, SignInActivity.class);
-            startActivity(loginIntent);
-            finish();
-        }
 
         setContentView(R.layout.activity_main);
 
@@ -77,12 +69,14 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mAuth.getCurrentUser() != null) {
-            MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             inflater.inflate(R.menu.menu, menu);
             return true;
+        } else {
+            inflater.inflate(R.menu.not_logged_menu, menu);
+            return true;
         }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -90,6 +84,11 @@ public class MainActivity extends AppCompatActivity implements
         switch (item.getItemId()) {
             case R.id.sign_out:
                 doLogout();
+                return true;
+            case R.id.log_in:
+                Intent loginIntent = new Intent(MainActivity.this, SignInActivity.class);
+                startActivity(loginIntent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         // user is now signed out
-                        startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                        startActivity(new Intent(MainActivity.this, MainActivity.class));
                         finish();
                     }
                 });
