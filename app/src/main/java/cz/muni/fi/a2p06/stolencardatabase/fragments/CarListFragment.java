@@ -124,7 +124,11 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu, menu);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            inflater.inflate(R.menu.search_menu, menu);
+        } else {
+            inflater.inflate(R.menu.search_menu_not_logged_in, menu);
+        }
         MenuItem searchViewItem = menu.findItem(R.id.action_search);
 
         setupSearchView((SearchView) searchViewItem.getActionView());

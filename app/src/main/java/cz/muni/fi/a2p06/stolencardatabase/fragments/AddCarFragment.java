@@ -1,9 +1,11 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -33,6 +35,7 @@ import java.io.FileNotFoundException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.muni.fi.a2p06.stolencardatabase.R;
+import cz.muni.fi.a2p06.stolencardatabase.SignInActivity;
 import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
@@ -57,6 +60,8 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
+
+    private FirebaseAuth mAuth;
 
     public AddCarFragment() {
         // Required empty public constructor
@@ -94,6 +99,17 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         mStepperLayout.setListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            Intent loginIntent = new Intent(getActivity(), SignInActivity.class);
+            startActivity(loginIntent);
+            getActivity().finish();
+        }
     }
 
     @Override
