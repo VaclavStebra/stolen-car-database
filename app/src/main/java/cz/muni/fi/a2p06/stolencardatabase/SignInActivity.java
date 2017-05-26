@@ -10,6 +10,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Arrays;
 
@@ -66,6 +67,7 @@ public class SignInActivity extends AppCompatActivity {
     private void loginUser() {
         Intent loginIntent = new Intent(SignInActivity.this, MainActivity.class);
         startActivity(loginIntent);
+        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getCurrentUser().getUid());
         finish();
     }
 }

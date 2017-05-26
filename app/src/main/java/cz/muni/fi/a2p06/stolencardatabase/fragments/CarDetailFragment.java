@@ -46,6 +46,10 @@ import com.google.firebase.storage.StorageReference;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -53,6 +57,7 @@ import cz.muni.fi.a2p06.stolencardatabase.MainActivity;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
+import cz.muni.fi.a2p06.stolencardatabase.utils.FirebaseRestClient;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
 /**
@@ -412,6 +417,11 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                         ref.child(key).child("reported_location").push().setValue(new Coordinates(location.getLatitude(), location.getLongitude()));
                     }
                     Toast.makeText(getContext(), "Location reported", Toast.LENGTH_SHORT).show();
+                    try {
+                        FirebaseRestClient.sendMessageToTopic(getActivity(), mCar.getUserUid(), mCar.getRegno() + " was spotted");
+                    } catch (UnsupportedEncodingException | JSONException e) {
+                        Log.e(TAG, "onDataChange", e);
+                    }
                 }
 
                 @Override
