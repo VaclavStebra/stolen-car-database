@@ -49,6 +49,7 @@ import com.stepstone.stepper.VerificationError;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.muni.fi.a2p06.stolencardatabase.MainActivity;
 import cz.muni.fi.a2p06.stolencardatabase.R;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
@@ -62,7 +63,7 @@ import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallback {
     private static final String TAG = "CarDetailFragment";
     private static final String SHOW_BUTTONS = "SHOW_BUTTONS";
-    private static final int REQUEST_LOCATION_PERMISSIONS = 200;
+    private static final int RC_HANDLE_LOCATION_PERM = 200;
 
     private Car mCar;
     private OnCarDetailFragmentInteractionListener mListener;
@@ -329,7 +330,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION_PERMISSIONS) {
+        if (requestCode == RC_HANDLE_LOCATION_PERM) {
             if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "Location permission granted - get location");
                 reportLocation();
@@ -343,7 +344,8 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                getActivity().finish();
+                                //getActivity().finish();
+                                // Do not do anything
                             }
                         })
                         .setNegativeButton(R.string.grant_access, new DialogInterface.OnClickListener() {
@@ -361,58 +363,68 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     private void requestLocationPermission() {
         Log.w(TAG, "Location permission is not granted. Requesting permission");
 
-        if (this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+                || this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
             this.requestPermissions(new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-            },
-                    REQUEST_LOCATION_PERMISSIONS);
+                    },
+                    RC_HANDLE_LOCATION_PERM);
         } else {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", CarDetailFragment.class.getPackage().getName(), null);
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", MainActivity.class.getPackage().getName(), null);
             intent.setData(uri);
             startActivity(intent);
         }
     }
 
     @OnClick(R.id.report_location)
-    public void reportLocation() {
-        int coarse_location_perm = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
-        int fine_location_perm = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
-        if (coarse_location_perm == PackageManager.PERMISSION_GRANTED
-                && fine_location_perm == PackageManager.PERMISSION_GRANTED) {
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            final Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                Log.d(TAG, String.valueOf(location.getLatitude()));
-                Log.d(TAG, String.valueOf(location.getLongitude()));
-                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
-                Query query = ref.orderByChild("regno").equalTo(mCar.getRegno());
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            String key = snapshot.getKey();
-                            ref.child(key).child("reported_location").push().setValue(new Coordinates(location.getLatitude(), location.getLongitude()));
-                        }
-                        Toast.makeText(getContext(), "Location reported", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e(TAG, "onCancelled", databaseError.toException());
-                    }
-                });
-            }
+    public void onReportLocationClick() {
+        int coarseLocationPerm = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        int fineLocationPerm = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        if (hasLocationPermissions(coarseLocationPerm, fineLocationPerm)) {
+            reportLocation();
         } else {
             this.requestPermissions(
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_LOCATION_PERMISSIONS);
+                    RC_HANDLE_LOCATION_PERM
+            );
+        }
+    }
+
+    private boolean hasLocationPermissions(int coarseLocationPermResult, int fineLocationPermResult) {
+        return coarseLocationPermResult == PackageManager.PERMISSION_GRANTED
+                && fineLocationPermResult == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void reportLocation() throws SecurityException {
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        final Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location != null) {
+            Log.d(TAG, String.valueOf(location.getLatitude()));
+            Log.d(TAG, String.valueOf(location.getLongitude()));
+            final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cars");
+            Query query = ref.orderByChild("regno").equalTo(mCar.getRegno());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String key = snapshot.getKey();
+                        ref.child(key).child("reported_location").push().setValue(new Coordinates(location.getLatitude(), location.getLongitude()));
+                    }
+                    Toast.makeText(getContext(), "Location reported", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e(TAG, "onCancelled", databaseError.toException());
+                }
+            });
         }
     }
 
     public interface OnCarDetailFragmentInteractionListener {
         void onDeleteCar(Car car);
+
         void onEditCar(Car car);
     }
 }
