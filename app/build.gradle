@@ -52,6 +52,9 @@ dependencies {
     // StepStone Stepper
     compile 'com.stepstone.stepper:material-stepper:3.2.0'
 
+    // Google play services
+    compile 'com.google.android.gms:play-services:10.2.1'
+
     // Google Places
     compile 'com.google.android.gms:play-services-places:10.2.1'
 
