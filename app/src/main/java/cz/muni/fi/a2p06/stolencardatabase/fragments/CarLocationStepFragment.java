@@ -71,6 +71,7 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mCar = getArguments().getParcelable(Car.class.getSimpleName());
+            loadData();
         }
     }
 
@@ -111,7 +112,6 @@ public class CarLocationStepFragment extends Fragment implements BlockingStep, O
             }
         });
 
-        loadData();
         prepareMapView(savedInstanceState);
     }
 

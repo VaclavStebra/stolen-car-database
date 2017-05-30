@@ -69,6 +69,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
         }
         if (getArguments() != null) {
             mCar = getArguments().getParcelable(Car.class.getSimpleName());
+            loadData();
         }
     }
 
@@ -86,7 +87,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
     private void prepareUi() {
         mCarPhoto.setVisibility(View.GONE);
         mDeletePhotoButton.setVisibility(View.GONE);
-        loadData();
+        showPhoto();
 
         mAddPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,7 +188,6 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
             String uri = mCar.getPhotoUrl();
             if (uri != null) {
                 mPhotoUri = Uri.parse(uri);
-                showPhoto();
             }
         }
     }

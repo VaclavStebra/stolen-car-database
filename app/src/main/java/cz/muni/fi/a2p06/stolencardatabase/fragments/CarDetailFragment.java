@@ -71,11 +71,13 @@ import cz.muni.fi.a2p06.stolencardatabase.views.CustomMapView;
 public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallback {
     private static final String TAG = "CarDetailFragment";
     private static final String SHOW_BUTTONS = "SHOW_BUTTONS";
+    private static final String SHOW_REPORT_LOCATION_BUTTON = "SHOW_REPORT_LOCATION_BUTTON";
     private static final int RC_HANDLE_LOCATION_PERM = 200;
 
     private Car mCar;
     private OnCarDetailFragmentInteractionListener mListener;
     private boolean mShowButtons;
+    private boolean mShowReportLocationButton;
 
     @BindView(R.id.car_detail_photo)
     ImageView mPhoto;
@@ -97,8 +99,12 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     TextView mEngine;
     @BindView(R.id.car_detail_engine_text)
     TextView mEngineText;
+
     @BindView(R.id.car_map_view)
     CustomMapView mMapView;
+
+    @BindView(R.id.report_location)
+    Button mReportLocation;
     @BindView(R.id.delete_car)
     Button mDeleteButton;
     @BindView(R.id.edit_car)
@@ -118,10 +124,11 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
      * @param car car to display.
      * @return A new instance of fragment CarDetailFragment.
      */
-    public static CarDetailFragment newInstance(Car car, boolean showButtons) {
+    public static CarDetailFragment newInstance(Car car, boolean showButtons, boolean showReportLocationButton) {
         CarDetailFragment fragment = new CarDetailFragment();
         Bundle args = new Bundle();
         args.putBoolean(SHOW_BUTTONS, showButtons);
+        args.putBoolean(SHOW_REPORT_LOCATION_BUTTON, showReportLocationButton);
         args.putParcelable(Car.class.getSimpleName(), car);
         fragment.setArguments(args);
         return fragment;
@@ -133,6 +140,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         if (getArguments() != null) {
             mCar = getArguments().getParcelable(Car.class.getSimpleName());
             mShowButtons = getArguments().getBoolean(SHOW_BUTTONS);
+            mShowReportLocationButton = getArguments().getBoolean(SHOW_REPORT_LOCATION_BUTTON);
         }
     }
 
@@ -142,14 +150,20 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_car_detail, container, false);
         ButterKnife.bind(this, view);
+
         mMapView.setViewParent(mScrollView);
         mMapView.onCreate(savedInstanceState);
         mMapView.setVisibility(View.GONE);
+
         if (mCar != null) {
             populateCarDetails();
-            if (mCar.getLocation() != null || mCar.getReportedLocation().size() > 0) {
+            if (mCar.getLocation() != null || (mCar.getReportedLocation() != null && mCar.getReportedLocation().size() > 0)) {
                 mMapView.getMapAsync(this);
             }
+        }
+
+        if (!mShowReportLocationButton) {
+            mReportLocation.setVisibility(View.GONE);
         }
 
         return view;
@@ -311,7 +325,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Coordinates carPos = mCar.getLocation();
-        boolean hasReportedLocation = mCar.getReportedLocation().size() > 0;
+        HashMap<String, Coordinates> reportedLocation = mCar.getReportedLocation();
         if (googleMap != null) {
             googleMap.clear();
             if (carPos != null) {
@@ -319,8 +333,8 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                 googleMap.addMarker(new MarkerOptions().position(pos).title(mCar.getRegno()));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
             }
-            if (hasReportedLocation) {
-                addReportedLocationMarkers(googleMap);
+            if (reportedLocation != null && reportedLocation.size() > 0) {
+                addReportedLocationMarkers(googleMap, reportedLocation);
                 if (carPos == null) {
                     Coordinates position = mCar.getReportedLocation().values().iterator().next();
                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(position.getLat(), position.getLon())));
@@ -330,11 +344,10 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         }
     }
 
-    private void addReportedLocationMarkers(GoogleMap map) {
+    private void addReportedLocationMarkers(GoogleMap map, HashMap<String, Coordinates> locations) {
         if (map == null) {
             return;
         }
-        HashMap<String, Coordinates> locations = mCar.getReportedLocation();
         int count = 1;
         for (Coordinates coords : locations.values()) {
             LatLng pos = new LatLng(coords.getLat(), coords.getLon());

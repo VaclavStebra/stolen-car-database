@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void manageCarClickOnMobile(Car car) {
-        CarDetailFragment carDetailFragment = CarDetailFragment.newInstance(car, true);
+        CarDetailFragment carDetailFragment = CarDetailFragment.newInstance(car, true, true);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, carDetailFragment);
         transaction.addToBackStack(null);
