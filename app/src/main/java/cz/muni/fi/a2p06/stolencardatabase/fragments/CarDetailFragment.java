@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +30,8 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +50,7 @@ import com.stepstone.stepper.VerificationError;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +61,7 @@ import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Coordinates;
 import cz.muni.fi.a2p06.stolencardatabase.utils.FirebaseRestClient;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
+import cz.muni.fi.a2p06.stolencardatabase.views.CustomMapView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,11 +98,13 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     @BindView(R.id.car_detail_engine_text)
     TextView mEngineText;
     @BindView(R.id.car_map_view)
-    MapView mMapView;
+    CustomMapView mMapView;
     @BindView(R.id.delete_car)
     Button mDeleteButton;
     @BindView(R.id.edit_car)
     Button mEditButton;
+    @BindView(R.id.car_detail_scroll_view)
+    ScrollView mScrollView;
 
 
     public CarDetailFragment() {
@@ -137,11 +142,12 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_car_detail, container, false);
         ButterKnife.bind(this, view);
+        mMapView.setViewParent(mScrollView);
         mMapView.onCreate(savedInstanceState);
         mMapView.setVisibility(View.GONE);
         if (mCar != null) {
             populateCarDetails();
-            if (mCar.getLocation() != null) {
+            if (mCar.getLocation() != null || mCar.getReportedLocation().size() > 0) {
                 mMapView.getMapAsync(this);
             }
         }
@@ -305,12 +311,35 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Coordinates carPos = mCar.getLocation();
-        if (googleMap != null && carPos != null) {
-            LatLng pos = new LatLng(carPos.getLat(), carPos.getLon());
+        boolean hasReportedLocation = mCar.getReportedLocation().size() > 0;
+        if (googleMap != null) {
             googleMap.clear();
-            googleMap.addMarker(new MarkerOptions().position(pos).title(mCar.getRegno()));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            if (carPos != null) {
+                LatLng pos = new LatLng(carPos.getLat(), carPos.getLon());
+                googleMap.addMarker(new MarkerOptions().position(pos).title(mCar.getRegno()));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            }
+            if (hasReportedLocation) {
+                addReportedLocationMarkers(googleMap);
+                if (carPos == null) {
+                    Coordinates position = mCar.getReportedLocation().values().iterator().next();
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(position.getLat(), position.getLon())));
+                }
+            }
             mMapView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void addReportedLocationMarkers(GoogleMap map) {
+        if (map == null) {
+            return;
+        }
+        HashMap<String, Coordinates> locations = mCar.getReportedLocation();
+        int count = 1;
+        for (Coordinates coords : locations.values()) {
+            LatLng pos = new LatLng(coords.getLat(), coords.getLon());
+            map.addMarker(new MarkerOptions().position(pos).title("#" + count).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            count++;
         }
     }
 

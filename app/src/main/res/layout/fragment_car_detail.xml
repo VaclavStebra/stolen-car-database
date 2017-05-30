@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/car_detail_scroll_view"
 
     tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.CarDetailFragment">
 
@@ -112,15 +113,14 @@
             </TableRow>
         </TableLayout>
 
-        <com.google.android.gms.maps.MapView
+        <cz.muni.fi.a2p06.stolencardatabase.views.CustomMapView
             android:id="@+id/car_map_view"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
             map:cameraZoom="17"
             map:mapType="normal"
-            map:liteMode="true"
             map:uiMapToolbar="false"/>
     </LinearLayout>
 
