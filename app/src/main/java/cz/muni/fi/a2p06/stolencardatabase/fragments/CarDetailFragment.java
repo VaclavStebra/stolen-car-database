@@ -276,9 +276,9 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     }
 
     private void populateCarImage() {
+        DrawableTypeRequest drawableTypeRequest;
         if (mCar.getPhotoUrl() != null) {
             Uri photoUri = Uri.parse(mCar.getPhotoUrl());
-            DrawableTypeRequest drawableTypeRequest;
 
             if (photoUri.getScheme().equals("content")) {
                 drawableTypeRequest = Glide.with(this).load(photoUri);
@@ -287,14 +287,13 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                 drawableTypeRequest = Glide.with(this).using(new FirebaseImageLoader())
                         .load(storageReference);
             }
-
-            drawableTypeRequest.asBitmap()
-                    .placeholder(R.drawable.car_placeholder)
-                    .centerCrop()
-                    .into(mPhoto);
         } else {
-            mPhoto.setVisibility(View.GONE);
+            drawableTypeRequest = Glide.with(this).load("");
         }
+        drawableTypeRequest.asBitmap()
+                .placeholder(R.drawable.car_placeholder)
+                .centerCrop()
+                .into(mPhoto);
     }
 
     @Override
