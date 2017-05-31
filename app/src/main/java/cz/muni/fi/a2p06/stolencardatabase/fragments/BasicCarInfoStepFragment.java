@@ -83,6 +83,14 @@ public class BasicCarInfoStepFragment extends Fragment
         if (getArguments() != null) {
             mCar = getArguments().getParcelable(Car.class.getSimpleName());
         }
+
+        if (savedInstanceState != null) {
+            YearPickerFragment yearPickerFragment = (YearPickerFragment) getActivity()
+                    .getFragmentManager().findFragmentByTag("YearPicker");
+            if (yearPickerFragment != null) {
+                yearPickerFragment.setOnYearSetListener(this);
+            }
+        }
     }
 
     @Override

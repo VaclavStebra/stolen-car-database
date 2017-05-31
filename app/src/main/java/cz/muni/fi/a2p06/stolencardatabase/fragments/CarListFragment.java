@@ -115,7 +115,7 @@ public class CarListFragment extends Fragment implements CarListAdapter.CarItemH
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mSearchView.isShown()) {
+        if (mSearchView != null && mSearchView.isShown()) {
             outState.putString(CAR_LIST_QUERY_KEY, mSearchView.getQuery().toString());
             outState.putBoolean(CAR_LIST_IS_SEARCH_SUBMITTED_KEY, mIsSearchSubmitted);
         }
