@@ -7,6 +7,9 @@
     tools:context="cz.muni.fi.a2p06.stolencardatabase.fragments.BasicCarInfoStepFragment">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint_layout"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"

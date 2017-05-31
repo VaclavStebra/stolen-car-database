@@ -83,6 +83,14 @@ public class BasicCarInfoStepFragment extends Fragment
         if (getArguments() != null) {
             mCar = getArguments().getParcelable(Car.class.getSimpleName());
         }
+
+        if (savedInstanceState != null) {
+            YearPickerFragment yearPickerFragment = (YearPickerFragment) getActivity()
+                    .getFragmentManager().findFragmentByTag("YearPicker");
+            if (yearPickerFragment != null) {
+                yearPickerFragment.setOnYearSetListener(this);
+            }
+        }
     }
 
     @Override
@@ -306,6 +314,11 @@ public class BasicCarInfoStepFragment extends Fragment
 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        View view = getView();
+        if (view != null) {
+            // Remove focus from each EditText so that the keyboard won't show in the next step on orientation change
+            view.findViewById(R.id.constraint_layout).requestFocus();
+        }
         saveData();
         callback.goToNextStep();
     }
