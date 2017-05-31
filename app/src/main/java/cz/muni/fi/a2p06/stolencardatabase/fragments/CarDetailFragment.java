@@ -471,6 +471,8 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                     Log.e(TAG, "onCancelled", databaseError.toException());
                 }
             });
+        } else {
+            Toast.makeText(getContext(), "Location could not be determined. Please enable location.", Toast.LENGTH_LONG).show();
         }
     }
 
