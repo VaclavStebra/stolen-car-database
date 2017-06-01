@@ -106,16 +106,16 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Login")
-                    .setMessage("You have to be logged in to add car")
-                    .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+            builder.setTitle(R.string.login_dialog_title)
+                    .setMessage(R.string.login_dialog_message)
+                    .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent loginIntent = new Intent(getActivity(), SignInActivity.class);
                             startActivity(loginIntent);
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             getFragmentManager().popBackStack();
