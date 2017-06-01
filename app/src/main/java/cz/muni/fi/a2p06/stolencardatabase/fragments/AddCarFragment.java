@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -41,6 +42,8 @@ import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CarPhotoStepFragment#newInstance} factory method to
@@ -54,6 +57,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     private static final String ADD_CAR_CAR_KEY = "car";
     private static final int ADD_CAR_MODE_CREATE = 1;
     private static final int ADD_CAR_MODE_UPDATE = 2;
+    private static final int ADD_CAR_RC_SIGNIN_RESULT = 3;
 
     private Car mCar;
     private int mMode;
@@ -64,6 +68,12 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
 
     public AddCarFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -112,7 +122,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent loginIntent = new Intent(getActivity(), SignInActivity.class);
-                            startActivity(loginIntent);
+                            startActivityForResult(loginIntent, ADD_CAR_RC_SIGNIN_RESULT);
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -124,6 +134,13 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
                     .setCancelable(false)
                     .show();
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == ADD_CAR_RC_SIGNIN_RESULT) {
+            getActivity().invalidateOptionsMenu(); // recreate menu (updates menu items if user was logged in)
         }
     }
 

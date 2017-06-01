@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String TAG = "MainActivity";
 
+    private static final int RC_SIGNIN_RESULT = 1;
     private FragmentManager mFragmentManager;
 
     @Nullable
@@ -75,12 +76,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        invalidateOptionsMenu(); // recreate menu (updates menu items if user was logged in)
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -100,10 +95,19 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.log_in:
                 Intent loginIntent = new Intent(MainActivity.this, SignInActivity.class);
-                startActivity(loginIntent);
+                startActivityForResult(loginIntent, RC_SIGNIN_RESULT);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == RC_SIGNIN_RESULT) {
+            invalidateOptionsMenu(); // recreate menu (updates menu items if user was logged in)
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
