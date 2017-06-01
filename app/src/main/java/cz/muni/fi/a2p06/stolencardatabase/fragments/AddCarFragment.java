@@ -1,12 +1,13 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,8 +62,6 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
 
-    private FirebaseAuth mAuth;
-
     public AddCarFragment() {
         // Required empty public constructor
     }
@@ -102,13 +101,29 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
+    public void onResume() {
+        super.onResume();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
-            Intent loginIntent = new Intent(getActivity(), SignInActivity.class);
-            startActivity(loginIntent);
-            getActivity().finish();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Login")
+                    .setMessage("You have to be logged in to add car")
+                    .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent loginIntent = new Intent(getActivity(), SignInActivity.class);
+                            startActivity(loginIntent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getFragmentManager().popBackStack();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+
         }
     }
 

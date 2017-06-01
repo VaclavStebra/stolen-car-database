@@ -200,7 +200,7 @@ public class CarPhotoStepFragment extends Fragment implements BlockingStep {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RC_HANDLE_STORAGE_PERM);
         } else {
             Snackbar.make(getView(), R.string.car_photo_permission_message, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.car_photo_grant_access, new View.OnClickListener() {
+                    .setAction(R.string.grant_access, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent();
