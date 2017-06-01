@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentManager mFragmentManager;
 
     @Nullable
-    @BindView(R.id.fragment_container)
+    @BindView(R.id.large_fragment_container)
     FrameLayout mFragmentContainer;
     @BindView(R.id.main_activity_root_view)
     CoordinatorLayout mRootView;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         mFragmentManager = getSupportFragmentManager();
 
-        if (mFragmentContainer!= null) {
+        if (mFragmentContainer == null) {
             if (savedInstanceState != null) {
                 return;
             }
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(Car car) {
-        if (mFragmentContainer != null) {
+        if (mFragmentContainer == null) {
             manageCarClickOnMobile(car);
         } else {
             updateCarDetailFragment(car);
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onAddCarClick() {
-        if (mFragmentContainer != null) {
+        if (mFragmentContainer == null) {
             manageAddCarClickOnMobile();
         } else {
             manageAddCarClickOnTablet();
@@ -146,23 +147,41 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void manageAddCarClickOnTablet() {
-        // TODO swap fragments
+        AddCarFragment addCarFragment = AddCarFragment.newInstance();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.large_fragment_container, addCarFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
     public void onDataLoaded(Car car) {
-        CarDetailFragment carFragment = (CarDetailFragment)
-                mFragmentManager.findFragmentById(R.id.car_detail_frag);
-        if (carFragment != null && carFragment.getCar() == null) {
-            updateCarDetailFragment(car);
+        Fragment fragment = mFragmentManager.findFragmentById(R.id.large_fragment_container);
+        if (fragment instanceof CarDetailFragment
+                && ((CarDetailFragment) fragment).getCar() != null) {
+            return;
         }
+
+        updateCarDetailFragment(car);
     }
 
     private void updateCarDetailFragment(Car car) {
-        CarDetailFragment carFragment = (CarDetailFragment)
-                mFragmentManager.findFragmentById(R.id.car_detail_frag);
-        if (carFragment != null) {
-            carFragment.updateCarView(car);
+        if (mFragmentContainer != null) {
+            Fragment fragment = mFragmentManager.findFragmentById(R.id.large_fragment_container);
+            if (!(fragment instanceof CarDetailFragment)) {
+                mFragmentManager.popBackStackImmediate("initTransaction", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+
+            fragment = mFragmentManager.findFragmentById(R.id.large_fragment_container);
+            if (fragment instanceof CarDetailFragment) {
+                ((CarDetailFragment) fragment).updateCarView(car);
+            } else {
+                CarDetailFragment carDetailFragment = CarDetailFragment.newInstance(car, true, true);
+                mFragmentManager.beginTransaction()
+                        .add(R.id.large_fragment_container, carDetailFragment)
+                        .addToBackStack("initTransaction")
+                        .commit();
+            }
         }
     }
 
@@ -182,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDeleteCar(final Car car) {
-        if (mFragmentContainer != null) {
+        if (mFragmentContainer == null) {
             manageDeleteCarClickOnMobile();
         } else {
             manageDeleteCarClickOnTablet();
@@ -199,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int dismissType) {
                         super.onDismissed(transientBottomBar, dismissType);
-                        if(dismissType == DISMISS_EVENT_TIMEOUT || dismissType == DISMISS_EVENT_SWIPE
+                        if (dismissType == DISMISS_EVENT_TIMEOUT || dismissType == DISMISS_EVENT_SWIPE
                                 || dismissType == DISMISS_EVENT_MANUAL) {
                             deleteCar(car);
                         }
@@ -231,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onEditCar(Car car) {
-        if (mFragmentContainer != null) {
+        if (mFragmentContainer == null) {
             manageEditCarClickOnMobile(car);
         } else {
             manageEditCarClickOnTablet(car);
@@ -274,6 +293,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void manageEditCarClickOnTablet(Car car) {
-        // TODO swap fragments
+        AddCarFragment addCarFragment = AddCarFragment.newInstance(car);
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.large_fragment_container, addCarFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

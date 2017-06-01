@@ -251,6 +251,9 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     public void updateCarView(Car car) {
         mCar = car;
         populateCarDetails();
+        if (mCar.getLocation() != null || (mCar.getReportedLocation() != null && mCar.getReportedLocation().size() > 0)) {
+            mMapView.getMapAsync(this);
+        }
     }
 
     private void populateCarDetails() {
@@ -471,7 +474,7 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
                 }
             });
         } else {
-            Toast.makeText(getContext(), "Location could not be determined. Please enable location.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Location could not be determined. Please enable GPS.", Toast.LENGTH_LONG).show();
         }
     }
 
