@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.log_in:
                 Intent loginIntent = new Intent(MainActivity.this, SignInActivity.class);
                 startActivity(loginIntent);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements
     private void updateCarDetailFragment(Car car) {
         Fragment fragment = mFragmentManager.findFragmentById(R.id.large_fragment_container);
         if (!(fragment instanceof CarDetailFragment)) {
-            mFragmentManager.popBackStack("initTransaction", 0);
+            mFragmentManager.popBackStackImmediate("initTransaction", 0);
         }
 
         fragment = mFragmentManager.findFragmentById(R.id.large_fragment_container);

@@ -251,6 +251,9 @@ public class CarDetailFragment extends Fragment implements Step, OnMapReadyCallb
     public void updateCarView(Car car) {
         mCar = car;
         populateCarDetails();
+        if (mCar.getLocation() != null || (mCar.getReportedLocation() != null && mCar.getReportedLocation().size() > 0)) {
+            mMapView.getMapAsync(this);
+        }
     }
 
     private void populateCarDetails() {
