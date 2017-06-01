@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements
         CarDetailFragment.OnCarDetailFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
+
+    private FragmentManager mFragmentManager;
+
     @Nullable
     @BindView(R.id.fragment_container)
     FrameLayout mFragmentContainer;
@@ -57,13 +61,15 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
+        mFragmentManager = getSupportFragmentManager();
+
         if (mFragmentContainer!= null) {
             if (savedInstanceState != null) {
                 return;
             }
 
             CarListFragment carListFragment = new CarListFragment();
-            getSupportFragmentManager().beginTransaction()
+            mFragmentManager.beginTransaction()
                     .add(R.id.fragment_container, carListFragment).commit();
         }
     }
@@ -107,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void manageCarClickOnMobile(Car car) {
         CarDetailFragment carDetailFragment = CarDetailFragment.newInstance(car, true, true);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, carDetailFragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -124,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void manageAddCarClickOnMobile() {
         AddCarFragment addCarFragment = AddCarFragment.newInstance();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, addCarFragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -137,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDataLoaded(Car car) {
         CarDetailFragment carFragment = (CarDetailFragment)
-                getSupportFragmentManager().findFragmentById(R.id.car_detail_frag);
+                mFragmentManager.findFragmentById(R.id.car_detail_frag);
         if (carFragment != null && carFragment.getCar() == null) {
             updateCarDetailFragment(car);
         }
@@ -145,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void updateCarDetailFragment(Car car) {
         CarDetailFragment carFragment = (CarDetailFragment)
-                getSupportFragmentManager().findFragmentById(R.id.car_detail_frag);
+                mFragmentManager.findFragmentById(R.id.car_detail_frag);
         if (carFragment != null) {
             carFragment.updateCarView(car);
         }
@@ -225,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void manageDeleteCarClickOnMobile() {
         CarListFragment carListFragment = new CarListFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, carListFragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -252,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void manageEditCarClickOnMobile(Car car) {
         AddCarFragment addCarFragment = AddCarFragment.newInstance(car);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, addCarFragment);
         transaction.addToBackStack(null);
         transaction.commit();

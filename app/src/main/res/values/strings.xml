@@ -209,5 +209,4 @@
     <string name="error_update_not_possible">Update is not possible. Please check your internet connection</string>
     <string name="error_car_not_provided">The car was not provided</string>
     <string name="car_photo_permission_message">Access to external storage is needed</string>
-    <string name="car_photo_grant_access">Grant Access</string>
 </resources>
