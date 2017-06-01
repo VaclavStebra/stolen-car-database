@@ -15,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.Arrays;
 
 public class SignInActivity extends AppCompatActivity {
+    private static final String TAG = "SignInActivity";
 
     private FirebaseAuth mAuth;
 
@@ -40,13 +41,17 @@ public class SignInActivity extends AppCompatActivity {
                 loginUser();
                 return;
             }
-            if (response == null || response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+            if (response != null && response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                 doSignIn();
                 return;
             }
-            if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+            if (response != null && response.getErrorCode() == ErrorCodes.NO_NETWORK) {
                 Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
                 return;
+            }
+            if (response == null) {
+                setResult(RESULT_CANCELED);
+                finish();
             }
         }
     }
@@ -65,9 +70,8 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        Intent loginIntent = new Intent(SignInActivity.this, MainActivity.class);
-        startActivity(loginIntent);
         FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getCurrentUser().getUid());
+        setResult(RESULT_OK);
         finish();
     }
 }

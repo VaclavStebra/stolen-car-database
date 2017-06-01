@@ -1,12 +1,14 @@
 package cz.muni.fi.a2p06.stolencardatabase.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,8 @@ import cz.muni.fi.a2p06.stolencardatabase.adapters.StepperAdapter;
 import cz.muni.fi.a2p06.stolencardatabase.entity.Car;
 import cz.muni.fi.a2p06.stolencardatabase.utils.HelperMethods;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CarPhotoStepFragment#newInstance} factory method to
@@ -53,6 +57,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     private static final String ADD_CAR_CAR_KEY = "car";
     private static final int ADD_CAR_MODE_CREATE = 1;
     private static final int ADD_CAR_MODE_UPDATE = 2;
+    private static final int ADD_CAR_RC_SIGNIN_RESULT = 3;
 
     private Car mCar;
     private int mMode;
@@ -61,10 +66,14 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
 
-    private FirebaseAuth mAuth;
-
     public AddCarFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -102,13 +111,36 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
+    public void onResume() {
+        super.onResume();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
-            Intent loginIntent = new Intent(getActivity(), SignInActivity.class);
-            startActivity(loginIntent);
-            getActivity().finish();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(R.string.login_dialog_title)
+                    .setMessage(R.string.login_dialog_message)
+                    .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent loginIntent = new Intent(getActivity(), SignInActivity.class);
+                            startActivityForResult(loginIntent, ADD_CAR_RC_SIGNIN_RESULT);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getFragmentManager().popBackStack();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == ADD_CAR_RC_SIGNIN_RESULT) {
+            getActivity().invalidateOptionsMenu(); // recreate menu (updates menu items if user was logged in)
         }
     }
 
