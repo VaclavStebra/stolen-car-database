@@ -62,8 +62,6 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     @BindView(R.id.stepperLayout)
     StepperLayout mStepperLayout;
 
-    private FirebaseAuth mAuth;
-
     public AddCarFragment() {
         // Required empty public constructor
     }
@@ -105,7 +103,7 @@ public class AddCarFragment extends Fragment implements StepperLayout.StepperLis
     @Override
     public void onResume() {
         super.onResume();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Login")
