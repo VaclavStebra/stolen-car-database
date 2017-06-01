@@ -75,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        invalidateOptionsMenu(); // recreate menu (updates menu items if user was logged in)
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -95,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.log_in:
                 Intent loginIntent = new Intent(MainActivity.this, SignInActivity.class);
                 startActivity(loginIntent);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

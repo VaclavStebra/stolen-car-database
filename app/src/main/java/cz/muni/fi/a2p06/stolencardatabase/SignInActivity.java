@@ -41,7 +41,7 @@ public class SignInActivity extends AppCompatActivity {
                 return;
             }
             if (response == null || response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                doSignIn();
+                finish();
                 return;
             }
             if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
@@ -65,8 +65,6 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        Intent loginIntent = new Intent(SignInActivity.this, MainActivity.class);
-        startActivity(loginIntent);
         FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getCurrentUser().getUid());
         finish();
     }
